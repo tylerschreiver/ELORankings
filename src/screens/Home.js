@@ -81,7 +81,6 @@ const styles = {
 
 // is only called on init
 const mapStateToProps = (state) => {
-  console.log(state);
   return { signedIn: state.AuthReducer.signedIn };
 };
 
