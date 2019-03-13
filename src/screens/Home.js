@@ -35,7 +35,6 @@ class Home extends Component {
   // }
 
   changeSection(section) {
-    console.log(Actions);
     switch(section) {
       case 'Events': 
         Actions.Events();
@@ -50,7 +49,6 @@ class Home extends Component {
   }
   
   render() {
-    console.log('oiwejdfopiwejfoijwe');
     const { navbarStyle, homeStyle, sectionStyle } = styles;
     const sideMenu = <SideMenuContent />;
     // if (!this.props.signedIn) return <Login />
