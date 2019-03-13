@@ -51,36 +51,32 @@ class Home extends Component {
   render() {
     const { navbarStyle, homeStyle, sectionStyle } = styles;
     const sideMenu = <SideMenuContent />;
-    // if (!this.props.signedIn) return <Login />
+    if (!this.props.signedIn) {
+      return (
+        <View style={{ height: '100%', width: '100%', backgroundColor: '#36393f' }}>
+          <Login />
+        </View>
+      );
+    }
 
     return (
-      // <SideMenu menu={sideMenu} toleranceX={1} openMenuOffset={200}
-      //   animationFunction={(prop, value) => Animated.spring(prop, {
-      //       toValue: value,
-      //     friction: 10,
-      //   })}
-        // >      
-        <View>
-          <View style={{ height: '100%', width: '100%', backgroundColor: '#36393f' }}>
-            <SideMenu menu={sideMenu} toleranceX={1} openMenuOffset={200}
-              animationFunction={(prop, value) => Animated.spring(prop, {
-                toValue: value,
-                friction: 10,
-              })}
-            >      
-              <Router>
-                <Scene key="root" hideNavBar={true}>
-                    <Scene key="Events" component={Events} initial="true" />
-                    <Scene key="Leaderboard" component={Leaderboard} />
-                    <Scene key="Profile" component={Profile} />
-                </Scene>
-              </Router>
-              <Navbar navigate={(section) => this.changeSection(section)} style={navbarStyle}/>
-            </SideMenu>
-          </View>
-        </View>
-        // {/* </View> */}
-      // </SideMenu>
+      <View style={{ height: '100%', width: '100%', backgroundColor: '#36393f' }}>
+        <SideMenu menu={sideMenu} toleranceX={1} openMenuOffset={200}
+          animationFunction={(prop, value) => Animated.spring(prop, {
+            toValue: value,
+            friction: 10,
+          })}
+        >      
+          <Router>
+            <Scene key="root" hideNavBar={true}>
+                <Scene key="Events" component={Events} initial="true" />
+                <Scene key="Leaderboard" component={Leaderboard} />
+                <Scene key="Profile" component={Profile} />
+            </Scene>
+          </Router>
+          <Navbar navigate={(section) => this.changeSection(section)} style={navbarStyle}/>
+        </SideMenu>
+      </View>
     );
   }
 }
