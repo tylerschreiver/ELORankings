@@ -13,7 +13,6 @@ class Navbar extends Component {
   render() {
     const { iconStyle, activeIconTextStyle, navbarStyle, iconTextStyle, touchableStyle } = styles;
     const { currentSection } = this.state;
-
     return (
       <View style={[navbarStyle, this.props.style]}>
         <View style={iconStyle}>

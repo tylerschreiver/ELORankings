@@ -23,11 +23,13 @@ class Events extends Component {
 
   componentDidMount() {
     this.props.getEvents();
+    console.log('events')
   }
 
   renderEvents() {
     const { eventStyle } = styles;
     if (!this.props.events) return null;
+
     else {
       return this.props.events.map((event) => {
         return (
@@ -42,7 +44,6 @@ class Events extends Component {
 
   render() {
     const { eventSection, eventsPage, headerStyle } = styles;
-    console.log(this.props);
     return (
       <View style={eventsPage}>
         <Text style={headerStyle}>Events</Text>
@@ -67,9 +68,6 @@ class Events extends Component {
         <ScrollView>
           {this.renderEvents()}
         </ScrollView>
-
-
-
       </View>
     );
   }
@@ -78,7 +76,8 @@ class Events extends Component {
 const styles = {
   eventsPage: {
     flex: 1,
-    width: '100%'
+    width: '100%',
+    backgroundColor: '#36393f'
   },
   headerStyle: {
     fontSize: 20,

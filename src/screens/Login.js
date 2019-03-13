@@ -3,6 +3,7 @@ import { View, Text, TextInput } from 'react-native';
 import { Button } from '../components';
 import { connect } from 'react-redux'; 
 import { signIn } from '../actions/AuthActions';
+import { Actions } from 'react-native-router-flux';
 
 class Login extends Component {
   state = { email: '', password: '' };
@@ -16,7 +17,7 @@ class Login extends Component {
     const { inputStyle, inputSectionStyle, labelStyle, buttonStyle, footerStyle } = styles;
 
     return (
-      <View style={{ display: 'flex', flex: 1 }}>
+      <View style={{ display: 'flex', flex: 1, backgroundColor: '#36393f' }}>
         <Text style={{ fontSize: 30, color: 'white', textAlign: 'center', marginTop: 100 }}>Sign In</Text>
 
         <View style={inputSectionStyle}>

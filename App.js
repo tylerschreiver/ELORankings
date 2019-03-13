@@ -1,26 +1,79 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- * @lint-ignore-every XPLATJSCOPYRIGHT1
- */
-
 import React, {Component} from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import { Provider } from 'react-redux';
 import Home from './src/screens/Home';
 import store from './src/store';
+import { Router, Scene, Actions } from 'react-native-router-flux'
+import Events from './src/screens/Events'
+import Leaderboard from './src/screens/Leaderboard'
+import Profile from './src/screens/Profile'
+import { Navbar, SideMenuContent } from './src/components';
+import SideMenu from 'react-native-side-menu';
 
 export default class App extends Component {
+  changeSection(section) {
+    switch(section) {
+      case 'Events': 
+        Actions.Events();
+        break;
+      case 'Leaderboard': 
+        Actions.Leaderboard();
+        break;
+      case 'Profile': 
+        Actions.Profile();
+        break;
+    }
+  }
+
   render() {
+    const { navbarStyle, homeStyle, sectionStyle } = styles;
+
+    const sideMenu = <SideMenuContent />;
     return (
       <Provider store={ store }>
-        <View style={{ height: '100%', width: '100%', backgroundColor: '#36393f' }}>
-          <Home />
-        </View>
+          <View style={homeStyle}>
+            {/* <View style={{ height: '100%', width: '100%', backgroundColor: '#36393f' }}> */}
+            <Home />
+              {/* <Router>
+                <SideMenu menu={sideMenu} toleranceX={1} openMenuOffset={200}
+                  animationFunction={(prop, value) => Animated.spring(prop, {
+                    toValue: value,
+                    friction: 10,
+                  })}
+                >      
+                  <Scene key="root" hideNavBar={true}>
+                      <Scene key="Events" component={Events} initial="true" />
+                      <Scene key="Leaderboard" component={Leaderboard} />
+                      <Scene key="Profile" component={Profile} />
+                  </Scene>
+                </SideMenu>
+              </Router>
+            </View>
+            <Navbar navigate={(section) => this.changeSection(section)} style={navbarStyle}/> */}
+          </View>
       </Provider>
     );
   }
+}
+
+const styles = {
+  navbarStyle: {
+    height: 75,
+    width: '100%',
+    display: 'flex'
+  },
+  sectionStyle: {
+    flex: 1,
+    display: 'flex',
+    backgroundColor: '#36393f',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  // homeStyle: {
+  //   display: 'flex',
+  //   flex: 1,
+  //   flexDirection: 'column',
+  //   width: '100%',
+  //   height: '100%'
+  // }
 }
