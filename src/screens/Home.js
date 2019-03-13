@@ -4,9 +4,10 @@ import { Navbar, SideMenuContent } from '../components';
 import SideMenu from 'react-native-side-menu';
 import { connect } from 'react-redux'; 
 import { signOut } from '../actions/AuthActions';
-import Login from './Login'
+import { Router, Scene, Actions } from 'react-native-router-flux'
 import Events from './Events';
 import Profile from './Profile';
+import Login from './Login';
 import Leaderboard from './Leaderboard';
 
 class Home extends Component {
@@ -24,35 +25,58 @@ class Home extends Component {
     }
   }
 
-  renderSection() {
-    switch (this.state.section) {
-      case 'Events': return <Events />;
-      case 'Leaderboard': return <Leaderboard />;
-      case 'Profile': return <Profile />;
-      default: return <Events />
+  // renderSection() {
+  //   switch (this.state.section) {
+  //     case 'Events': return <Events />;
+  //     case 'Leaderboard': return <Leaderboard />;
+  //     case 'Profile': return <Profile />;
+  //     default: return <Events />
+  //   }
+  // }
+
+  changeSection(section) {
+    switch(section) {
+      case 'Events': 
+        Actions.Events();
+        break;
+      case 'Leaderboard': 
+        Actions.Leaderboard();
+        break;
+      case 'Profile': 
+        Actions.Profile();
+        break;
     }
   }
   
   render() {
     const { navbarStyle, homeStyle, sectionStyle } = styles;
     const sideMenu = <SideMenuContent />;
-    if (!this.props.signedIn) return <Login />
+    if (!this.props.signedIn) {
+      return (
+        <View style={{ height: '100%', width: '100%', backgroundColor: '#36393f' }}>
+          <Login />
+        </View>
+      );
+    }
 
     return (
-      <SideMenu menu={sideMenu} toleranceX={1} openMenuOffset={200}
-      // disableGestures={true}
-        animationFunction={(prop, value) => Animated.spring(prop, {
+      <View style={{ height: '100%', width: '100%', backgroundColor: '#36393f' }}>
+        <SideMenu menu={sideMenu} toleranceX={1} openMenuOffset={200}
+          animationFunction={(prop, value) => Animated.spring(prop, {
             toValue: value,
-          friction: 10,
-        })}
+            friction: 10,
+          })}
         >      
-        <View style={homeStyle}>
-          <View style={sectionStyle}>
-            {this.renderSection()}
-          </View>
-          <Navbar navigate={(section) => this.setState({ section })} style={navbarStyle}/>
-        </View>
-      </SideMenu>
+          <Router>
+            <Scene key="root" hideNavBar={true}>
+                <Scene key="Events" component={Events} initial="true" />
+                <Scene key="Leaderboard" component={Leaderboard} />
+                <Scene key="Profile" component={Profile} />
+            </Scene>
+          </Router>
+          <Navbar navigate={(section) => this.changeSection(section)} style={navbarStyle}/>
+        </SideMenu>
+      </View>
     );
   }
 }

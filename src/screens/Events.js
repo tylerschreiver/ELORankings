@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { connect } from 'react-redux'; 
+import { View, Text, ScrollView } from 'react-native';
 import { Dropdown } from '../components';
+import { getEvents } from '../actions/EventActions';
 
 class Events extends Component {
 
@@ -19,14 +21,34 @@ class Events extends Component {
     { key: 2, name: "Indiana" }
   ];
 
+  componentDidMount() {
+    this.props.getEvents();
+    console.log('events')
+  }
+
+  renderEvents() {
+    const { eventStyle } = styles;
+    if (!this.props.events) return null;
+
+    else {
+      return this.props.events.map((event) => {
+        return (
+          <View style={eventStyle} key={event.id}>
+            <Text style={{ color: '#cccccc' }}>{event.name}</Text>
+
+          </View>
+        );
+      })
+    }
+  }
+
   render() {
     const { eventSection, eventsPage, headerStyle } = styles;
-    console.log(this.state);
     return (
       <View style={eventsPage}>
         <Text style={headerStyle}>Events</Text>
 
-        <View style={{ flexDirection: 'row', marginRight: 10, marginLeft: 10, justifyContent: 'space-around' }}>
+        <View style={{ flexDirection: 'row', marginRight: 10, marginLeft: 10, justifyContent: 'space-around', marginBottom: 10 }}>
           <Dropdown
             placeholder="Time Frame"
             items={this.timeFrames}
@@ -43,7 +65,9 @@ class Events extends Component {
           />
         </View>
 
-
+        <ScrollView>
+          {this.renderEvents()}
+        </ScrollView>
       </View>
     );
   }
@@ -52,7 +76,8 @@ class Events extends Component {
 const styles = {
   eventsPage: {
     flex: 1,
-    width: '100%'
+    width: '100%',
+    backgroundColor: '#36393f'
   },
   headerStyle: {
     fontSize: 20,
@@ -63,7 +88,21 @@ const styles = {
   eventSection: {
     margin: 10,
     padding: 10
+  },
+  eventStyle: {
+    marginRight: 10,
+    marginLeft: 10,
+    backgroundColor: "#4c4f54",
+    padding: 10,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 5
   }
 }
 
-export default Events;
+const mapStateToProps = ({ EventsReducer }) => {
+  return { events: EventsReducer.events.events };
+}
+
+export default connect(mapStateToProps, { getEvents })(Events);
