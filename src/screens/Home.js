@@ -66,7 +66,7 @@ class Home extends Component {
             toValue: value,
             friction: 10,
           })}
-        >      
+        >
           <Router>
             <Scene key="root" hideNavBar={true}>
                 <Scene key="Events" component={Events} initial="true" />
