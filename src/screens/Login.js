@@ -3,18 +3,23 @@ import { View, Text, TextInput } from 'react-native';
 import { Button } from '../components';
 import { connect } from 'react-redux'; 
 import { signIn } from '../actions/AuthActions';
-import { Actions } from 'react-native-router-flux';
+import CreateAccount from './CreateAccount';
 
 class Login extends Component {
-  state = { email: '', password: '' };
+  state = { email: '', password: '', createAccount: false };
 
   handleLoginAttempt() {
-    this.props.signIn();
+    this.props.signIn(this.state.email, this.state.password);
   }
   
   render() {
-    const { email, password } = this.state;
-    const { inputStyle, inputSectionStyle, labelStyle, buttonStyle, footerStyle } = styles;
+    const { email, password, createAccount } = this.state;
+    const { inputStyle, inputSectionStyle, labelStyle, buttonStyle, footerStyle, createAccountStyle, errorStyle } = styles;
+    const { error } = this.props;
+
+    if (createAccount) {
+      return <CreateAccount backToSignIn={() => this.setState({ createAccount: false })}/>
+    }
 
     return (
       <View style={{ display: 'flex', flex: 1, backgroundColor: '#36393f' }}>
@@ -25,7 +30,7 @@ class Login extends Component {
           <TextInput 
             style={inputStyle} 
             value={email} 
-            onChange={(e) => this.setState({ email: e.target.value })} 
+            onChangeText={text => this.setState({ email: text })}
           />
         </View>
 
@@ -35,13 +40,17 @@ class Login extends Component {
             style={inputStyle} 
             value={password}
             secureTextEntry={true}
-            onChange={(e) => this.setState({ password: e.target.value })} 
+            onChangeText={text => this.setState({ password: text })} 
           />
         </View>
 
+        <Text style={errorStyle}>{error}</Text>
+
         <View style={footerStyle}>
-          <Button onClick={() => this.handleLoginAttempt()} text="Log In" style={buttonStyle}/>
+          <Button disabled={!email.length || !password.length} onClick={() => this.handleLoginAttempt()} text="Log In" style={buttonStyle}/>
         </View>
+
+        <Text onPress={() => this.setState({ createAccount: true })} style={createAccountStyle}>Create Account</Text>
       </View>
     );
   }
@@ -75,11 +84,24 @@ const styles = {
     justifyContent: 'flex-end',
     marginBottom: 40,
     alignItems: 'center'
+  },
+  createAccountStyle: {
+    color: 'white',
+    textDecorationLine: 'underline',
+    fontSize: 18,
+    alignSelf: 'center',
+    marginBottom: 15
+  },
+  errorStyle: {
+    color: 'red',
+    fontSize: 18,
+    alignSelf: 'center'
   }
 }
 
 const mapStateToProps = ({ AuthReducer }) => {
-  return { signedIn: AuthReducer.signedIn };
+  const { signedIn, error } = AuthReducer;
+  return { signedIn, error };
 };
 
 export default connect(mapStateToProps, { signIn })(Login);

@@ -5,9 +5,13 @@ class Button extends Component {
   
 
   render() {
-    const { buttonStyle, buttonTextStyle } = styles;
+    const { buttonStyle, buttonTextStyle, disabledStyle } = styles;
+    const { disabled } = this.props;
+    let buttonStyles = [buttonStyle, this.props.style];
+    if (disabled) buttonStyles.push(disabledStyle);
+    
     return (
-      <View onTouchEnd={() => this.props.onClick()} style={[buttonStyle, this.props.style]}>
+      <View onTouchEnd={() => { if(!disabled) this.props.onClick() }} style={buttonStyles}>
         <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white', true)}>
           <View>
             <Text style={buttonTextStyle}>{this.props.children || this.props.text}</Text>
@@ -33,6 +37,10 @@ styles = {
     color: 'white',
     textAlign: 'center',
     fontSize: 24
+  },
+  disabledStyle: {
+    backgroundColor: 'gray',
+    borderColor: 'gray'
   }
 }
 
