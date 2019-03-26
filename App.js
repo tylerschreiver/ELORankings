@@ -3,32 +3,44 @@ import { View } from 'react-native';
 import { Provider } from 'react-redux';
 import Home from './src/screens/Home';
 import store from './src/store';
-import { Router, Scene, Actions } from 'react-native-router-flux'
-import Events from './src/screens/Events'
-import Leaderboard from './src/screens/Leaderboard'
-import Profile from './src/screens/Profile'
-import { Navbar, SideMenuContent } from './src/components';
-import SideMenu from 'react-native-side-menu';
+// import { Router, Scene, Actions } from 'react-native-router-flux'
+// import Events from './src/screens/Events'
+// import Leaderboard from './src/screens/Leaderboard'
+// import Profile from './src/screens/Profile'
+// import { Navbar, SideMenuContent } from './src/components';
+// import SideMenu from 'react-native-side-menu';
+import firebase from 'react-native-firebase';
 
 export default class App extends Component {
-  changeSection(section) {
-    switch(section) {
-      case 'Events': 
-        Actions.Events();
-        break;
-      case 'Leaderboard': 
-        Actions.Leaderboard();
-        break;
-      case 'Profile': 
-        Actions.Profile();
-        break;
-    }
+  componentWillMount() {
+    firebase.initializeApp({
+      apiKey: "AIzaSyAW8K-5Pq5QywrZCxEQWLq6rajCgclUOYg",
+      authDomain: "elo-rankings-531a9.firebaseapp.com",
+      databaseURL: "https://elo-rankings-531a9.firebaseio.com",
+      projectId: "elo-rankings-531a9",
+      storageBucket: "elo-rankings-531a9.appspot.com",
+      messagingSenderId: "791422824537"
+    });
   }
+
+  // changeSection(section) {
+  //   switch(section) {
+  //     case 'Events': 
+  //       Actions.Events();
+  //       break;
+  //     case 'Leaderboard': 
+  //       Actions.Leaderboard();
+  //       break;
+  //     case 'Profile': 
+  //       Actions.Profile();
+  //       break;
+  //   }
+  // }
 
   render() {
     const { navbarStyle, homeStyle, sectionStyle } = styles;
 
-    const sideMenu = <SideMenuContent />;
+    // const sideMenu = <SideMenuContent />;
     return (
       <Provider store={ store }>
           <View style={homeStyle}>

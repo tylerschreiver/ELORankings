@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "791422824537",
+    "firebase_url": "https://elo-rankings-531a9.firebaseio.com",
+    "project_id": "elo-rankings-531a9",
+    "storage_bucket": "elo-rankings-531a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791422824537:android:493d659a50fbf0f8",
+        "android_client_info": {
+          "package_name": "com.elorankings"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791422824537-e5j9s86t6jba4njdj6o3r6s7b6im769b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGaTaFG8c05h72JMchBZASryVeJqFrkfA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
