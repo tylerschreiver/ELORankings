@@ -1,7 +1,7 @@
 import { user_signed_in, user_signed_out, sign_in_fail } from '../actions/types';
 
 const INITIAL_STATE = {
-  signedIn: false,
+  signedIn: true, // TODO don't leave this like this
   error: ''
 };
 

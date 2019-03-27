@@ -1,24 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'; 
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Picker } from 'react-native';
 import { Dropdown } from '../components';
 import { getEvents } from '../actions/EventActions';
+import * as states from '../mockData/states.json';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
 class Events extends Component {
 
-  state = { timeFrame: 'Today', selectedRegions: [] };
+  state = { timeFrame: 'All', selectedRegions: [] };
 
   timeFrames = [
-    { key: "0", name: "Today" }, 
-    { key: "1", name: "This Week" }, 
-    { key: "2", name: "This Month" },
-    { key: "3", name: "All" } 
-  ];
-
-  regions = [
-    { key: 0, name: "Kentucky" },
-    { key: 1, name: "Ohio" },
-    { key: 2, name: "Indiana" }
+    { id: "0", name: "Today" }, 
+    { id: "1", name: "This Week" }, 
+    { id: "2", name: "This Month" },
+    { id: "3", name: "All" } 
   ];
 
   componentDidMount() {
@@ -35,7 +31,6 @@ class Events extends Component {
         return (
           <View style={eventStyle} key={event.id}>
             <Text style={{ color: '#cccccc' }}>{event.name}</Text>
-
           </View>
         );
       })
@@ -49,7 +44,29 @@ class Events extends Component {
         <Text style={headerStyle}>Events</Text>
 
         <View style={{ flexDirection: 'row', marginRight: 10, marginLeft: 10, justifyContent: 'space-around', marginBottom: 10 }}>
-          <Dropdown
+
+          <SectionedMultiSelect 
+            uniqueKey="id" 
+            items={this.timeFrames} 
+            selectedItems={this.state.timeFrame} 
+            selectText="Time Frame"
+            showChips={false}
+            single={true}
+            onSelectedItemsChange={(items) => this.setState({timeFrame: items})}
+            styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5 }, selectToggleText: { color: 'white', textAlign: 'center' }, container: { height: 'auto' } }}          
+          />
+
+          <SectionedMultiSelect 
+            uniqueKey="id" 
+            items={states.default} 
+            selectedItems={this.state.regions} 
+            selectText="Regions"
+            showChips={false}
+            alwaysShowSelectText={true}
+            onSelectedItemsChange={(items) => this.setState({regions: items})}
+            styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5 }, selectToggleText: { color: 'white', textAlign: 'center' } }}
+            />
+          {/* <Dropdown
             placeholder="Time Frame"
             items={this.timeFrames}
             multiselect={false}
@@ -62,7 +79,7 @@ class Events extends Component {
             multiselect={true}
             dropdownStyle={{ width: 120 }}
             onChange={(sr) => this.setState({ selectedRegions: sr })}
-          />
+          /> */}
         </View>
 
         <ScrollView>
