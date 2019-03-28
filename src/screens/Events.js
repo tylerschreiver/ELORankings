@@ -66,20 +66,6 @@ class Events extends Component {
             onSelectedItemsChange={(items) => this.setState({regions: items})}
             styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5 }, selectToggleText: { color: 'white', textAlign: 'center' } }}
             />
-          {/* <Dropdown
-            placeholder="Time Frame"
-            items={this.timeFrames}
-            multiselect={false}
-            dropdownStyle={{ width: 120 }}
-            onChange={(tf) => this.setState({ timeFrame: tf })}
-          />
-          <Dropdown
-            placeholder="Region"
-            items={this.regions}
-            multiselect={true}
-            dropdownStyle={{ width: 120 }}
-            onChange={(sr) => this.setState({ selectedRegions: sr })}
-          /> */}
         </View>
 
         <ScrollView>
