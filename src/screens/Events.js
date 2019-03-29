@@ -1,44 +1,98 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'; 
 import { View, Text, ScrollView, Picker } from 'react-native';
-import { Dropdown } from '../components';
 import { getEvents } from '../actions/EventActions';
 import * as states from '../mockData/states.json';
+import { EventView } from '../components'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
 class Events extends Component {
 
-  state = { timeFrame: 'All', selectedRegions: [] };
+  state = { timeFrame: ['All'], regions: [], filteredEvents: [] };
+
+  dates = {
+    today: new Date(),
+    week: new Date(),
+    month: new Date()
+  }
+
+  hasChecked = false;
 
   timeFrames = [
     { id: "0", name: "Today" }, 
     { id: "1", name: "This Week" }, 
     { id: "2", name: "This Month" },
-    { id: "3", name: "All" } 
+    { id: "3", name: "All" }
   ];
 
   componentDidMount() {
     this.props.getEvents();
-    console.log('events')
+
+    const today = new Date();
+    const dayLength = 24 * 60 * 60 * 1000;
+    this.dates.today = new Date(today.getTime() + dayLength);
+    this.dates.week = new Date(today.getTime() + dayLength * 7);
+    this.dates.month = new Date(today.getTime() + dayLength * 30);
   }
 
-  renderEvents() {
-    const { eventStyle } = styles;
-    if (!this.props.events) return null;
-
-    else {
-      return this.props.events.map((event) => {
-        return (
-          <View style={eventStyle} key={event.id}>
-            <Text style={{ color: '#cccccc' }}>{event.name}</Text>
-          </View>
-        );
-      })
+  componentDidUpdate(props) {
+    const { filteredEvents, regions, timeFrame } = this.state;
+    if (filteredEvents.length === 0 && regions.length === 0 && timeFrame[0] === 'All') {
+      this.setState({ filteredEvents: props.events });
     }
   }
 
+  renderEvents() {
+    if (this.state.filteredEvents.length === 0) return null;
+
+    else {
+      return this.state.filteredEvents.map((event) => {
+        return <EventView event={event} key={event.id} />;
+      });
+    }
+  }
+
+  getRegionName(id) {
+    for (let key in states) {
+      if (states[key].id === id) return states[key].name;
+    }
+  }
+
+  isInTimeFrame(event, timeFrame) {
+    const time = new Date(event.activeTimeslots[0]['end'].toLocaleDateString());
+    switch (timeFrame) {
+      case 'All': return true;
+      case 'This Month': return this.dates.month.getTime() > time.getTime();
+      case 'This Week': return this.dates.week.getTime() > time.getTime();
+      case 'Today': return this.dates.today.getTime() > time.getTime();
+    }
+  }
+
+  filter(regions, timeFrameId) {
+    let filteredEvents = this.state.timeFrame || this.state.regions 
+      ? this.state.filteredEvents 
+      : this.props.events;
+      
+    if (timeFrameId !== null) {
+      let timeFrame = [this.timeFrames[timeFrameId].name];
+      this.setState({ timeFrame });
+      filteredEvents = filteredEvents.filter((event) => this.isInTimeFrame(event, timeFrame[0]));
+    }
+    
+    if (regions !== null) {
+      this.setState({regions})
+      let selectedRegionNames = regions.map((region) => this.getRegionName(region));
+      filteredEvents = filteredEvents.filter((event) => {
+        let eventRegion = event.region.region;
+        return selectedRegionNames.indexOf(eventRegion) !== -1;
+      });
+    }
+
+    this.setState({ filteredEvents });
+  }
+
   render() {
-    const { eventSection, eventsPage, headerStyle } = styles;
+    const { eventsPage, headerStyle } = styles;
     return (
       <View style={eventsPage}>
         <Text style={headerStyle}>Events</Text>
@@ -52,7 +106,7 @@ class Events extends Component {
             selectText="Time Frame"
             showChips={false}
             single={true}
-            onSelectedItemsChange={(items) => this.setState({timeFrame: items})}
+            onSelectedItemsChange={(timeFrame) => this.filter(null, timeFrame)}
             styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5 }, selectToggleText: { color: 'white', textAlign: 'center' }, container: { height: 'auto' } }}          
           />
 
@@ -63,7 +117,7 @@ class Events extends Component {
             selectText="Regions"
             showChips={false}
             alwaysShowSelectText={true}
-            onSelectedItemsChange={(items) => this.setState({regions: items})}
+            onSelectedItemsChange={(regions) => this.filter(regions, null)}
             styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5 }, selectToggleText: { color: 'white', textAlign: 'center' } }}
             />
         </View>
