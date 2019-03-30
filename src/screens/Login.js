@@ -47,7 +47,11 @@ class Login extends Component {
         <Text style={errorStyle}>{error}</Text>
 
         <View style={footerStyle}>
-          <Button disabled={!email.length || !password.length} onClick={() => this.handleLoginAttempt()} text="Log In" style={buttonStyle}/>
+          <Button disabled={!email.length || !password.length} 
+            onClick={() => this.handleLoginAttempt()} 
+            text="Log In" 
+            style={buttonStyle}
+          />
         </View>
 
         <Text onPress={() => this.setState({ createAccount: true })} style={createAccountStyle}>Create Account</Text>

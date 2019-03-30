@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'; 
+
 import { View, Text } from 'react-native';
+import { setSelectedEvent } from '../actions/EventActions';
+import { Actions } from 'react-native-router-flux';
 
 
-class EventView extends Component {
+class EventViewComponent extends Component {
+
+  selectEvent() {
+    this.props.setSelectedEvent(this.props.event);
+    Actions.EventScreen();
+  }
 
   render() {
     const { eventStyle, eventTextStyle } = styles;
     const { event } = this.props;
 
     return (
-      <View style={eventStyle}>
+      <View onTouchEnd={() => this.selectEvent()} style={eventStyle}>
         <View style={{ flex:1, flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={eventTextStyle}>{event.name}</Text>
           <Text style={eventTextStyle}>{event.region.region}</Text>
@@ -41,4 +50,5 @@ const styles = {
   }
 }
 
+const EventView = connect(null, { setSelectedEvent })(EventViewComponent)
 export { EventView };

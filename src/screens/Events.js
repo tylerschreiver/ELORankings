@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'; 
-import { View, Text, ScrollView, Picker } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
+
 import { getEvents } from '../actions/EventActions';
 import * as states from '../mockData/states.json';
-import { EventView } from '../components'
+import { EventView, Header } from '../components'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
 class Events extends Component {
@@ -92,10 +93,11 @@ class Events extends Component {
   }
 
   render() {
-    const { eventsPage, headerStyle } = styles;
+    const { eventsPage } = styles;
     return (
       <View style={eventsPage}>
-        <Text style={headerStyle}>Events</Text>
+        {/* <Text style={headerStyle}>Events</Text> */}
+        <Header headerText="Events" />
 
         <View style={{ flexDirection: 'row', marginRight: 10, marginLeft: 10, justifyContent: 'space-around', marginBottom: 10 }}>
 
@@ -136,12 +138,7 @@ const styles = {
     width: '100%',
     backgroundColor: '#36393f'
   },
-  headerStyle: {
-    fontSize: 20,
-    color: 'white',
-    textAlign: 'center',
-    marginBottom: 15
-  },
+
   eventSection: {
     margin: 10,
     padding: 10
