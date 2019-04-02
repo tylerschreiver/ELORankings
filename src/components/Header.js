@@ -10,7 +10,6 @@ class Header extends Component {
   render() {
     const { headerStyle, headerTextStyle } = styles;
     const { headerText } = this.props;
-    console.log(this.props);
     return (
       <View style={headerStyle}>
         <Text style={headerTextStyle}>{headerText}</Text>

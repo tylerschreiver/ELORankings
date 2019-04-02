@@ -7,6 +7,7 @@ class Button extends Component {
   render() {
     const { buttonStyle, buttonTextStyle, disabledStyle } = styles;
     const { disabled } = this.props;
+
     let buttonStyles = [buttonStyle, this.props.style];
     if (disabled) buttonStyles.push(disabledStyle);
     
@@ -23,7 +24,7 @@ class Button extends Component {
   }
 }
 
-styles = {
+const styles = {
   buttonStyle: {
     width: '100%',
     borderColor: 'rebeccapurple',
@@ -42,6 +43,6 @@ styles = {
     backgroundColor: 'gray',
     borderColor: 'gray'
   }
-}
+};
 
 export { Button };
