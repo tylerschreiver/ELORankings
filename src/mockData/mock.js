@@ -3,7 +3,7 @@ import faker from 'faker'
 export const generateEvents = () => {
     let events = [];
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
         let id = faker.random.uuid();
         let region = {id: faker.random.uuid(), region: faker.address.state()}
         let name = "Event " + i;

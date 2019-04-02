@@ -1,5 +1,5 @@
 import { generateEvents } from '../mockData/mock';
-import { events_requested } from './types';
+import { events_requested, event_selected } from './types';
 
 export const getEvents = () => {
   // return async (dispatch, getState) => {
@@ -12,3 +12,7 @@ export const getEvents = () => {
   //   }
   // }
 };
+
+export const setSelectedEvent = (event) => {
+  return { type: event_selected, payload: event }
+}

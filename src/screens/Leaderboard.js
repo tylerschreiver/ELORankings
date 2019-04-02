@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import { BasePage } from '../components';
 
 class Leaderboard extends Component {
 
   render() {
     return (
-      <View>
-        <Text>Leaderboard</Text>
-      </View>
+      <BasePage headerText="Leaderboard">
+      
+      </BasePage>
     );
   }
 }

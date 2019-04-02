@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { View, Text, Animated } from 'react-native';
-import { Navbar, SideMenuContent } from '../components';
+import { Router, Scene, Actions } from 'react-native-router-flux';
 import SideMenu from 'react-native-side-menu';
 import { connect } from 'react-redux'; 
+
 import { signOut } from '../actions/AuthActions';
-import { Router, Scene, Actions } from 'react-native-router-flux'
+import { Navbar, SideMenuContent } from '../components';
+
 import Events from './Events';
 import Profile from './Profile';
 import Login from './Login';
+import EventScreen from './EventScreen';
 import Leaderboard from './Leaderboard';
 
 class Home extends Component {
@@ -24,15 +27,6 @@ class Home extends Component {
       this.setState({ section: 'Events' });
     }
   }
-
-  // renderSection() {
-  //   switch (this.state.section) {
-  //     case 'Events': return <Events />;
-  //     case 'Leaderboard': return <Leaderboard />;
-  //     case 'Profile': return <Profile />;
-  //     default: return <Events />
-  //   }
-  // }
 
   changeSection(section) {
     switch(section) {
@@ -72,6 +66,7 @@ class Home extends Component {
                 <Scene key="Events" component={Events} initial="true" />
                 <Scene key="Leaderboard" component={Leaderboard} />
                 <Scene key="Profile" component={Profile} />
+                <Scene key="EventScreen" component={EventScreen} />
             </Scene>
           </Router>
           <Navbar navigate={(section) => this.changeSection(section)} style={navbarStyle}/>

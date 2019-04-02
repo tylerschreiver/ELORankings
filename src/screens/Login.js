@@ -6,7 +6,7 @@ import { signIn } from '../actions/AuthActions';
 import CreateAccount from './CreateAccount';
 
 class Login extends Component {
-  state = { email: '', password: '', createAccount: false };
+  state = { email: 'tyschreiver+2@gmail.com', password: 'Marth12#', createAccount: false };
 
   handleLoginAttempt() {
     this.props.signIn(this.state.email, this.state.password);
@@ -47,7 +47,11 @@ class Login extends Component {
         <Text style={errorStyle}>{error}</Text>
 
         <View style={footerStyle}>
-          <Button disabled={!email.length || !password.length} onClick={() => this.handleLoginAttempt()} text="Log In" style={buttonStyle}/>
+          <Button disabled={!email.length || !password.length} 
+            onClick={() => this.handleLoginAttempt()} 
+            text="Log In" 
+            style={buttonStyle}
+          />
         </View>
 
         <Text onPress={() => this.setState({ createAccount: true })} style={createAccountStyle}>Create Account</Text>
@@ -70,7 +74,8 @@ const styles = {
     width: '100%',
     color: 'white',
     backgroundColor: '#2f3136',
-    paddingLeft: 10
+    paddingLeft: 10,
+    fontSize: 16
   },
   labelStyle: {
     color: 'white'
