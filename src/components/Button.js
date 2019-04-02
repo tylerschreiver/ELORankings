@@ -16,7 +16,6 @@ class Button extends Component {
         <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white', true)}>
           <View>
             <Text style={buttonTextStyle}>{this.props.children || this.props.text}</Text>
-
           </View>
         </TouchableNativeFeedback>
       </View>
@@ -32,7 +31,8 @@ const styles = {
     backgroundColor: 'rebeccapurple',
     borderRadius: 5,
     paddingTop: 5,
-    paddingBottom: 5
+    paddingBottom: 5,
+    justifyContent: 'center'
   },
   buttonTextStyle: {
     color: 'white',
