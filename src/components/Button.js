@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableNativeFeedback } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 
 class Button extends Component {
   
@@ -13,11 +13,11 @@ class Button extends Component {
     
     return (
       <View onTouchEnd={() => { if(!disabled) this.props.onClick() }} style={buttonStyles}>
-        <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white', true)}>
+        <TouchableOpacity>
           <View>
             <Text style={buttonTextStyle}>{this.props.children || this.props.text}</Text>
           </View>
-        </TouchableNativeFeedback>
+        </TouchableOpacity>
       </View>
     );
   }
