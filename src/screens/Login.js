@@ -22,7 +22,7 @@ class Login extends Component {
     }
 
     return (
-      <View style={{ display: 'flex', flex: 1, backgroundColor: '#36393f' }}>
+      <View style={{ display: 'flex', flex: 1, backgroundColor: '#36393f', justifyContent: 'space-between' }}>
         <Text style={{ fontSize: 30, color: 'white', textAlign: 'center', marginTop: 100 }}>Sign In</Text>
 
         <View style={inputSectionStyle}>
@@ -74,6 +74,7 @@ const styles = {
     width: '100%',
     color: 'white',
     backgroundColor: '#2f3136',
+    padding: 10,
     paddingLeft: 10,
     fontSize: 16
   },
