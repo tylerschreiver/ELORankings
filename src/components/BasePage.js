@@ -6,7 +6,7 @@ class BasePage extends Component {
 
   render() {
     return (
-      <View style={{ height: '100%', width: '100%', backgroundColor: '#36393f' }}>
+      <View style={{ height: '100%', width: '100%', backgroundColor: '#36393f'}}>
         <Header headerText={this.props.headerText}/>
         {this.props.children}
       </View>

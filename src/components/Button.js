@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableNativeFeedback } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 
 class Button extends Component {
   
@@ -13,11 +13,11 @@ class Button extends Component {
     
     return (
       <View onTouchEnd={() => { if(!disabled) this.props.onClick() }} style={buttonStyles}>
-        <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white', true)}>
+        <TouchableOpacity>
           <View>
             <Text style={buttonTextStyle}>{this.props.children || this.props.text}</Text>
           </View>
-        </TouchableNativeFeedback>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -32,7 +32,10 @@ const styles = {
     borderRadius: 5,
     paddingTop: 5,
     paddingBottom: 5,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8
   },
   buttonTextStyle: {
     color: 'white',
@@ -43,6 +46,6 @@ const styles = {
     backgroundColor: 'gray',
     borderColor: 'gray'
   }
-};
+}
 
-export { Button };
+export { Button }
