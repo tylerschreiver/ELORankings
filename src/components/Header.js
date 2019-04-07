@@ -25,7 +25,6 @@ const styles = {
     paddingTop: 15,
     paddingBottom: 15,
     marginBottom: 15,
-    marginTop: 10,
     borderBottomWidth: 1,
     borderBottomColor: 'black',
     backgroundColor: '#4c4f54'
