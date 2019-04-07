@@ -12,6 +12,7 @@ import Profile from './Profile';
 import Login from './Login';
 import EventScreen from './EventScreen';
 import Leaderboard from './Leaderboard';
+import SetScreen from './SetScreen';
 
 class Home extends Component {
   state = { section: '' };
@@ -67,6 +68,7 @@ class Home extends Component {
                 <Scene key="Leaderboard" component={Leaderboard} />
                 <Scene key="Profile" component={Profile} />
                 <Scene key="EventScreen" component={EventScreen} />
+                <Scene key="Set" component={SetScreen} />
             </Scene>
           </Router>
           <Navbar navigate={(section) => this.changeSection(section)} style={navbarStyle}/>

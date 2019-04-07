@@ -3,6 +3,7 @@ import { View, Text, ScrollView } from 'react-native';
 import { connect } from 'react-redux'; 
 
 import { BasePage, Button, QRCodeComponent, QRScanner } from '../components';
+import { Actions } from 'react-native-router-flux';
 
 class EventScreen extends Component {
 
@@ -60,9 +61,13 @@ class EventScreen extends Component {
                 style={twoButtonStyle}
                 onClick={() => this.setState({ showCreateMatchQR: true })} 
               />
-              <Button text="Join Match" 
+              {/* <Button text="Join Match" 
                 style={twoButtonStyle}
                 onClick={() => this.setState({ showFindMatch: true })} 
+              /> */}
+              <Button text="Join Match" 
+                style={twoButtonStyle}
+                onClick={() => Actions.Set()} 
               />
             </View>
 
@@ -88,11 +93,6 @@ class EventScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ EventsReducer }) => {
-  const { selectedEvent } = EventsReducer;
-  return { selectedEvent };
-}
-
 const styles = {
   buttonStyle: {
     width: '80%',
@@ -115,5 +115,9 @@ const styles = {
   }
 }
 
+const mapStateToProps = ({ EventsReducer }) => {
+  const { selectedEvent } = EventsReducer;
+  return { selectedEvent };
+}
 
 export default connect(mapStateToProps)(EventScreen);
