@@ -23,4 +23,4 @@ export const createAccount = (email, password) => {
     .then(() => console.log('create'))
     .catch(() => console.log('fail'));
   }
-}
+};
