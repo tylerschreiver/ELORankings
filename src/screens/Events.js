@@ -43,22 +43,13 @@ class Events extends Component {
     }
   }
 
-  renderEvents() {
-    if (this.state.filteredEvents.length === 0) return null;
-
-    else {
-      return this.state.filteredEvents.map((event) => {
-        return <EventView event={event} key={event.id} />;
-      });
-    }
-  }
-
+  
   getRegionName(id) {
     for (let key in states) {
       if (states[key].id === id) return states[key].name;
     }
   }
-
+  
   isInTimeFrame(event, timeFrame) {
     const time = new Date(event.activeTimeslots[0]['end'].toLocaleDateString());
     switch (timeFrame) {
@@ -68,12 +59,12 @@ class Events extends Component {
       case 'Today': return this.dates.today.getTime() > time.getTime();
     }
   }
-
+  
   filter(regions, timeFrameId) {
     let filteredEvents = this.state.timeFrame || this.state.regions 
-      ? this.state.filteredEvents 
-      : this.props.events;
-      
+    ? this.state.filteredEvents 
+    : this.props.events;
+    
     if (timeFrameId !== null) {
       let timeFrame = [this.timeFrames[timeFrameId].name];
       this.setState({ timeFrame });
@@ -88,10 +79,20 @@ class Events extends Component {
         return selectedRegionNames.indexOf(eventRegion) !== -1;
       });
     }
-
+    
     this.setState({ filteredEvents });
   }
 
+  renderEvents() {
+    if (this.state.filteredEvents.length === 0) return null;
+
+    else {
+      return this.state.filteredEvents.map((event) => {
+        return <EventView event={event} key={event.id} />;
+      });
+    }
+  }
+  
   render() {
     const { eventsPage } = styles;
     return (
@@ -109,7 +110,7 @@ class Events extends Component {
             showChips={false}
             single={true}
             onSelectedItemsChange={(timeFrame) => this.filter(null, timeFrame)}
-            styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5 }, selectToggleText: { color: 'white', textAlign: 'center' }, container: { height: 'auto' } }}          
+            styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' }, container: { height: 'auto' } }}          
           />
 
           <SectionedMultiSelect 
@@ -120,7 +121,7 @@ class Events extends Component {
             showChips={false}
             alwaysShowSelectText={true}
             onSelectedItemsChange={(regions) => this.filter(regions, null)}
-            styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5 }, selectToggleText: { color: 'white', textAlign: 'center' } }}
+            styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
             />
         </View>
 
