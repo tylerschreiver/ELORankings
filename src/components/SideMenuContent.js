@@ -14,6 +14,7 @@ class SideMenuContentComponent extends Component {
   }
 
   selectEvent(event) {
+    console.log('select')
     this.props.setSelectedEvent(event);
     Actions.EventScreen();
   }
@@ -22,7 +23,7 @@ class SideMenuContentComponent extends Component {
     if (!this.props.viewedEvents || this.props.viewedEvents.length === 0) return null;
     return this.props.viewedEvents.map(event => {
       return (
-        <View onTouchEnd={() => this.selectEvent(event)} style={styles.viewedEventStyle}>
+        <View key={event.id} onTouchEnd={() => this.selectEvent(event)} style={styles.viewedEventStyle}>
           <Text style={{ color: 'white', fontSize: 14 }}>{event.name}</Text>
         </View>
       );
@@ -32,12 +33,12 @@ class SideMenuContentComponent extends Component {
   render() {
     const { menuStyle, logoutStyle, logoutWrapperStyle, headingStyle } = styles;
     return (  
-      <ScrollView contentContainerStyle={menuStyle} scrollsToTop={false}>
+      <ScrollView nestedScrollEnabled={true} contentContainerStyle={menuStyle} scrollsToTop={false}>
         <View style={{ flex: 1 }}>
 
           <View>
             <Text style={headingStyle}>Recently Viewed Events</Text>
-            <View style={{ height: 'auto', flex: 1, borderColor: 'white', borderWidth: 1, borderRadius: 5 }}>
+            <View onTouchEnd={() => console.log("woeijf")} style={{ height: 'auto', flex: 1, borderColor: 'white', borderWidth: 1, borderRadius: 5 }}>
               {this.renderViewedEvents()}
             </View>
           </View>
@@ -77,14 +78,13 @@ const styles = {
     alignSelf: 'center'
   },
   headingStyle: {
-    flex: 1,
     textAlign: 'center',
     color: 'white',
     fontSize: 14,
     margin: 5,
     marginTop: 10,
     marginBottom: 10,
-    minHeight: 14
+    minHeight: 14,
   },
   viewedEventStyle: {
     minHeight: 34,
@@ -92,6 +92,8 @@ const styles = {
     borderBottomWidth: 1,
     borderColor: 'black',
     padding: 10,
+    width: '100%',
+    height: 'auto',
     alignItems: 'center'
   }
 }

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { connect } from 'react-redux'; 
+import { Actions } from 'react-native-router-flux';
 
 import { BasePage, Button, QRCodeComponent, QRScanner } from '../components';
+import { eventSignIn, eventSignOut } from '../actions/EventActions';
 
 class EventScreen extends Component {
 
   state = { showSignInQR: false, showCreateMatchQR: false, showFindMatch: false, info: "" };
-
 
   renderQRScanner() {
     return (
@@ -25,27 +26,37 @@ class EventScreen extends Component {
     return (
       <QRCodeComponent value={qrValue} 
         text={qrText}
-        onClose={() => this.setState({ showSignInQR: false, showCreateMatchQR: false })}
+        onClose={() => {
+          console.log("oqwopidj")
+          this.setState({ showSignInQR: false, showCreateMatchQR: false })}}
       />
     );
   }
 
   render() {
     const { buttonStyle, eventSectionStyle, twoButtonStyle } = styles;
-    const { selectedEvent } = this.props;
+    const { selectedEvent, signedInEvent } = this.props;
     const { showSignInQR, showCreateMatchQR, showFindMatch } = this.state;
 
     if (!selectedEvent) return null;
     if (showFindMatch) return this.renderQRScanner();
     if (showSignInQR || showCreateMatchQR) return this.renderQRCode(); 
-
+    
     return (
-      <BasePage headerText={selectedEvent.name}>
+      <BasePage leftIcon={{ name: "chevron-left", onPress: () => Actions.pop() }} headerText={selectedEvent.name}>
         <ScrollView>
           <View style={{ alignItems: 'center', width: '100%' }}>
           
-            <Button onClick={() => this.setState({ showSignInQR: true })} 
-              text="Sign In / Leave Event" 
+            <Button onClick={
+              signedInEvent !== selectedEvent 
+                ? () => {
+                  console.log("sign in ");
+                  this.props.eventSignIn(selectedEvent);
+                  this.setState({ showSignInQR: true });
+                }
+                : () => this.props.eventSignOut()
+            }
+              text={signedInEvent === selectedEvent ? 'Leave Event' : 'Sign into Event'} 
               style={buttonStyle} 
             />
             
@@ -55,16 +66,18 @@ class EventScreen extends Component {
               <Text>Link</Text>
             </View>
 
-            <View style={{ flex: 1, flexDirection: 'row', width: '80%', height: 'auto', justifyContent: 'space-between' }}>
-              <Button text="Create Match" 
-                style={twoButtonStyle}
-                onClick={() => this.setState({ showCreateMatchQR: true })} 
-              />
-              <Button text="Join Match" 
-                style={twoButtonStyle}
-                onClick={() => this.setState({ showFindMatch: true })} 
-              />
-            </View>
+            { this.props.signedInEvent === this.props.selectedEvent &&
+              <View style={{ flex: 1, flexDirection: 'row', width: '80%', height: 'auto', justifyContent: 'space-between' }}>
+                <Button text="Create Match" 
+                  style={twoButtonStyle}
+                  onClick={() => this.setState({ showCreateMatchQR: true })} 
+                />
+                <Button text="Join Match" 
+                  style={twoButtonStyle}
+                  onClick={() => Actions.Set()} 
+                />
+              </View>
+            }
 
 
             <View style={{ flex: 1, flexDirection: 'row' }}></View>
@@ -73,12 +86,12 @@ class EventScreen extends Component {
               onClick={() => console.log("clicked a thingy") } 
             />
 
-            <Button
+            {/* <Button
               text="crash app" 
               // text="TO's and Assistants" 
               style={buttonStyle}
               // onClick={() => console.log("clicked a thingy") } 
-            />
+            /> */}
 
             <Text>{this.state.info}</Text>
           </View>
@@ -86,11 +99,6 @@ class EventScreen extends Component {
       </BasePage>
     );
   }
-}
-
-const mapStateToProps = ({ EventsReducer }) => {
-  const { selectedEvent } = EventsReducer;
-  return { selectedEvent };
 }
 
 const styles = {
@@ -115,5 +123,9 @@ const styles = {
   }
 }
 
+const mapStateToProps = ({ EventsReducer }) => {
+  const { selectedEvent, signedInEvent } = EventsReducer;
+  return { selectedEvent, signedInEvent };
+}
 
-export default connect(mapStateToProps)(EventScreen);
+export default connect(mapStateToProps, { eventSignIn, eventSignOut })(EventScreen);

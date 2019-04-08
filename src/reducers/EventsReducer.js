@@ -1,9 +1,10 @@
-import { events_requested, event_selected, event_viewed } from '../actions/types';
+import { events_requested, event_selected, event_sign_in, event_sign_out } from '../actions/types';
 
 const INITIAL_STATE = {
   events: [],
   selectedEvent: null,
-  viewedEvents: []
+  viewedEvents: [],
+  signedInEvent: null
 }
 
 const EventsReducer = (state = INITIAL_STATE, action) => {
@@ -13,6 +14,10 @@ const EventsReducer = (state = INITIAL_STATE, action) => {
     case event_selected: 
       const events = [ action.payload, ...state.viewedEvents ].slice(0,3);
       return { ...state, selectedEvent: action.payload, viewedEvents: events };
+    case event_sign_in: 
+      return { ...state, signedInEvent: action.payload };
+    case event_sign_out: 
+      return { ...state, signedInEvent: null };
     default: return state;
   }
 }

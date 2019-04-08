@@ -11,16 +11,24 @@ class Header extends Component {
 
   render() {
     const { headerStyle, headerTextStyle, iconStyle } = styles;
-    const { headerText } = this.props;
+    const { headerText, leftIcon, rightIcon } = this.props;
     return (
       <View style={headerStyle}>
-        {/* <View style={iconStyle}> */}
-          <Icon iconStyle={iconStyle} color="white" name="chevron-left" type="font-awesome" onPress={() => Actions.pop()} />
-        {/* </View> */}
+        <Icon iconStyle={iconStyle} 
+          color="white" 
+          name={leftIcon ? leftIcon.name : ''} 
+          type="font-awesome"
+          onPress={() => { if(leftIcon) leftIcon.onPress()}}  
+        />
+
         <Text style={headerTextStyle}>{headerText}</Text>
-        {/* <View style={iconStyle}> */}
-          <Icon iconStyle={iconStyle} color="white" name="ellipsis-v" type="font-awesome" />
-        {/* </View> */}
+
+        <Icon iconStyle={iconStyle} 
+          color="white" 
+          name={rightIcon ? rightIcon.name : ''} 
+          onPress={() => { if(rightIcon) rightIcon.onPress()}}
+          type="font-awesome" 
+        />
       </View>
     );
   }
@@ -34,8 +42,7 @@ const styles = {
     flexDirection: 'row',
     paddingTop: 15,
     paddingBottom: 15,
-    marginTop: 15,
-    marginBottom: 10,
+    marginBottom: 15,
     borderBottomWidth: 1,
     borderBottomColor: 'black',
     backgroundColor: '#4c4f54'
