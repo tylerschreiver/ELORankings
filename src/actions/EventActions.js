@@ -11,8 +11,8 @@ export const setSelectedEvent = (event) => {
   return { type: event_selected, payload: event }
 }
 
-export const eventSignIn = (id) => {
-  return { type: event_sign_in, payload: id }
+export const eventSignIn = (event) => {
+  return { type: event_sign_in, payload: event }
 }
 
 export const eventSignOut = () => { 

@@ -1,34 +1,51 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Platform, Dimensions } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { Actions } from 'react-native-router-flux';
+import isIphoneX from './IsIphoneX';
 
 class Header extends Component {
+  isIphoneX = false;
+
+  UNSAFE_componentWillMount() {
+    const dim = Dimensions.get('window');
+    this.isIphoneX = isIphoneX(dim, Platform);
+  }
 
   shouldComponentUpdate(nextProps) {
     return this.props.headerText !== nextProps.headerText;
   }
 
   render() {
-    const { headerStyle, headerTextStyle, iconStyle } = styles;
+    const { headerStyle, xHeaderStyle, headerTextStyle, iconStyle, iconHolder } = styles;
     const { headerText, leftIcon, rightIcon } = this.props;
+    const totalHeaderStyle = [ headerStyle ];
+    if (this.isIphoneX) totalHeaderStyle.push(xHeaderStyle);
+
     return (
-      <View style={headerStyle}>
-        <Icon iconStyle={iconStyle} 
-          color="white" 
-          name={leftIcon ? leftIcon.name : ''} 
-          type="font-awesome"
-          onPress={() => { if(leftIcon) leftIcon.onPress()}}  
-        />
+      <View style={totalHeaderStyle}>
+        <View style={iconHolder}>
+          { leftIcon && leftIcon.name !== '' &&
+            <Icon iconStyle={iconStyle} 
+              color="white" 
+              name={leftIcon ? leftIcon.name : ''} 
+              type="font-awesome"
+              onPress={() => { if(leftIcon) leftIcon.onPress() } }
+            />
+          }
+        </View>
 
         <Text style={headerTextStyle}>{headerText}</Text>
 
-        <Icon iconStyle={iconStyle} 
-          color="white" 
-          name={rightIcon ? rightIcon.name : ''} 
-          onPress={() => { if(rightIcon) rightIcon.onPress()}}
-          type="font-awesome" 
-        />
+        <View style={iconHolder}>
+          { rightIcon && rightIcon.name !== '' &&
+            <Icon iconStyle={iconStyle} 
+              color="white" 
+              name={rightIcon ? rightIcon.name : ''} 
+              onPress={() => { if(rightIcon) rightIcon.onPress()} }
+              type="font-awesome"
+            />
+          }
+        </View>
       </View>
     );
   }
@@ -53,9 +70,16 @@ const styles = {
     alignSelf: 'center',
     fontSize: 18
   },
+  xHeaderStyle: {
+    marginTop:30
+  },
   iconStyle: {
     marginLeft: 15,
     marginRight: 15
+  },
+  iconHolder: {
+    width: 47,
+    height: 'auto'
   }
 }
 

@@ -26,9 +26,7 @@ class EventScreen extends Component {
     return (
       <QRCodeComponent value={qrValue} 
         text={qrText}
-        onClose={() => {
-          console.log("oqwopidj")
-          this.setState({ showSignInQR: false, showCreateMatchQR: false })}}
+        onClose={() => this.setState({ showSignInQR: false, showCreateMatchQR: false })}
       />
     );
   }

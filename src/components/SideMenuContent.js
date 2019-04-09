@@ -10,11 +10,11 @@ import { setSelectedEvent } from '../actions/EventActions';
 class SideMenuContentComponent extends Component {
 
   shouldComponentUpdate(nextProps) {
-    return this.props.viewedEvents !== nextProps.viewedEvents;
+    return this.props.viewedEvents !== nextProps.viewedEvents ||
+           this.props.signedInEvent !== nextProps.signedInEvent;
   }
 
   selectEvent(event) {
-    console.log('select')
     this.props.setSelectedEvent(event);
     Actions.EventScreen();
   }
@@ -31,20 +31,30 @@ class SideMenuContentComponent extends Component {
   }
 
   render() {
-    const { menuStyle, logoutStyle, logoutWrapperStyle, headingStyle } = styles;
+    const { menuStyle, logoutStyle, logoutWrapperStyle, headingStyle, viewedEventStyle } = styles;
+    const { signedInEvent, signOut } = this.props;
     return (  
       <ScrollView nestedScrollEnabled={true} contentContainerStyle={menuStyle} scrollsToTop={false}>
         <View style={{ flex: 1 }}>
 
           <View>
+            { signedInEvent !== null && 
+              <View>
+                <Text style={headingStyle}>Current Event</Text>
+                <View onTouchEnd={() => this.selectEvent(signedInEvent)} style={viewedEventStyle}>
+                  <Text style={{ color: 'white', fontSize: 14 }}>{signedInEvent.name}</Text>
+                </View>
+              </View>
+            }
+
             <Text style={headingStyle}>Recently Viewed Events</Text>
-            <View onTouchEnd={() => console.log("woeijf")} style={{ height: 'auto', flex: 1, borderColor: 'white', borderWidth: 1, borderRadius: 5 }}>
+            <View style={{ height: 'auto', flex: 1, borderColor: 'white', borderWidth: 1, borderRadius: 5 }}>
               {this.renderViewedEvents()}
             </View>
           </View>
 
 
-          <View onTouchEnd={() => this.props.signOut()} style={logoutWrapperStyle}>
+          <View onTouchEnd={() => signOut()} style={logoutWrapperStyle}>
             <Text style={logoutStyle}>Logout</Text>
           </View>
         </View>
@@ -100,7 +110,9 @@ const styles = {
 
 
 const mapStateToProps = ({ EventsReducer }) => {
-  return { viewedEvents: EventsReducer.viewedEvents }
+  const { signedInEvent, viewedEvents } = EventsReducer;
+  console.log(EventsReducer);
+  return { signedInEvent, viewedEvents };
 };
 
 const SideMenuContent = connect(mapStateToProps, { signOut, setSelectedEvent })(SideMenuContentComponent);
