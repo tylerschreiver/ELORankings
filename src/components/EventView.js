@@ -42,7 +42,10 @@ const styles = {
     marginBottom: 10,
     borderWidth: 1,
     borderColor: 'black',
-    borderRadius: 5
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8
   },
   eventTextStyle: {
     fontSize: 14,

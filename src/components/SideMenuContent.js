@@ -1,23 +1,60 @@
 import React, { Component } from 'react';
 import { ScrollView, View, Text } from 'react-native';
-import { signOut } from '../actions/AuthActions'
 import { connect } from 'react-redux'; 
+import { Actions } from 'react-native-router-flux';
+
+import { signOut } from '../actions/AuthActions'
+import { setSelectedEvent } from '../actions/EventActions';
 
 
 class SideMenuContentComponent extends Component {
 
+  shouldComponentUpdate(nextProps) {
+    return this.props.viewedEvents !== nextProps.viewedEvents ||
+           this.props.signedInEvent !== nextProps.signedInEvent;
+  }
+
+  selectEvent(event) {
+    this.props.setSelectedEvent(event);
+    Actions.EventScreen();
+  }
+
+  renderViewedEvents() {
+    if (!this.props.viewedEvents || this.props.viewedEvents.length === 0) return null;
+    return this.props.viewedEvents.map(event => {
+      return (
+        <View key={event.id} onTouchEnd={() => this.selectEvent(event)} style={styles.viewedEventStyle}>
+          <Text style={{ color: 'white', fontSize: 14 }}>{event.name}</Text>
+        </View>
+      );
+    });
+  }
+
   render() {
-    const { menuStyle, logoutStyle, communityStyle, logoutWrapperStyle } = styles;
+    const { menuStyle, logoutStyle, logoutWrapperStyle, headingStyle, viewedEventStyle } = styles;
+    const { signedInEvent, signOut } = this.props;
     return (  
-      <ScrollView contentContainerStyle={menuStyle} scrollsToTop={false}>
+      <ScrollView nestedScrollEnabled={true} contentContainerStyle={menuStyle} scrollsToTop={false}>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 18, color: 'white', marginBottom: 15 }}>Communities</Text>
 
-          <Text style={communityStyle}>Super Smash Bros Melee</Text>
-          <Text style={communityStyle}>Chess</Text>
-          <Text style={communityStyle}>Rock Paper Scissors!!</Text>
+          <View>
+            { signedInEvent !== null && 
+              <View>
+                <Text style={headingStyle}>Current Event</Text>
+                <View onTouchEnd={() => this.selectEvent(signedInEvent)} style={viewedEventStyle}>
+                  <Text style={{ color: 'white', fontSize: 14 }}>{signedInEvent.name}</Text>
+                </View>
+              </View>
+            }
 
-          <View onTouchEnd={() => this.props.signOut()} style={logoutWrapperStyle}>
+            <Text style={headingStyle}>Recently Viewed Events</Text>
+            <View style={{ height: 'auto', flex: 1, borderColor: 'white', borderWidth: 1, borderRadius: 5 }}>
+              {this.renderViewedEvents()}
+            </View>
+          </View>
+
+
+          <View onTouchEnd={() => signOut()} style={logoutWrapperStyle}>
             <Text style={logoutStyle}>Logout</Text>
           </View>
         </View>
@@ -50,13 +87,33 @@ const styles = {
     fontSize: 20,
     alignSelf: 'center'
   },
-  communityStyle: {
-    display: 'flex',
+  headingStyle: {
+    textAlign: 'center',
     color: 'white',
-    marginBottom: 4
+    fontSize: 14,
+    margin: 5,
+    marginTop: 10,
+    marginBottom: 10,
+    minHeight: 14,
+  },
+  viewedEventStyle: {
+    minHeight: 34,
+    backgroundColor: '#4c4f54',
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    padding: 10,
+    width: '100%',
+    height: 'auto',
+    alignItems: 'center'
   }
 }
 
 
-const SideMenuContent = connect(null, { signOut })(SideMenuContentComponent);
+const mapStateToProps = ({ EventsReducer }) => {
+  const { signedInEvent, viewedEvents } = EventsReducer;
+  console.log(EventsReducer);
+  return { signedInEvent, viewedEvents };
+};
+
+const SideMenuContent = connect(mapStateToProps, { signOut, setSelectedEvent })(SideMenuContentComponent);
 export { SideMenuContent };

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'; 
-import { View, Text, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 
 import { getEvents } from '../actions/EventActions';
 import * as states from '../mockData/states.json';
@@ -27,7 +27,7 @@ class Events extends Component {
   ];
 
   componentDidMount() {
-    this.props.getEvents();
+    if (!this.state.events || this.state.events.length === 0) this.props.getEvents();
 
     const today = new Date();
     const dayLength = 24 * 60 * 60 * 1000;
@@ -43,22 +43,13 @@ class Events extends Component {
     }
   }
 
-  renderEvents() {
-    if (this.state.filteredEvents.length === 0) return null;
-
-    else {
-      return this.state.filteredEvents.map((event) => {
-        return <EventView event={event} key={event.id} />;
-      });
-    }
-  }
-
+  
   getRegionName(id) {
     for (let key in states) {
       if (states[key].id === id) return states[key].name;
     }
   }
-
+  
   isInTimeFrame(event, timeFrame) {
     const time = new Date(event.activeTimeslots[0]['end'].toLocaleDateString());
     switch (timeFrame) {
@@ -68,12 +59,10 @@ class Events extends Component {
       case 'Today': return this.dates.today.getTime() > time.getTime();
     }
   }
-
+  
   filter(regions, timeFrameId) {
-    let filteredEvents = this.state.timeFrame || this.state.regions 
-      ? this.state.filteredEvents 
-      : this.props.events;
-      
+    let filteredEvents = this.props.events;
+    
     if (timeFrameId !== null) {
       let timeFrame = [this.timeFrames[timeFrameId].name];
       this.setState({ timeFrame });
@@ -88,40 +77,52 @@ class Events extends Component {
         return selectedRegionNames.indexOf(eventRegion) !== -1;
       });
     }
-
+    
     this.setState({ filteredEvents });
   }
 
+  renderEvents() {
+    if (this.state.filteredEvents.length === 0) return null;
+
+    else {
+      return this.state.filteredEvents.map((event) => {
+        return <EventView event={event} key={event.id} />;
+      });
+    }
+  }
+  
   render() {
-    const { eventsPage } = styles;
+    const { eventsPage, shadowStyle } = styles;
     return (
       <View style={eventsPage}>
-        {/* <Text style={headerStyle}>Events</Text> */}
         <Header headerText="Events" />
 
         <View style={{ flexDirection: 'row', marginRight: 10, marginLeft: 10, justifyContent: 'space-around', marginBottom: 10 }}>
 
-          <SectionedMultiSelect 
-            uniqueKey="id" 
-            items={this.timeFrames} 
-            selectedItems={this.state.timeFrame} 
-            selectText="Time Frame"
-            showChips={false}
-            single={true}
-            onSelectedItemsChange={(timeFrame) => this.filter(null, timeFrame)}
-            styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5 }, selectToggleText: { color: 'white', textAlign: 'center' }, container: { height: 'auto' } }}          
-          />
-
-          <SectionedMultiSelect 
-            uniqueKey="id" 
-            items={states.default} 
-            selectedItems={this.state.regions} 
-            selectText="Regions"
-            showChips={false}
-            alwaysShowSelectText={true}
-            onSelectedItemsChange={(regions) => this.filter(regions, null)}
-            styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5 }, selectToggleText: { color: 'white', textAlign: 'center' } }}
+        <View style={shadowStyle}>
+            <SectionedMultiSelect 
+              uniqueKey="id" 
+              items={this.timeFrames} 
+              selectedItems={this.state.timeFrame} 
+              selectText="Time Frame"
+              showChips={false}
+              single={true}
+              onSelectedItemsChange={(timeFrame) => this.filter(null, timeFrame)}
+              styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}          
             />
+          </View>
+          <View style={shadowStyle}>
+            <SectionedMultiSelect 
+              uniqueKey="id" 
+              items={states.default} 
+              selectedItems={this.state.regions} 
+              selectText="Regions"
+              showChips={false}
+              alwaysShowSelectText={true}
+              onSelectedItemsChange={(regions) => this.filter(regions, null)}
+              styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
+            />
+          </View>
         </View>
 
         <ScrollView>
@@ -152,6 +153,11 @@ const styles = {
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 5
+  },
+  shadowStyle: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8
   }
 }
 
