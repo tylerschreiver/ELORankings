@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { Actions } from 'react-native-router-flux';
 
 class Navbar extends Component {
   state = { currentSection: 'Events' };
 
   handleNavPress(currentSection) {
-    this.props.navigate(currentSection);
-    this.setState({ currentSection });
+    if (Actions.currentScene !== currentSection) {
+      this.props.navigate(currentSection);
+      this.setState({ currentSection });
+    }
   }
 
   render() {
@@ -35,7 +38,7 @@ class Navbar extends Component {
             style={touchableStyle} 
             onPress={this.handleNavPress.bind(this, "Leaderboard")}
           >
-            <View onTouchEndCapture={() => this.props.navigate('Leaderboard')} style={iconStyle}>
+            <View style={iconStyle}>
               <Icon name="trophy" type="font-awesome" color={currentSection === "Leaderboard" ? 'white' : 'grey'}/>
               <Text style={currentSection === "Leaderboard" ? activeIconTextStyle : iconTextStyle}>Leaderboard</Text>
             </View>
@@ -49,7 +52,7 @@ class Navbar extends Component {
             style={touchableStyle} 
             onPress={this.handleNavPress.bind(this, "Profile")}
           >
-            <View onTouchEndCapture={() => this.props.navigate('Profile')} style={iconStyle}>
+            <View style={iconStyle}>
               <Icon name="user" type="font-awesome" color={currentSection === "Profile" ? 'white' : 'grey'}/>
               <Text style={currentSection === "Profile" ? activeIconTextStyle : iconTextStyle}>Profile</Text>
             </View>

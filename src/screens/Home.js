@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import { signOut } from '../actions/AuthActions';
 import { getEvents } from '../actions/EventActions';
+import { getUsers } from '../actions/UsersActions';
 import { Navbar, SideMenuContent } from '../components';
 
 import Events from './Events';
@@ -24,6 +25,7 @@ class Home extends Component {
 
   async UNSAFE_componentWillMount() {
     await this.props.getEvents();
+    await this.props.getUsers();
   }
 
   componentDidUpdate(prevProps) {
@@ -110,4 +112,4 @@ const mapStateToProps = (state) => {
 };
 
 
-export default connect(mapStateToProps, { signOut, getEvents })(Home);
+export default connect(mapStateToProps, { signOut, getEvents, getUsers })(Home);
