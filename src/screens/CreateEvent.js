@@ -105,6 +105,8 @@ class CreateEvent extends Component {
           <DatePicker 
             androidMode='calendar'
             showIcon={false}
+            confirmBtnText="Confirm"
+            cancelBtnText="Cancel"
             date={day.startDate}
             format='MMMM Do YYYY'
             onDateChange={startDate => this.setDateTime(startDate, null, null, index)}
@@ -147,6 +149,8 @@ class CreateEvent extends Component {
                 showIcon={false}
                 format="h:mm a"
                 date={day.startTime} 
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
                 onDateChange={startTime => this.setDateTime(null, startTime, null, i)}
                 mode='time'
                 customStyles={{
@@ -164,6 +168,8 @@ class CreateEvent extends Component {
                 showIcon={false}
                 format="h:mm a"
                 date={day.endTime} 
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
                 onDateChange={endTime => this.setDateTime(null, null, endTime, i)}
                 mode='time'
                 customStyles={{

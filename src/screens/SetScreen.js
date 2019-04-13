@@ -20,7 +20,8 @@ class SetScreen extends Component {
     const userChar = characters[this.props.character];
     const opponentChar = characters[this.props.opponentCharacter];
     const { playerNameStyles, playerStyles, characterIconStyle } = styles;
-    console.log(this.props.selectedStage);
+    
+    console.log(this.phoneDim);
 
     return (
       <View style={{ flex: 1, alignItems: 'space-between', margin: 5, height: '100%' }}>
@@ -29,7 +30,7 @@ class SetScreen extends Component {
           <Text style={playerNameStyles}>{this.props.userTag}</Text>
         </View>
         <View style={{ flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-          <Image style={{ height: this.phoneDim.width * .4, width: this.phoneDim.width * .4, margin: 5 }} 
+          <Image style={{ height: this.phoneDim.width * .8, width: this.phoneDim.width * .8, margin: 5 }} 
             source={stages[this.props.selectedStage]}>
           </Image>
         </View>
@@ -96,7 +97,7 @@ const mapStateToProps = ({ SetReducer, AuthReducer }) => {
   };
 }
 
-styles = {
+const styles = {
   playerStyles: {
     flexDirection: 'row',
     justifyContent: 'space-around',

@@ -16,7 +16,7 @@ class Events extends Component {
     today: new Date(),
     week: new Date(),
     month: new Date()
-  }
+  };
 
   hasChecked = false;
 
@@ -119,7 +119,7 @@ class Events extends Component {
               selectText="Regions"
               showChips={false}
               alwaysShowSelectText={true}
-              onSelectedItemsChange={(regions) => this.filter(regions, null)}
+              onSelectedItemsChange={regions => this.filter(regions, null)}
               styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
             />
           </View>
@@ -155,6 +155,8 @@ const styles = {
     borderRadius: 5
   },
   shadowStyle: {
+    backgroundColor: 'rebeccapurple',
+    borderRadius: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8
