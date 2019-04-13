@@ -16,7 +16,6 @@ class EventViewComponent extends Component {
   render() {
     const { eventStyle, eventTextStyle } = styles;
     const { event } = this.props;
-
     return (
       <View onTouchEnd={() => this.selectEvent()} style={eventStyle}>
         <View style={{ flex:1, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -25,8 +24,8 @@ class EventViewComponent extends Component {
         </View>
 
         <View style={{ flex: 1, flexDirection: 'row' }}>
-          <Text style={eventTextStyle}>{event.activeTimeslots[0].start.toLocaleDateString()} - </Text>
-          <Text style={eventTextStyle}>{event.activeTimeslots[0].end.toLocaleDateString()}</Text>
+          <Text style={eventTextStyle}>{event.activeTimeSlots[0].start.toLocaleDateString()} - </Text>
+          <Text style={eventTextStyle}>{event.activeTimeSlots[0].end.toLocaleDateString()}</Text>
         </View>
       </View>
     );

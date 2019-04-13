@@ -15,6 +15,7 @@ class SideMenuContentComponent extends Component {
   }
 
   selectEvent(event) {
+    console.log("oiwefjwopiefjewoi");
     if (event === this.props.selectedEvent) return;
     this.props.setSelectedEvent(event);
     Actions.EventScreen();
@@ -112,7 +113,6 @@ const styles = {
 
 const mapStateToProps = ({ EventsReducer }) => {
   const { signedInEvent, viewedEvents, selectedEvent } = EventsReducer;
-  console.log(EventsReducer);
   return { signedInEvent, viewedEvents, selectedEvent };
 };
 

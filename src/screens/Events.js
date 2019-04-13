@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'; 
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
 
 import { getEvents } from '../actions/EventActions';
 import * as states from '../mockData/states.json';
 import { EventView, Header } from '../components'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import { Actions } from 'react-native-router-flux';
 
 class Events extends Component {
 
@@ -27,23 +28,23 @@ class Events extends Component {
   ];
 
   componentDidMount() {
-    if (!this.state.events || this.state.events.length === 0) this.props.getEvents();
-
     const today = new Date();
     const dayLength = 24 * 60 * 60 * 1000;
     this.dates.today = new Date(today.getTime() + dayLength);
     this.dates.week = new Date(today.getTime() + dayLength * 7);
     this.dates.month = new Date(today.getTime() + dayLength * 30);
+    
+    this.filter(null, null);
   }
 
-  componentDidUpdate(props) {
-    const { filteredEvents, regions, timeFrame } = this.state;
-    if (filteredEvents.length === 0 && regions.length === 0 && timeFrame[0] === 'All') {
-      this.setState({ filteredEvents: props.events });
+  async componentDidUpdate(props) {
+    const { regions, timeFrame } = this.state;
+    if (props.events !== this.props.events) {
+      const timeFrameNames = this.timeFrames.map(t => t.name);
+      await this.filter(regions, [timeFrameNames.indexOf(timeFrame[0]).toString()]);
     }
   }
 
-  
   getRegionName(id) {
     for (let key in states) {
       if (states[key].id === id) return states[key].name;
@@ -51,7 +52,7 @@ class Events extends Component {
   }
   
   isInTimeFrame(event, timeFrame) {
-    const time = new Date(event.activeTimeslots[0]['end'].toLocaleDateString());
+    const time = new Date(event.activeTimeSlots[0]['end'].toLocaleDateString());
     switch (timeFrame) {
       case 'All': return true;
       case 'This Month': return this.dates.month.getTime() > time.getTime();
@@ -65,11 +66,11 @@ class Events extends Component {
     
     if (timeFrameId !== null) {
       let timeFrame = [this.timeFrames[timeFrameId].name];
-      this.setState({ timeFrame });
+      if (timeFrame[0] !== this.state.timeFrame[0]) this.setState({ timeFrame });
       filteredEvents = filteredEvents.filter((event) => this.isInTimeFrame(event, timeFrame[0]));
     }
     
-    if (regions !== null) {
+    if (regions !== null && regions.length > 0) {
       this.setState({regions})
       let selectedRegionNames = regions.map((region) => this.getRegionName(region));
       filteredEvents = filteredEvents.filter((event) => {
@@ -82,10 +83,9 @@ class Events extends Component {
   }
 
   renderEvents() {
-    if (this.state.filteredEvents.length === 0) return null;
-
+    if (this.state.filteredEvents.length === 0) return null;    
     else {
-      return this.state.filteredEvents.map((event) => {
+      return this.state.filteredEvents.map(event => {
         return <EventView event={event} key={event.id} />;
       });
     }
@@ -95,7 +95,7 @@ class Events extends Component {
     const { eventsPage, shadowStyle } = styles;
     return (
       <View style={eventsPage}>
-        <Header headerText="Events" />
+        <Header headerText="Events" rightIcon={{ name: "plus", onPress: () => Actions.CreateEvent() }}/>
 
         <View style={{ flexDirection: 'row', marginRight: 10, marginLeft: 10, justifyContent: 'space-around', marginBottom: 10 }}>
 
@@ -158,11 +158,15 @@ const styles = {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8
+  },
+  space: {
+    marginBottom: 15
   }
 }
 
 const mapStateToProps = ({ EventsReducer }) => {
-  return { events: EventsReducer.events.events };
+  const { events } = EventsReducer;
+  return { events };
 }
 
 export default connect(mapStateToProps, { getEvents })(Events);

@@ -10,6 +10,7 @@
     "react": "16.6.3",
     "react-native": "0.58.5",
     "react-native-camera": "^2.2.0",
+    "react-native-datepicker": "^1.7.2",
     "react-native-firebase": "^5.2.3",
     "react-native-qrcode-scanner": "^1.1.2",
     "react-native-qrcode-svg": "^5.1.2",

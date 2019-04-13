@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Linking } from 'react-native';
 import { connect } from 'react-redux'; 
 import { Actions } from 'react-native-router-flux';
 
@@ -9,6 +9,11 @@ import { eventSignIn, eventSignOut } from '../actions/EventActions';
 class EventScreen extends Component {
 
   state = { showSignInQR: false, showCreateMatchQR: false, showFindMatch: false, info: "" };
+
+  openLink(link) {
+    if (link.indexOf('http://') === -1 || link.indexOf('https://') === -1) link = 'http://' + link;
+    Linking.openURL(link);
+  }
 
   renderQRScanner() {
     return (
@@ -32,36 +37,34 @@ class EventScreen extends Component {
   }
 
   render() {
-    const { buttonStyle, eventSectionStyle, twoButtonStyle } = styles;
+    const { buttonStyle, eventSectionStyle, twoButtonStyle, eventInfoText } = styles;
     const { selectedEvent, signedInEvent } = this.props;
     const { showSignInQR, showCreateMatchQR, showFindMatch } = this.state;
 
     if (!selectedEvent) return null;
     if (showFindMatch) return this.renderQRScanner();
     if (showSignInQR || showCreateMatchQR) return this.renderQRCode(); 
+
+    const rightIcon = signedInEvent === selectedEvent 
+      ? { name: "sign-out", onPress: () => this.props.eventSignOut() } 
+      // todo remove auto sign in
+      : { name: "sign-in", onPress: () => {this.setState({ showSignInQR: true }); this.props.eventSignIn(selectedEvent) }};
     
     return (
-      <BasePage leftIcon={{ name: "chevron-left", onPress: () => Actions.pop() }} headerText={selectedEvent.name}>
+      <BasePage 
+        leftIcon={{ name: "chevron-left", onPress: () => Actions.pop() }} 
+        rightIcon={rightIcon} 
+        headerText={selectedEvent.name}
+      >
         <ScrollView>
           <View style={{ alignItems: 'center', width: '100%' }}>
-          
-            <Button onClick={
-              signedInEvent !== selectedEvent 
-                ? () => {
-                  console.log("sign in ");
-                  this.props.eventSignIn(selectedEvent);
-                  this.setState({ showSignInQR: true });
-                }
-                : () => this.props.eventSignOut()
-            }
-              text={signedInEvent === selectedEvent ? 'Leave Event' : 'Sign into Event'} 
-              style={buttonStyle} 
-            />
             
             <View style={eventSectionStyle}>
-              <Text>Event Info</Text>
-              <Text>Location</Text>
-              <Text>Link</Text>
+              <Text style={eventInfoText}>{selectedEvent.description}</Text>
+              <Text style={eventInfoText}>{selectedEvent.address}</Text>
+              <View onTouchEnd={() => this.openLink(selectedEvent.tourneyLink)}>
+                <Text style={eventInfoText}>{selectedEvent.tourneyLink}</Text>
+              </View>
             </View>
 
             { this.props.signedInEvent === this.props.selectedEvent &&
@@ -86,9 +89,7 @@ class EventScreen extends Component {
 
             {/* <Button
               text="crash app" 
-              // text="TO's and Assistants" 
               style={buttonStyle}
-              // onClick={() => console.log("clicked a thingy") } 
             /> */}
 
             <Text>{this.state.info}</Text>
@@ -117,7 +118,12 @@ const styles = {
     backgroundColor: '#4c4f54',
     borderWidth: 1,
     bordedrColor: 'black',
-    borderRadius: 5
+    borderRadius: 5,
+    padding: 10
+  },
+  eventInfoText: {
+    fontSize: 18,
+    color: 'white'
   }
 }
 

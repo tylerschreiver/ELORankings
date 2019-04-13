@@ -5,6 +5,7 @@ import SideMenu from 'react-native-side-menu';
 import { connect } from 'react-redux'; 
 
 import { signOut } from '../actions/AuthActions';
+import { getEvents } from '../actions/EventActions';
 import { Navbar, SideMenuContent } from '../components';
 
 import Events from './Events';
@@ -13,6 +14,7 @@ import Login from './Login';
 import EventScreen from './EventScreen';
 import Leaderboard from './Leaderboard';
 import SetScreen from './SetScreen';
+import CreateEvent from './CreateEvent';
 
 class Home extends Component {
   state = { section: '' };
@@ -20,7 +22,8 @@ class Home extends Component {
     super(props);
   }
 
-  componentDidMount() {
+  async UNSAFE_componentWillMount() {
+    await this.props.getEvents();
   }
 
   componentDidUpdate(prevProps) {
@@ -66,6 +69,7 @@ class Home extends Component {
           <Router>
             <Scene key="root" hideNavBar={true}>
                 <Scene key="Events" component={Events} initial="true" />
+                <Scene key="CreateEvent" component={CreateEvent} />
                 <Scene key="Leaderboard" component={Leaderboard} />
                 <Scene key="Profile" component={Profile} />
                 <Scene key="EventScreen" component={EventScreen} />
@@ -107,4 +111,4 @@ const mapStateToProps = (state) => {
 };
 
 
-export default connect(mapStateToProps, { signOut })(Home);
+export default connect(mapStateToProps, { signOut, getEvents })(Home);
