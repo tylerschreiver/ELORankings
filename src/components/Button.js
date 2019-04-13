@@ -6,16 +6,16 @@ class Button extends Component {
 
   render() {
     const { buttonStyle, buttonTextStyle, disabledStyle } = styles;
-    const { disabled } = this.props;
+    const { disabled, onClick, text, children, style } = this.props;
 
-    let buttonStyles = [buttonStyle, this.props.style];
+    let buttonStyles = [buttonStyle, style];
     if (disabled) buttonStyles.push(disabledStyle);
     
     return (
-      <View onTouchEnd={() => { if(!disabled) this.props.onClick() }} style={buttonStyles}>
+      <View onTouchEnd={() => { if(!disabled) onClick() }} style={buttonStyles}>
         <TouchableOpacity>
           <View>
-            <Text style={buttonTextStyle}>{this.props.children || this.props.text}</Text>
+            <Text style={buttonTextStyle}>{children || text}</Text>
           </View>
         </TouchableOpacity>
       </View>

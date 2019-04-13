@@ -12,7 +12,9 @@ class Header extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.props.headerText !== nextProps.headerText;
+    return this.props.headerText !== nextProps.headerText ||
+      this.props.rightIcon !== nextProps.rightIcon ||
+      this.props.leftIcon !== nextProps.leftIcon;
   }
 
   render() {
@@ -75,10 +77,10 @@ const styles = {
   },
   iconStyle: {
     marginLeft: 15,
-    marginRight: 15
+    marginRight: 15,
   },
   iconHolder: {
-    width: 47,
+    width: 55,
     height: 'auto'
   }
 }

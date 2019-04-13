@@ -111,7 +111,6 @@ const styles = {
 
 const mapStateToProps = ({ EventsReducer }) => {
   const { signedInEvent, viewedEvents } = EventsReducer;
-  console.log(EventsReducer);
   return { signedInEvent, viewedEvents };
 };
 

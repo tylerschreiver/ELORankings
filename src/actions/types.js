@@ -6,6 +6,7 @@ export const events_requested = 'events_requested'
 export const event_selected = 'event_selected';
 export const event_sign_in = 'event_sign_in';
 export const event_sign_out = 'event_sign_out';
+export const create_event = 'create_event';
 
 export const set_opponent = 'set_opponent';
 export const set_game_win = 'set_game_win';
