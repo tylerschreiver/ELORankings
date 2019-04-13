@@ -4,6 +4,10 @@ import { Header } from './Header';
 
 class BasePage extends Component {
 
+  shouldComponentUpdate(nextProps) {
+    return this.props.headerText !== nextProps.headerText;
+  }
+
   render() {
     return (
       <View style={{ height: '100%', width: '100%', backgroundColor: '#36393f'}}>

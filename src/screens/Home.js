@@ -30,6 +30,7 @@ class Home extends Component {
   }
 
   changeSection(section) {
+    if (section === Actions.currentScene) return;
     switch(section) {
       case 'Events': 
         Actions.Events();
