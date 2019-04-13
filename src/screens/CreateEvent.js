@@ -55,14 +55,19 @@ class CreateEvent extends Component {
     }
     if (time1 !== null) {
       timeSections = time1.split(':');
+
+      const hours = timeSections[1].includes("am") ? timeSections[0] : 12 + Number(timeSections[0]);
+      const minutes = timeSections[1].substr(0,2);
       const day = new Date(timeFrameDays[index].startDate)
-      day.setHours(timeSections[0], timeSections[1]);
+      day.setHours(hours, minutes);
       timeFrameDays[index].startTime = day;
     }
     if (time2 !== null) {
       timeSections = time2.split(':');
+      const hours = timeSections[1].includes("am") ? timeSections[0] : 12 + Number(timeSections[0]);
+      const minutes = timeSections[1].substr(0,2);
       const day = new Date(timeFrameDays[index].startDate)
-      day.setHours(timeSections[0], timeSections[1]);
+      day.setHours(hours, minutes);
       timeFrameDays[index].endTime = day;
     }
     this.setState({ timeFrames: timeFrameDays });
