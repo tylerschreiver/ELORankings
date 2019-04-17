@@ -84,19 +84,6 @@ class SetScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ SetReducer, AuthReducer }) => {
-  const { opponentTag, opponentCharacter, games, bannedStages, character, selectedStage, headerText } = SetReducer;
-  return { 
-    opponentTag, 
-    opponentCharacter, 
-    games, bannedStages, 
-    character, 
-    selectedStage, 
-    headerText,
-    userTag: AuthReducer.userTag 
-  };
-}
-
 const styles = {
   playerStyles: {
     flexDirection: 'row',
@@ -121,6 +108,19 @@ const styles = {
     height: 64,
     width: 64
   }
+}
+
+const mapStateToProps = ({ SetReducer, AuthReducer }) => {
+  const { opponentTag, opponentCharacter, games, bannedStages, character, selectedStage, headerText } = SetReducer;
+  return { 
+    opponentTag, 
+    opponentCharacter, 
+    games, bannedStages, 
+    character, 
+    selectedStage, 
+    headerText,
+    userTag: AuthReducer.userTag 
+  };
 }
 
 export default connect(mapStateToProps, { 

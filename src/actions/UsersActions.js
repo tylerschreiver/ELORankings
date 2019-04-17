@@ -11,25 +11,25 @@ import generatePlayers from '../mockData/players';
 
 const fakeUsers = [
   {
-    userId: faker.random.uuid(),
+    id: '2b608d4d-562f-491c-9968-321dda0ec874',
     username: 'Yee',
     email: 'tyler.schreiver+2@interapt.com',
     region: 'Kentucky',
     subregion: 'Lousiville',
     ranks: [
-      { eloScore: 6000, characters: [{ id: 'Marth', percentUsed: 80 }, { id: 'Peach', percentUsed: 20 }], },
-      { eloScore: 3200, characters: [{ id: 'Mario', percentUsed: 100 }]}
+      { eloScore: 6000, userId: '2b608d4d-562f-491c-9968-321dda0ec874', characters: [{ id: 'Marth', percentUsed: 80 }, { id: 'Peach', percentUsed: 20 }], },
+      { eloScore: 3200, userId: '2b608d4d-562f-491c-9968-321dda0ec874', characters: [{ id: 'Mario', percentUsed: 100 }]}
     ]
   },
   {
-    userId: faker.random.uuid(),
+    id: '2b608d4d-562f-491c-9968-321dda0ec875',
     username: 'Nato',
     email: 'nato@google.com',
     region: 'Kentucky',
     subregion: 'The Vill',
     ranks: [{
       eloScore: 2000, 
-      characters: [{ id: 'Falco', percentUsed: 100 }]
+      characters: [{ id: 'Falco', id: '2b608d4d-562f-491c-9968-321dda0ec875', percentUsed: 100 }]
     }]
   }
 ];
@@ -41,10 +41,10 @@ export const getUsers = () => {
 };
 
 export const getLeaderboard = () => {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     // await dispatch(getUsers());
     const users = getState().UsersReducer.users;
-    const ranks = []
+    let ranks = []
     users.forEach(user => {
       user.ranks.forEach(rank => {
         const id = faker.random.uuid();
@@ -53,12 +53,13 @@ export const getLeaderboard = () => {
           userId: user.id,
           eloScore: rank.eloScore, 
           region: user.region,
-          characters: rank.characters.map(char => char.id), 
+          characters: rank.characters, 
           id
         });
       });
     });
     ranks.sort((a, b) => b.eloScore - a.eloScore);
+    ranks.forEach((rank, i) => rank.position = i);
     dispatch({ type: set_leaderboard, payload: ranks });
   }
 };
@@ -80,13 +81,19 @@ export const removeCurrentUser = () => {
   return { type: remove_current_user };
 };
 
-export const getPlayerRanks = user => {
-  const { userId } = user;
-  return (dispatch, getState) => {
-    const { leaderboard } = getState().UsersReducer;
-    const ranks = leaderboard.filter(rank => {
-      return rank.userId === userId;
-    });
+export const getPlayerRanks = id => {
+  return async (dispatch, getState) => {
+    if (getState().UsersReducer.leaderboard.length === 0) {
+      dispatch(getLeaderboard());
+    }
+    const ranks = getState().UsersReducer.leaderboard.filter(rank => rank.userId === id);
     return ranks;
+  }
+}
+
+export const getUserById = id => {
+  return (dispatch, getState) => {
+    const { users } = getState().UsersReducer;
+    return users.find(user => user.id === id);
   }
 }

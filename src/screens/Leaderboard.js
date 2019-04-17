@@ -39,7 +39,6 @@ class Leaderboard extends Component {
     } 
 
     if (selectedRegions !== null && selectedRegions.length !== 0) {
-      // this.setState({ selectedRegions });
       filteredRanks = filteredRanks.filter(rank => {
         return selectedRegions.indexOf(rank.region) !== -1;
       });
@@ -66,11 +65,11 @@ class Leaderboard extends Component {
 
   renderCharacters(rank) {
     return rank.characters.map(char => {
-      const icon = characters[char];
+      const icon = characters[char.id];
       return (
         <Image 
           style={{ marginLeft: 5, marginRight: 5 }} 
-          key={char} 
+          key={char.id} 
           source={icon} 
         />
       );
