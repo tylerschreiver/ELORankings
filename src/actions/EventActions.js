@@ -53,6 +53,7 @@ export const createSet = (set) => {
     socket.connect(token);
     socket.emit('createSet', set);
     socket.on('setCreated', id => {
+      console.log('dispatch fam');
       dispatch({ type: set_set_id, payload: { id, strikeFirst: true }});
     });
     socket.on('setJoined', set => {
@@ -68,6 +69,7 @@ export const joinSet = (set) => {
     const { headers } = getState().AuthReducer;
     const token = headers.Authorization.slice(7, headers.Authorization.length);
     socket.connect(token);
+    console.log('set set set');
     dispatch({ type: set_set_id, payload: { setId: set } });
     socket.emit('joinSet', set);
     socket.on('setJoined', () => {

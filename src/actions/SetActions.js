@@ -20,7 +20,7 @@ export const banStage = stage => {
     const { setId } = getState().SetReducer;
     // const token = headers.Authorization.slice(7, headers.Authorization.length);
 
-   
+    console.log(setId);
     // socket.connect(token);
     socket.emit('removeStage', { stage, setId });
   }
