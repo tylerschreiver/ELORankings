@@ -10,8 +10,11 @@ class EventScreen extends Component {
   isAdmin = false;
   state = { showSignInQR: false, showCreateMatchQR: false, showFindMatch: false, info: "", setId: "" };
 
-  shouldComponentUpdate(prevProps) {
+  UNSAFE_componentWillMount() {
     this.isAdmin = this.props.selectedEvent.eventAdmins.includes(this.props.uid);
+  }
+
+  shouldComponentUpdate(prevProps) {
     if (this.props.signedInEvent !== prevProps.signedInEvent) {
       return true;
     } else if (this.props.setId !== prevProps.setId) {
@@ -78,8 +81,8 @@ class EventScreen extends Component {
 
     
     if (!selectedEvent) return null;
-    if (showFindMatch || showSignInQR) return this.renderQRScanner();
-    if (showCreateMatchQR) return this.renderQRCode(); 
+    if (showFindMatch) return this.renderQRScanner();
+    if (showCreateMatchQR || showSignInQR) return this.renderQRCode(); 
 
     const rightIcon = signedInEvent === selectedEvent 
       ? { name: "sign-out", onPress: () => this.props.eventSignOut() } 
