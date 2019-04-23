@@ -34,7 +34,6 @@ const SetReducer = (state = INITIAL_STATE, action) => {
     case set_banned_stage: {
       if (!state.bannedStages.includes(action.payload)) {
         const bannedStages = [ ...state.bannedStages, action.payload ];
-        console.log(bannedStages)
         if (state.games.length === 0 && bannedStages.length === 5) {
           const selectedStage = stages.filter(stage => bannedStages.indexOf(stage) === -1);
           return { ...state, bannedStages, selectedStage: selectedStage[0], headerText: "Select the Winner" };

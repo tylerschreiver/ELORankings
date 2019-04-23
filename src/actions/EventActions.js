@@ -53,11 +53,9 @@ export const createSet = (set) => {
     socket.connect(token);
     socket.emit('createSet', set);
     socket.on('setCreated', id => {
-      console.log('creating set for opponent to join')
       dispatch({ type: set_set_id, payload: { setId: id, strikeFirst: true }});
     });
     socket.on('setJoined', set => {
-      console.log('opponent joined set')
       Actions.Set();
     });
   };
@@ -72,7 +70,6 @@ export const joinSet = set => {
     dispatch({ type: set_set_id, payload: { setId: set.setId, strikeFirst: false } });
     socket.emit('joinSet', set);
     socket.on('setJoined', () => {
-      console.log('join success');
       Actions.Set();
     });
   };

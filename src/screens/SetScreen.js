@@ -13,7 +13,6 @@ class SetScreen extends Component {
   stageArray = [];
 
   UNSAFE_componentWillMount() {
-    console.log('mount')
     this.props.init();
     for(const key in stages) this.stageArray.push({ key, stage: stages[key] });
   }
@@ -43,19 +42,23 @@ class SetScreen extends Component {
   }
 
   renderStages() {
+    const { isWaiting, bannedStages, setStage, banStage, headerText } = this.props
     const widthAndHeight = this.phoneDim.width * .4;
+    console.log(isWaiting);
     return this.stageArray.map(stageObj => {
-      if (this.props.bannedStages.includes(stageObj.key)) return null;
-      if (this.props.isWaiting) {
+      if (bannedStages.includes(stageObj.key)) return null;
+      if (isWaiting) {
+        console.log('waiting waiting waiting')
         return (
           <View key={stageObj.key}> 
             <Image style={{ height: widthAndHeight, width: widthAndHeight, margin: 5 }} source={stageObj.stage}></Image>
           </View >
         );
       }
-      const banOrPick = this.props.headerText.indexOf("Choose") !== -1
-        ? () => this.props.setStage(stageObj.key)
-        : () => this.props.banStage(stageObj.key);
+      cosole.log('ban section');
+      const banOrPick = headerText.indexOf("Choose") !== -1
+        ? () => setStage(stageObj.key)
+        : () => banStage(stageObj.key);
       return (
         <View key={stageObj.key} onTouchEnd={banOrPick} > 
           <Image style={{ height: widthAndHeight, width: widthAndHeight, margin: 5 }} source={stageObj.stage}></Image>

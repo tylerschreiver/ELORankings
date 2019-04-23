@@ -3,12 +3,7 @@ import socket from '../globals/socket';
 
 export const init = () => {
   return async (dispatch, getState) => {
-    console.log('init');
-    const { headers } = getState().AuthReducer;
-    const token = headers.Authorization.slice(7, headers.Authorization.length);
-    socket.connect(token);
     socket.on('stageBanned', stage => {
-      console.log('hit');
       dispatch({ type: set_banned_stage, payload: stage });
     });
     console.log(socket.socket._callbacks);
@@ -17,11 +12,7 @@ export const init = () => {
 
 export const banStage = stage => {
   return async (dispatch, getState) => {
-    const { headers } = getState().AuthReducer;
     const { setId } = getState().SetReducer;
-    const token = headers.Authorization.slice(7, headers.Authorization.length);
-
-    // socket.connect(token);
     socket.emit('removeStage', { stage, setId });
   }
 };
