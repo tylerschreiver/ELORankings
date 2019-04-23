@@ -17,8 +17,6 @@ class QRCodeComponent extends Component {
     const size = Math.floor((Dimensions.get('window').width * 0.8));
     const totalFullScreenStyle = [ fullScreenQRStyle ];
 
-    console.log(this.props.value);
-
     if (this.isIphoneX) totalFullScreenStyle.push(iphoneXStyle)
 
     return (

@@ -13,6 +13,7 @@ class Socket {
   }
 
   connect(token) {
+    console.log('caLL CONNECT')
     this.socket = SocketIOClient('http://192.168.1.2:5000', { 
       transports: ['websocket'], 
       jsonp: false,

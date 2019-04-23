@@ -53,12 +53,11 @@ export const createSet = (set) => {
     socket.connect(token);
     socket.emit('createSet', set);
     socket.on('setCreated', id => {
-      console.log('dispatch fam');
-      console.log(id);
+      console.log('creating set for opponent to join')
       dispatch({ type: set_set_id, payload: { setId: id, strikeFirst: true }});
     });
     socket.on('setJoined', set => {
-      console.log('maubne')
+      console.log('opponent joined set')
       Actions.Set();
     });
   };
@@ -70,10 +69,10 @@ export const joinSet = set => {
     const { headers } = getState().AuthReducer;
     const token = headers.Authorization.slice(7, headers.Authorization.length);
     socket.connect(token);
-    console.log(set);
     dispatch({ type: set_set_id, payload: { setId: set.setId, strikeFirst: false } });
     socket.emit('joinSet', set);
     socket.on('setJoined', () => {
+      console.log('join success');
       Actions.Set();
     });
   };

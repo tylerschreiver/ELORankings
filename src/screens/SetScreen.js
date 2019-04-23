@@ -13,6 +13,7 @@ class SetScreen extends Component {
   stageArray = [];
 
   UNSAFE_componentWillMount() {
+    console.log('mount')
     this.props.init();
     for(const key in stages) this.stageArray.push({ key, stage: stages[key] });
   }
@@ -45,7 +46,6 @@ class SetScreen extends Component {
     const widthAndHeight = this.phoneDim.width * .4;
     return this.stageArray.map(stageObj => {
       if (this.props.bannedStages.includes(stageObj.key)) return null;
-      console.log(this.props.isWaiting);
       if (this.props.isWaiting) {
         return (
           <View key={stageObj.key}> 
@@ -119,7 +119,6 @@ const styles = {
 
 const mapStateToProps = ({ SetReducer, AuthReducer }) => {
   const { opponentTag, opponentCharacter, games, bannedStages, character, selectedStage, headerText, isWaiting } = SetReducer;
-  console.log(headerText);
   return { 
     opponentTag, 
     opponentCharacter, 

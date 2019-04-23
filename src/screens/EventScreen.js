@@ -149,7 +149,6 @@ const styles = {
 const mapStateToProps = ({ EventsReducer, SetReducer }) => {
   const { selectedEvent, signedInEvent } = EventsReducer;
   const { setId } = SetReducer;
-  console.log(setId);
   return { selectedEvent, signedInEvent, setId };
 }
 
