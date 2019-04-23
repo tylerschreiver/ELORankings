@@ -33,9 +33,10 @@ class EventScreen extends Component {
   }
 
   async joinSet(setId) {
-    const set = await this.props.joinSet({ setId, eventId: this.props.signedInEvent.id });
+    console.log('join');
+    this.props.joinSet({ setId, eventId: this.props.signedInEvent.id });
     this.setState({ showFindMatch: false });
-    Actions.Set()
+    // Actions.Set()
   }
 
   renderQRScanner() {
