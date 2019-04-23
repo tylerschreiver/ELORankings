@@ -78,7 +78,7 @@ const SetReducer = (state = INITIAL_STATE, action) => {
       return newState;
 
     case set_set_id:
-      return { ...state, setId: action.payload.id, strikeFirst: action.payload.strikeFirst };
+      return { ...state, setId: action.payload.setId, strikeFirst: action.payload.strikeFirst };
     default: return state;
    }
 }
