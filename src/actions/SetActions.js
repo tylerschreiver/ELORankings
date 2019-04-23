@@ -2,10 +2,13 @@ import { set_banned_stage, set_game_win, set_opponent, reset_banned_stages, set_
 import socket from '../globals/socket';
 
 export const init = () => {
-  socket.on('stageBanned', stage => {
-    console.log('hit');
-    dispatch({ type: set_banned_stage, payload: stage });
-  });
+  return async () => {
+    console.log("is this called?")
+    socket.on('stageBanned', stage => {
+      console.log('hit');
+      dispatch({ type: set_banned_stage, payload: stage });
+    });
+  }
 }
 
 export const banStage = stage => {

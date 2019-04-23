@@ -21,8 +21,6 @@ class SetScreen extends Component {
     const userChar = characters[this.props.character];
     const opponentChar = characters[this.props.opponentCharacter];
     const { playerNameStyles, playerStyles, characterIconStyle } = styles;
-    
-    console.log(this.phoneDim);
 
     return (
       <View style={{ flex: 1, alignItems: 'space-between', margin: 5, height: '100%' }}>
