@@ -55,7 +55,8 @@ export const createSet = (set) => {
     socket.on('setCreated', id => {
       dispatch({ type: set_set_id, payload: { setId: id, strikeFirst: true }});
     });
-    socket.on('setJoined', set => {
+    socket.on('setJoined', ranks => {
+      console.log(ranks)
       Actions.Set();
     });
   };
@@ -69,7 +70,8 @@ export const joinSet = set => {
     socket.connect(token);
     dispatch({ type: set_set_id, payload: { setId: set.setId, strikeFirst: false } });
     socket.emit('joinSet', set);
-    socket.on('setJoined', () => {
+    socket.on('setJoined', ranks => {
+      console.log(ranks);
       Actions.Set();
     });
   };

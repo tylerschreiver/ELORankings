@@ -12,13 +12,13 @@ import {
 const stages = ['Dreamland', 'Fountain of Dreams', 'Battlefield', 'Final Destination', 'Yoshis Story', 'Pokemon Stadium'];
 
 const INITIAL_STATE = {
-  opponentTag: 'Nato',
-  opponentCharacter: 'Falco',
+  opponentTag: '',
+  opponentCharacter: '',
   games: [],
   bannedStages: ['Pokemon Stadium'],
   selectedStage: '',
   bestOf: 3,
-  character: 'Mario',
+  character: '',
   headerText: 'Strike 1 Stage',
   strikeFirst: false,
   setOver: false,
