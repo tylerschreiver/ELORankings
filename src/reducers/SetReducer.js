@@ -20,9 +20,10 @@ const INITIAL_STATE = {
   bestOf: 3,
   character: 'Mario',
   headerText: 'Strike 1 Stage',
-  strikeFirst: true,
+  strikeFirst: false,
   setOver: false,
-  setId: null
+  setId: null,
+  isWaiting: false
 };
 
 const SetReducer = (state = INITIAL_STATE, action) => {
@@ -38,6 +39,7 @@ const SetReducer = (state = INITIAL_STATE, action) => {
       }
       const newState = { ...state, bannedStages }
       newState.headerText = getHeaderText(newState);
+      newState.isWaiting = newState.headerText.includes('Wait');
       return newState;
     }
   
@@ -56,6 +58,7 @@ const SetReducer = (state = INITIAL_STATE, action) => {
       const newState = { ...state, games, selectedStage: '', bannedStages: [] };
       newState.setOver = isSetOver(newState);
       newState.headerText = getHeaderText(newState);
+      newState.isWaiting = newState.headerText.includes('Wait');
       newState.bannedStages = game.didWin ? getBannedOpponentStages(games) : getBannedUserStages(games);
       return newState;
     }
@@ -68,11 +71,11 @@ const SetReducer = (state = INITIAL_STATE, action) => {
     case set_stage: 
       const newState = { ...state, selectedStage: action.payload }
       newState.headerText =  getHeaderText(newState);
+      newState.isWaiting = newState.headerText.includes('Wait');
       return newState;
 
     case set_set_id:
-      console.log(action.payload);
-      return { ...state, setId: action.payload };
+      return { ...state, setId: action.payload.id, strikeFirst: action.payload.strikeFirst };
     default: return state;
    }
 }

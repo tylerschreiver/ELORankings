@@ -53,11 +53,14 @@ export const createSet = (set) => {
     socket.connect(token);
     socket.emit('createSet', set);
     socket.on('setCreated', id => {
-      dispatch({ type: set_set_id, payload: id });
+      dispatch({ type: set_set_id, payload: { id, strikeFirst: true }});
     });
     socket.on('setJoined', set => {
       Actions.Set();
-    })
+    });
+    socket.on('stageBanned', stage => {
+      dispatch({ type: set_banned_stage, action: stage });
+    });
   };
 }
 
@@ -66,10 +69,13 @@ export const joinSet = (set) => {
     const { headers } = getState().AuthReducer;
     const token = headers.Authorization.slice(7, headers.Authorization.length);
     socket.connect(token);
+    dispatch({ type: set_set_id, payload: set.setId});
     socket.emit('joinSet', set);
-    socket.on('setJoined', set => {
-      console.log(set);
+    socket.on('setJoined', () => {
       Actions.Set();
+    });
+    socket.on('stageBanned', stage => {
+      dispatch({ type: set_banned_stage, action: stage });
     });
   };
 }

@@ -46,9 +46,10 @@ class SetScreen extends Component {
     const widthAndHeight = this.phoneDim.width * .4;
     return this.stageArray.map(stageObj => {
       if (this.props.bannedStages.includes(stageObj.key)) return null;
-      const banOrPick = this.props.headerText.indexOf("Choose") !== -1
-        ? () => this.props.setStage(stageObj.key)
-        : () => this.props.banStage(stageObj.key);
+      const banOrPick = isWaiting ? console.log("fuggit") :
+          this.props.headerText.indexOf("Choose") !== -1
+            ? () => this.props.setStage(stageObj.key)
+            : () => this.props.banStage(stageObj.key);
       return (
         <View key={stageObj.key} onTouchEnd={banOrPick} > 
           <Image style={{ height: widthAndHeight, width: widthAndHeight, margin: 5 }} source={stageObj.stage}></Image>
@@ -85,7 +86,7 @@ class SetScreen extends Component {
 }
 
 const mapStateToProps = ({ SetReducer, AuthReducer }) => {
-  const { opponentTag, opponentCharacter, games, bannedStages, character, selectedStage, headerText } = SetReducer;
+  const { opponentTag, opponentCharacter, games, bannedStages, character, selectedStage, headerText, isWaiting } = SetReducer;
   return { 
     opponentTag, 
     opponentCharacter, 
@@ -93,7 +94,8 @@ const mapStateToProps = ({ SetReducer, AuthReducer }) => {
     character, 
     selectedStage, 
     headerText,
-    userTag: AuthReducer.userTag 
+    userTag: AuthReducer.userTag,
+    isWaiting
   };
 }
 
