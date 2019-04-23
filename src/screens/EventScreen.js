@@ -8,7 +8,15 @@ import { eventSignIn, eventSignOut, createSet, joinSet } from '../actions/EventA
 
 class EventScreen extends Component {
   isAdmin = false;
-  state = { showSignInQR: false, showCreateMatchQR: false, showFindMatch: false, info: "", setId: "" };
+
+  state = {
+    showSignInQR: false, 
+    showCreateMatchQR: false, 
+    showFindMatch: false, 
+    showFindSignIn: false, 
+    info: "", 
+    setId: "" 
+  };
 
   UNSAFE_componentWillMount() {
     this.isAdmin = this.props.selectedEvent.eventAdmins.includes(this.props.uid);
@@ -43,14 +51,14 @@ class EventScreen extends Component {
   }
 
   eventSignIn(eventId) {
-    this.setState({ showSignInQR: false });
+    this.setState({ showFindSignIn: false });
     this.props.eventSignIn(eventId);
   }
 
   renderQRScanner() {
     return (
       <QRScanner exitScanner={result => {
-          if (this.state.showSignInQR) {
+          if (this.state.showFindSignIn) {
             if (result.data === this.props.selectedEvent.eventId) this.eventSignIn(result.data);
             else console.log('well tgus us a lil fukt up');
           }
@@ -77,11 +85,11 @@ class EventScreen extends Component {
   render() {
     const { buttonStyle, eventSectionStyle, twoButtonStyle, eventInfoText } = styles;
     const { selectedEvent, signedInEvent, uid } = this.props;
-    const { showSignInQR, showCreateMatchQR, showFindMatch } = this.state;
+    const { showSignInQR, showCreateMatchQR, showFindMatch, showFindSignIn } = this.state;
 
     
     if (!selectedEvent) return null;
-    if (showFindMatch) return this.renderQRScanner();
+    if (showFindMatch || showFindSignIn) return this.renderQRScanner();
     if (showCreateMatchQR || showSignInQR) return this.renderQRCode(); 
 
     const rightIcon = signedInEvent === selectedEvent 
@@ -91,7 +99,7 @@ class EventScreen extends Component {
         if (this.isAdmin) {
           this.props.eventSignIn(this.props.selectedEvent);
         } else {
-          this.setState({ showSignInQR: true })
+          this.setState({ showFindSignIn: true })
         }
       }};
       // : { name: "sign-in", onPress: () => { this.props.eventSignIn(this.props.selectedEvent) }};
