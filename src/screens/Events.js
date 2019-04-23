@@ -52,7 +52,7 @@ class Events extends Component {
   }
   
   isInTimeFrame(event, timeFrame) {
-    const time = new Date(event.activeTimeSlots[0]['end'].toLocaleDateString());
+    // const time = new Date(event.activeTimeSlots[0]['end'].toLocaleDateString());
     switch (timeFrame) {
       case 'All': return true;
       case 'This Month': return this.dates.month.getTime() > time.getTime();

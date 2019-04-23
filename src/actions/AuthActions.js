@@ -1,15 +1,20 @@
-import { user_signed_in, user_signed_out, sign_in_fail } from './types';
+import { user_signed_in, user_signed_out, sign_in_fail, set_headers } from './types';
 import firebase from 'react-native-firebase';
+import backendUrl from '../globals/environment';
 
 export const signIn = (email, password) => {
-  return (dispatch) => {
-    firebase.auth().signInWithEmailAndPassword(email, password)
-    .then((callback) => {
-      dispatch({type: user_signed_in});
-    })
-    .catch((e) => {
-      dispatch({type: sign_in_fail});
-    });
+  return async (dispatch) => {
+    try {
+      const user = await firebase.auth().signInWithEmailAndPassword(email, password);
+      const token = await user.user.getIdToken();
+      const headers = {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      };
+      dispatch({ type: user_signed_in, payload: headers });
+    } catch(e) {
+      console.log(e);
+    }
   }
 };
 
@@ -18,9 +23,36 @@ export const signOut = () => {
 };
 
 export const createAccount = (email, password) => {
-  return () => {
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(() => console.log('create'))
-    .catch(() => console.log('fail'));
+  return async (dispatch) => {
+    try {
+      const user = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      const token = await user.user.getIdToken();
+      const body = JSON.stringify({
+        regionId: 'ppllRguivb7ouNQdX4it',
+        primaryCharacter: 'Marth',
+        diplayName: 'Yee'
+      });
+  
+      const headers = {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      };
+  
+      const url = backendUrl + '/Users';
+      
+      const response = await fetch(url, { 
+        method: "POST",
+        headers, 
+        body 
+      });
+  
+      if (response.ok) {
+        dispatch({ type: set_headers, payload: headers });
+      }
+    
+      return response.ok;
+    } catch(e) {
+      console.log(e);
+    }
   }
 };

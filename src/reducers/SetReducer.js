@@ -1,4 +1,13 @@
-import { set_best_of, set_banned_stage, set_game_win, set_opponent, reset_banned_stages, set_user_character, set_stage } from '../actions/types';
+import { 
+  set_best_of, 
+  set_banned_stage, 
+  set_game_win, 
+  set_opponent, 
+  reset_banned_stages, 
+  set_user_character, 
+  set_stage,
+  set_set_id
+} from '../actions/types';
 
 const stages = ['Dreamland', 'Fountain of Dreams', 'Battlefield', 'Final Destination', 'Yoshis Story', 'Pokemon Stadium'];
 
@@ -12,7 +21,8 @@ const INITIAL_STATE = {
   character: 'Mario',
   headerText: 'Strike 1 Stage',
   strikeFirst: true,
-  setOver: false
+  setOver: false,
+  setId: null
 };
 
 const SetReducer = (state = INITIAL_STATE, action) => {
@@ -59,6 +69,10 @@ const SetReducer = (state = INITIAL_STATE, action) => {
       const newState = { ...state, selectedStage: action.payload }
       newState.headerText =  getHeaderText(newState);
       return newState;
+
+    case set_set_id:
+      console.log(action.payload);
+      return { ...state, setId: action.payload };
     default: return state;
    }
 }

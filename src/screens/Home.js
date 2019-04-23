@@ -24,13 +24,14 @@ class Home extends Component {
   }
 
   async UNSAFE_componentWillMount() {
-    await this.props.getEvents();
-    await this.props.getUsers();
+
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     if (prevProps.signedIn !== this.props.signedIn) {
       this.setState({ section: 'Events' });
+      await this.props.getEvents();
+      await this.props.getUsers();
     }
   }
 

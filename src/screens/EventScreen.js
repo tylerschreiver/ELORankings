@@ -4,32 +4,53 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 
 import { BasePage, Button, QRCodeComponent, QRScanner } from '../components';
-import { eventSignIn, eventSignOut } from '../actions/EventActions';
+import { eventSignIn, eventSignOut, createSet, joinSet } from '../actions/EventActions';
 
 class EventScreen extends Component {
 
-  state = { showSignInQR: false, showCreateMatchQR: false, showFindMatch: false, info: "" };
+  state = { showSignInQR: false, showCreateMatchQR: false, showFindMatch: false, info: "", setId: "" };
+
+  shouldComponentUpdate(props) {
+    if (this.props.signedInEvent !== props.signedInEvent) {
+      return true;
+    } else if (this.props.setId !== props.id) {
+      return true;
+    }
+    return false;
+  }
+
+  componentDidUpdate(props) {
+    if (props.setId !== this.props.setId) this.setState({ showCreateMatchQR: true });
+  }
 
   openLink(link) {
     if (link.indexOf('http://') === -1 || link.indexOf('https://') === -1) link = 'http://' + link;
     Linking.openURL(link);
   }
 
+  async pressCreateSet() {
+    const setId = await this.props.createSet({ bestOf: 5, eventId: this.props.signedInEvent.id });
+  }
+
+  async joinSet(setId) {
+    const set = await this.props.joinSet({ setId, eventId: this.props.signedInEvent.id });
+    this.setState({ showFindMatch: false });
+    Actions.Set()
+  }
+
   renderQRScanner() {
-    return (
-      <QRScanner exitScanner={(e) => {
-        this.setState({showFindMatch: false, info: JSON.stringify(e)});
-      }}/>
-    )
+    return <QRScanner exitScanner={setId => this.joinSet(setId.data)}/>
   }
 
   renderQRCode() {
     const { showSignInQR } = this.state;
-    const qrValue = showSignInQR ? "sign into event" : "create a match";
     const qrText = showSignInQR ? "Sign In" : "Create Match";
 
+    console.log(this.props.setId);
+
     return (
-      <QRCodeComponent value={qrValue} 
+      <QRCodeComponent 
+        value={this.props.setId} 
         text={qrText}
         onClose={() => this.setState({ showSignInQR: false, showCreateMatchQR: false })}
       />
@@ -43,12 +64,12 @@ class EventScreen extends Component {
 
     if (!selectedEvent) return null;
     if (showFindMatch) return this.renderQRScanner();
-    if (showSignInQR || showCreateMatchQR) return this.renderQRCode(); 
+    if (showCreateMatchQR) return this.renderQRCode(); 
 
     const rightIcon = signedInEvent === selectedEvent 
       ? { name: "sign-out", onPress: () => this.props.eventSignOut() } 
       // todo remove auto sign in
-      : { name: "sign-in", onPress: () => {this.setState({ showSignInQR: true }); this.props.eventSignIn(selectedEvent) }};
+      : { name: "sign-in", onPress: () => { this.props.eventSignIn(this.props.selectedEvent) }};
     
     return (
       <BasePage 
@@ -71,11 +92,11 @@ class EventScreen extends Component {
               <View style={{ flex: 1, flexDirection: 'row', width: '80%', height: 'auto', justifyContent: 'space-between' }}>
                 <Button text="Create Match" 
                   style={twoButtonStyle}
-                  onClick={() => this.setState({ showCreateMatchQR: true })} 
+                  onClick={() => this.pressCreateSet()} 
                 />
                 <Button text="Join Match" 
                   style={twoButtonStyle}
-                  onClick={() => Actions.Set()} 
+                  onClick={() => this.setState({ showFindMatch: true })} 
                 />
               </View>
             }
@@ -87,10 +108,10 @@ class EventScreen extends Component {
               onClick={() => console.log("clicked a thingy") } 
             />
 
-            {/* <Button
+            <Button
               text="crash app" 
               style={buttonStyle}
-            /> */}
+            />
 
             <Text>{this.state.info}</Text>
           </View>
@@ -127,9 +148,10 @@ const styles = {
   }
 }
 
-const mapStateToProps = ({ EventsReducer }) => {
+const mapStateToProps = ({ EventsReducer, SetReducer }) => {
   const { selectedEvent, signedInEvent } = EventsReducer;
-  return { selectedEvent, signedInEvent };
+  const { setId } = SetReducer;
+  return { selectedEvent, signedInEvent, setId };
 }
 
-export default connect(mapStateToProps, { eventSignIn, eventSignOut })(EventScreen);
+export default connect(mapStateToProps, { eventSignIn, eventSignOut, createSet, joinSet })(EventScreen);

@@ -1,12 +1,14 @@
 export const user_signed_in = 'user_signed_in';
 export const user_signed_out = 'user_signed_out';
 export const sign_in_fail = 'sign_in_fail';
+export const set_headers = 'set_headers';
 
 export const events_requested = 'events_requested'
 export const event_selected = 'event_selected';
 export const event_sign_in = 'event_sign_in';
 export const event_sign_out = 'event_sign_out';
 export const create_event = 'create_event';
+export const set_set_id = 'set_set_id';
 
 export const set_opponent = 'set_opponent';
 export const set_game_win = 'set_game_win';
