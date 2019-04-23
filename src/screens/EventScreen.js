@@ -11,21 +11,15 @@ class EventScreen extends Component {
   state = { showSignInQR: false, showCreateMatchQR: false, showFindMatch: false, info: "", setId: "" };
 
   shouldComponentUpdate(props) {
-    console.log(props);
     if (this.props.signedInEvent !== props.signedInEvent) {
       return true;
     } else if (this.props.setId !== props.setId) {
-      console.log('update');
-      console.log(props.setId);
-      console.log(this.props.setId);
       return true;
     }
     return true;
   }
 
   componentDidUpdate(props) {
-    console.log(props.setId);
-    console.log(this.props.setId);
     if (props.setId !== this.props.setId) this.setState({ showCreateMatchQR: true });
   }
 

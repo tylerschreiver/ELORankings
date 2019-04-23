@@ -23,10 +23,11 @@ class Socket {
 
   on(event, callback) {
     this.socket.on(event, callback);
+    console.log(this.socket._callbacks)
   }
 
   emit(event, options) {
-    console.log('emit');
+    console.log(this.socket._callbacks)
     this.socket.emit(event, options);
   }
 

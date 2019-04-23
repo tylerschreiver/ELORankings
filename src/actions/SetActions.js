@@ -11,16 +11,16 @@ export const init = () => {
       console.log('hit');
       dispatch({ type: set_banned_stage, payload: stage });
     });
+    console.log(socket.socket._callbacks);
   }
 }
 
 export const banStage = stage => {
   return async (dispatch, getState) => {
-    // const { headers } = getState().AuthReducer;
+    const { headers } = getState().AuthReducer;
     const { setId } = getState().SetReducer;
-    // const token = headers.Authorization.slice(7, headers.Authorization.length);
+    const token = headers.Authorization.slice(7, headers.Authorization.length);
 
-    console.log(setId);
     // socket.connect(token);
     socket.emit('removeStage', { stage, setId });
   }
