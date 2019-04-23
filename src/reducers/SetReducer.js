@@ -32,16 +32,18 @@ const SetReducer = (state = INITIAL_STATE, action) => {
       return { ...state, bannedStages: [] };
 
     case set_banned_stage: {
-      const bannedStages = [ ...state.bannedStages, action.payload ];
-      console.log(bannedStages)
-      if (state.games.length === 0 && bannedStages.length === 5) {
-        const selectedStage = stages.filter(stage => bannedStages.indexOf(stage) === -1);
-        return { ...state, bannedStages, selectedStage: selectedStage[0], headerText: "Select the Winner" };
-      }
-      const newState = { ...state, bannedStages }
-      newState.headerText = getHeaderText(newState);
-      newState.isWaiting = newState.headerText.includes('Wait');
-      return newState;
+      if (!state.bannedStages.includes(action.payload)) {
+        const bannedStages = [ ...state.bannedStages, action.payload ];
+        console.log(bannedStages)
+        if (state.games.length === 0 && bannedStages.length === 5) {
+          const selectedStage = stages.filter(stage => bannedStages.indexOf(stage) === -1);
+          return { ...state, bannedStages, selectedStage: selectedStage[0], headerText: "Select the Winner" };
+        }
+        const newState = { ...state, bannedStages }
+        newState.headerText = getHeaderText(newState);
+        newState.isWaiting = newState.headerText.includes('Wait');
+        return newState;
+      } else return state;
     }
   
     case set_opponent:
