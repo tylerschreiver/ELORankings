@@ -96,7 +96,6 @@ const SetReducer = (state = INITIAL_STATE, action) => {
     } 
 
     case set_rank: {
-      console.log(action.payload);
       if (action.payload.rank) {
         return { ...state, rank: action.payload.rank };
       } else if (action.payload.opponentRank) {
@@ -105,7 +104,6 @@ const SetReducer = (state = INITIAL_STATE, action) => {
     }
 
     case set_character: {
-      console.log(action.payload);
       if (action.payload.character) {
         return { ...state, character: action.payload.character };
       } else if (action.payload.opponentCharacter) {

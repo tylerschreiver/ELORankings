@@ -22,16 +22,18 @@ export const signOut = () => {
   return { type: user_signed_out };
 };
 
-export const createAccount = (email, password) => {
+export const createAccount = (email, password, region, character, tag) => {
   return async (dispatch) => {
     try {
       const user = await firebase.auth().createUserWithEmailAndPassword(email, password);
       const token = await user.user.getIdToken();
       const body = JSON.stringify({
-        regionId: 'ppllRguivb7ouNQdX4it',
-        primaryCharacter: 'Marth',
-        diplayName: 'Yee'
+        regionId: region,
+        primaryCharacter: character,
+        diplayName: tag
       });
+
+      console.log(body);
   
       const headers = {
         Authorization: 'Bearer ' + token,

@@ -115,7 +115,7 @@ class Leaderboard extends Component {
                   showChips={false}
                   onSelectedItemsChange={regions => this.filter(null, regions, null)}
                   styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
-                  />
+                />
               </View>
               <View style={shadowStyle}>
                 <SectionedMultiSelect

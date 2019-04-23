@@ -117,7 +117,7 @@ class SetScreen extends Component {
     if (this.props.headerText.indexOf('Won') !== -1) return (
       <View><Text>{this.props.headerText}</Text></View>
     );
-    else if (this.props.character === '' && this.props.opponentCharacter === '' && this.props.games.length === 0) {
+    else if ((this.props.character === '' || this.props.opponentCharacter === '') && this.props.games.length === 0) {
       return (
         <View>
           <Text>Choose Rank</Text>
