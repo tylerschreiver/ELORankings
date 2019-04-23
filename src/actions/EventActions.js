@@ -45,7 +45,7 @@ export const createEvent = event => {
   return { type: create_event, payload: event };
 }
 
-export const createSet = (set) => {
+export const createSet = set => {
   return async (dispatch, getState) => {
     const { headers } = getState().AuthReducer;
     const token = headers.Authorization.slice(7, headers.Authorization.length);
@@ -55,10 +55,9 @@ export const createSet = (set) => {
     socket.on('setCreated', id => {
       dispatch({ type: set_set_id, payload: { setId: id, strikeFirst: true }});
     });
-    socket.on('setJoined', ranks => {
-      console.log(ranks.creator);
-      const fake = { id: 'ww', rank: { character: 'Mario', score: 100, slotNumber: 1 }}
-      dispatch({ type: set_available_ranks, payload: [fake] });
+    socket.on('setJoined', joinedSet => {
+      console.log(joinedSet);
+      dispatch({ type: set_available_ranks, payload: joinedSet.creator });
       Actions.Set();
     });
   };
@@ -66,16 +65,15 @@ export const createSet = (set) => {
 
 export const joinSet = set => {
   return async (dispatch, getState) => {
-    console.log('joineth');
+    console.log(set);
     const { headers } = getState().AuthReducer;
     const token = headers.Authorization.slice(7, headers.Authorization.length);
     socket.connect(token);
     dispatch({ type: set_set_id, payload: { setId: set.setId, strikeFirst: false } });
     socket.emit('joinSet', set);
-    socket.on('setJoined', ranks => {
-      console.log(ranks.joiner);
-      const fake = { id: 'ww', rank: { character: 'Mario', score: 100, slotNumber: 1 }}
-      dispatch({ type: set_available_ranks, payload: [fake] });
+    socket.on('setJoined', joinedSet => {
+      console.log(joinedSet);
+      dispatch({ type: set_available_ranks, payload: joinedSet.joiner.rank });
       Actions.Set();
     });
   };

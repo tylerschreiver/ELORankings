@@ -17,6 +17,10 @@ class SetScreen extends Component {
     for(const key in stages) this.stageArray.push({ key, stage: stages[key] });
   }
 
+  shouldComponentUpdate(props) {
+    return true;
+  }
+
   renderGameWin() {
     const userChar = characters[this.props.character];
     const opponentChar = characters[this.props.opponentCharacter];
@@ -75,20 +79,21 @@ class SetScreen extends Component {
   }
 
   renderRanks() {
+    console.log(this.props.availableRanks);
     return this.props.availableRanks.map(rank => {
-      <TouchableOpacity onTouchEnd={() => console.log(rank)}>
-        <View>
-          <Text>{rank.id}</Text>
-          <Text>{rank.rank.character}</Text>
-          <Text>{rank.rank.score}</Text>
-          <Text>Slot {rank.rank.slotNumber}</Text>
+      return (
+      <TouchableOpacity key={rank.slotNumber} onTouchEnd={() => console.log(rank)}>
+        <View style={{ flexDirection: 'row', borderWidth: 1, borderRadius: 5, padding: 10, borderColor: 'black' }}>
+          <Text>{rank.character}</Text>
+          <Text>{rank.score}</Text>
+          <Text>Slot {rank.slotNumber}</Text>
         </View>
       </TouchableOpacity>
+      );
     });
   }
   
   renderSection() {
-    console.log(this.props)
     if (this.props.headerText.indexOf('Won') !== -1) return (
       <View><Text>{this.props.headerText}</Text></View>
     );
@@ -142,6 +147,7 @@ const styles = {
 
 const mapStateToProps = ({ SetReducer, AuthReducer }) => {
   const { opponentTag, opponentCharacter, games, bannedStages, character, selectedStage, headerText, isWaiting, availableRanks } = SetReducer;
+  console.log(availableRanks);
   return { 
     opponentTag, 
     opponentCharacter, 
