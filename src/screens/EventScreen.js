@@ -20,7 +20,7 @@ class EventScreen extends Component {
       console.log(this.props.setId);
       return true;
     }
-    return false;
+    return true;
   }
 
   componentDidUpdate(props) {
