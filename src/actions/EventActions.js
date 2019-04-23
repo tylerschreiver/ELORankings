@@ -54,7 +54,7 @@ export const createSet = (set) => {
     socket.emit('createSet', set);
     socket.on('setCreated', id => {
       console.log('dispatch fam');
-      dispatch({ type: set_set_id, payload: { id, strikeFirst: true }});
+      dispatch({ type: set_set_id, payload: { setId: id, strikeFirst: true }});
     });
     socket.on('setJoined', set => {
       console.log('maubne')
