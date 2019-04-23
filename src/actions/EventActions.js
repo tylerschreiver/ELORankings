@@ -58,9 +58,6 @@ export const createSet = (set) => {
     socket.on('setJoined', set => {
       Actions.Set();
     });
-    socket.on('stageBanned', stage => {
-      dispatch({ type: set_banned_stage, action: stage });
-    });
   };
 }
 
@@ -73,9 +70,6 @@ export const joinSet = (set) => {
     socket.emit('joinSet', set);
     socket.on('setJoined', () => {
       Actions.Set();
-    });
-    socket.on('stageBanned', stage => {
-      dispatch({ type: set_banned_stage, action: stage });
     });
   };
 }
