@@ -3,16 +3,16 @@ import { events_requested, event_selected, create_event, event_sign_in, event_si
 import faker from 'faker';
 import backendUrl from '../globals/environment';
 import socket from '../globals/socket';
+import { Actions } from 'react-native-router-flux';
 
 export const getEvents = () => {
   return async (dispatch, getState) => {
     try {
       const { headers } = getState().AuthReducer;
       const url = backendUrl + '/Events';
-  
       const response = await fetch(url, { method: 'GET', headers });
       const events = JSON.parse(response._bodyText);
-
+      
       dispatch({ type: events_requested, payload: events });
     } catch (e) {
       console.log(e);
@@ -47,20 +47,17 @@ export const createEvent = event => {
 
 export const createSet = (set) => {
   return async (dispatch, getState) => {
-
-    console.log(set);
-    // console.log(JSON.stringify(set));
-    // console.log(Object.keys(JSON.stringify(set)))
-    console.log(Object.keys(set));
-
     const { headers } = getState().AuthReducer;
     const token = headers.Authorization.slice(7, headers.Authorization.length);
    
     socket.connect(token);
-    socket.emit('createSet',set);
+    socket.emit('createSet', set);
     socket.on('setCreated', id => {
       dispatch({ type: set_set_id, payload: id });
     });
+    socket.on('setJoined', set => {
+      Actions.Set();
+    })
   };
 }
 
@@ -68,16 +65,11 @@ export const joinSet = (set) => {
   return async (dispatch, getState) => {
     const { headers } = getState().AuthReducer;
     const token = headers.Authorization.slice(7, headers.Authorization.length);
-
     socket.connect(token);
-    socket.emit('joinSet',set);
+    socket.emit('joinSet', set);
     socket.on('setJoined', set => {
       console.log(set);
+      Actions.Set();
     });
-    //   const url = backendUrl + '/Events/' + eventId + '/sets/' + setId;
-  //   const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify({}) });
-  //   if (response.ok) {
-  //     return response._bodyText;
-  //   }
   };
 }

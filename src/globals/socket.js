@@ -6,6 +6,7 @@ import env from './environment';
 
 class Socket {
   constructor() {
+    console.log("when this get hit?");
     this.connect = this.connect.bind(this);
     this.on = this.on.bind(this);
     this.emit = this.emit.bind(this);
