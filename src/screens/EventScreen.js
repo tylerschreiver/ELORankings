@@ -7,13 +7,14 @@ import { BasePage, Button, QRCodeComponent, QRScanner } from '../components';
 import { eventSignIn, eventSignOut, createSet, joinSet } from '../actions/EventActions';
 
 class EventScreen extends Component {
-
+  isAdmin = false;
   state = { showSignInQR: false, showCreateMatchQR: false, showFindMatch: false, info: "", setId: "" };
 
-  shouldComponentUpdate(props) {
-    if (this.props.signedInEvent !== props.signedInEvent) {
+  shouldComponentUpdate(prevProps) {
+    this.isAdmin = this.props.selectedEvent.eventAdmins.includes(this.props.uid);
+    if (this.props.signedInEvent !== prevProps.signedInEvent) {
       return true;
-    } else if (this.props.setId !== props.setId) {
+    } else if (this.props.setId !== prevProps.setId) {
       return true;
     }
     return true;
@@ -84,7 +85,7 @@ class EventScreen extends Component {
       ? { name: "sign-out", onPress: () => this.props.eventSignOut() } 
       // todo remove auto sign in
       : { name: "sign-in", onPress: () => {
-        if (selectedEvent.eventAdmins.includes(uid)) {
+        if (this.isAdmin) {
           this.props.eventSignIn(this.props.selectedEvent);
         } else {
           this.setState({ showSignInQR: true })
@@ -128,6 +129,13 @@ class EventScreen extends Component {
               style={buttonStyle}
               onClick={() => console.log("clicked a thingy") } 
             />
+
+            { this.isAdmin &&            
+              <Button text="Create Signin QR" 
+                style={buttonStyle}
+                onClick={() => this.setState({ showSignInQR: true }) } 
+              />
+            }
 
             <Button
               text="crash app" 
