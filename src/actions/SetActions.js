@@ -1,11 +1,16 @@
-import { set_banned_stage, set_game_win, set_opponent, reset_banned_stages, set_best_of, set_user_character, set_stage } from './types';
+import { set_banned_stage, set_game_win, set_opponent, reset_banned_stages, set_best_of, set_user_character, set_stage, set_rank } from './types';
 import socket from '../globals/socket';
 
 export const init = () => {
   return async (dispatch, getState) => {
+    const { uid } = getState().AuthReducer;
     socket.on('stageBanned', stage => {
       dispatch({ type: set_banned_stage, payload: stage });
     });
+    socket.on('rankChosen', rank => {
+      const payload = rank.id === uid ? { rank: rank.rank } : { opponentRank: rank.rank }
+      dispatch({ type: set_rank, payload });
+    })
   }
 }
 
@@ -15,6 +20,13 @@ export const banStage = stage => {
     socket.emit('removeStage', { stage, setId });
   }
 };
+
+export const chooseRankedSlot = slot => {
+  return async (dispatch, getState) => {
+    const { setId } = getState().SetReducer;
+    socket.emit('chooseRank', { rank: slot, setId })
+  }
+}
 
 export const resetBannedStages = () => {
   return { type: reset_banned_stages };

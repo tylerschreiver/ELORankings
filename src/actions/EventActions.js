@@ -57,7 +57,7 @@ export const createSet = set => {
     });
     socket.on('setJoined', joinedSet => {
       console.log(joinedSet);
-      dispatch({ type: set_available_ranks, payload: joinedSet.creator });
+      dispatch({ type: set_available_ranks, payload: joinedSet.creator.rank });
       Actions.Set();
     });
   };

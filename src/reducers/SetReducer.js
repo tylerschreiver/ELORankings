@@ -25,7 +25,9 @@ const INITIAL_STATE = {
   setOver: false,
   setId: null,
   isWaiting: false,
-  availableRanks: []
+  availableRanks: [],
+  rank: null,
+  opponentRank: null
 };
 
 const SetReducer = (state = INITIAL_STATE, action) => {
@@ -90,6 +92,15 @@ const SetReducer = (state = INITIAL_STATE, action) => {
     case set_available_ranks: {
       return { ...state, availableRanks: action.payload };
     } 
+
+    case set_rank: {
+      console.log(action.payload);
+      if (action.payload.rank) {
+        return { ...state, rank: action.payload.rank };
+      } else if (action.payload.opponentRank) {
+        return { ...state, opponentRank: action.payload.opponentRank };
+      } else return { ...state };
+    }
     default: return state;
    }
 }

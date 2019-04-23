@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { Image, View, ScrollView, Dimensions, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
-import { banStage, resetBannedStages, setGameWin, setOpponent, setBestOf, setStage, init } from '../actions/SetActions'
+import { banStage, resetBannedStages, setGameWin, setOpponent, setBestOf, setStage, init, chooseRankedSlot } from '../actions/SetActions'
 import { BasePage } from '../components';
 import stages from '../assets/getStages';
 import characters from '../assets/getCharacters';
 
 class SetScreen extends Component {
-  state = { firstGame: true, selectStage: true };
+  state = { firstGame: true, selectStage: true, chooseCharacter: false };
   phoneDim = Dimensions.get("window");
   stageArray = [];
 
@@ -19,6 +19,13 @@ class SetScreen extends Component {
 
   shouldComponentUpdate(props) {
     return true;
+  }
+
+  pickedRankSlot(rank) {
+    if (rank.slotNumber === 1) {
+      this.setState({ chooseCharacter: true });
+      this.props.chooseRankedSlot(rank)
+    }
   }
 
   renderGameWin() {
@@ -79,10 +86,9 @@ class SetScreen extends Component {
   }
 
   renderRanks() {
-    console.log(this.props.availableRanks);
     return this.props.availableRanks.map(rank => {
       return (
-      <TouchableOpacity key={rank.slotNumber} onTouchEnd={() => console.log(rank)}>
+      <TouchableOpacity key={rank.slotNumber} onTouchEnd={() => this.pickedRankSlot(rank)}>
         <View style={{ flexDirection: 'row', borderWidth: 1, borderRadius: 5, padding: 10, borderColor: 'black' }}>
           <Text>{rank.character}</Text>
           <Text>{rank.score}</Text>
@@ -98,7 +104,6 @@ class SetScreen extends Component {
       <View><Text>{this.props.headerText}</Text></View>
     );
     else if (this.props.character === '' && this.props.opponentCharacter === '' && this.props.games.length === 0) {
-      console.log(this.props.availableRanks);
       return (
         <View>
           <Text>Choose Rank</Text>
@@ -147,7 +152,6 @@ const styles = {
 
 const mapStateToProps = ({ SetReducer, AuthReducer }) => {
   const { opponentTag, opponentCharacter, games, bannedStages, character, selectedStage, headerText, isWaiting, availableRanks } = SetReducer;
-  console.log(availableRanks);
   return { 
     opponentTag, 
     opponentCharacter, 
@@ -169,5 +173,6 @@ export default connect(mapStateToProps, {
   setOpponent, 
   setStage,
   setBestOf,
-  init
+  init,
+  chooseRankedSlot
 })(SetScreen);

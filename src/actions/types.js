@@ -18,6 +18,7 @@ export const set_best_of = 'set_best_of';
 export const reset_banned_stages = 'reset_banned_stages';
 export const set_user_character = 'set_user_character';
 export const set_available_ranks = 'set_available_ranks';
+export const set_rank = 'set_rank'
 
 export const set_users = 'set_users';
 export const set_leaderboard = 'set_leaderboard';
