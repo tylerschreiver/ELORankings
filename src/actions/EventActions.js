@@ -1,5 +1,5 @@
 import { generateEvents } from '../mockData/mock';
-import { events_requested, event_selected, create_event, event_sign_in, event_sign_out, set_set_id } from './types';
+import { events_requested, event_selected, create_event, event_sign_in, event_sign_out, set_set_id, set_available_ranks } from './types';
 import faker from 'faker';
 import backendUrl from '../globals/environment';
 import socket from '../globals/socket';
@@ -56,7 +56,9 @@ export const createSet = (set) => {
       dispatch({ type: set_set_id, payload: { setId: id, strikeFirst: true }});
     });
     socket.on('setJoined', ranks => {
-      console.log(ranks)
+      console.log(ranks.creator);
+      const fake = { id: 'ww', rank: { character: 'Mario', score: 100, slotNumber: 1 }}
+      dispatch({ type: set_available_ranks, payload: [fake] });
       Actions.Set();
     });
   };
@@ -71,7 +73,9 @@ export const joinSet = set => {
     dispatch({ type: set_set_id, payload: { setId: set.setId, strikeFirst: false } });
     socket.emit('joinSet', set);
     socket.on('setJoined', ranks => {
-      console.log(ranks);
+      console.log(ranks.joiner);
+      const fake = { id: 'ww', rank: { character: 'Mario', score: 100, slotNumber: 1 }}
+      dispatch({ type: set_available_ranks, payload: [fake] });
       Actions.Set();
     });
   };

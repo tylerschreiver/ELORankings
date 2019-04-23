@@ -6,7 +6,8 @@ import {
   reset_banned_stages, 
   set_user_character, 
   set_stage,
-  set_set_id
+  set_set_id,
+  set_available_ranks
 } from '../actions/types';
 
 const stages = ['Dreamland', 'Fountain of Dreams', 'Battlefield', 'Final Destination', 'Yoshis Story', 'Pokemon Stadium'];
@@ -23,7 +24,8 @@ const INITIAL_STATE = {
   strikeFirst: false,
   setOver: false,
   setId: null,
-  isWaiting: false
+  isWaiting: false,
+  availableRanks: []
 };
 
 const SetReducer = (state = INITIAL_STATE, action) => {
@@ -84,6 +86,10 @@ const SetReducer = (state = INITIAL_STATE, action) => {
       newState.isWaiting = newState.headerText.includes('Wait');
       return { ...newState }
     }
+
+    case set_available_ranks: {
+      return { ...state, availableRanks: action.payload };
+    } 
     default: return state;
    }
 }

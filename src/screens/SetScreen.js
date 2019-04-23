@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, View, ScrollView, Dimensions, Text } from 'react-native';
+import { Image, View, ScrollView, Dimensions, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
 import { banStage, resetBannedStages, setGameWin, setOpponent, setBestOf, setStage, init } from '../actions/SetActions'
@@ -73,11 +73,34 @@ class SetScreen extends Component {
       </ScrollView>
     );
   }
+
+  renderRanks() {
+    return this.props.availableRanks.map(rank => {
+      <TouchableOpacity onTouchEnd={() => console.log(rank)}>
+        <View>
+          <Text>{rank.id}</Text>
+          <Text>{rank.rank.character}</Text>
+          <Text>{rank.rank.score}</Text>
+          <Text>Slot {rank.rank.slotNumber}</Text>
+        </View>
+      </TouchableOpacity>
+    });
+  }
   
   renderSection() {
+    console.log(this.props)
     if (this.props.headerText.indexOf('Won') !== -1) return (
       <View><Text>{this.props.headerText}</Text></View>
     );
+    else if (this.props.character === '' && this.props.opponentCharacter === '' && this.props.games.length === 0) {
+      console.log(this.props.availableRanks);
+      return (
+        <View>
+          <Text>Choose Rank</Text>
+          {this.renderRanks()}
+        </View>
+      );
+    }
     else if (this.props.selectedStage === '') return this.renderStageStrike();
     else return this.renderGameWin();
   }
@@ -118,16 +141,18 @@ const styles = {
 }
 
 const mapStateToProps = ({ SetReducer, AuthReducer }) => {
-  const { opponentTag, opponentCharacter, games, bannedStages, character, selectedStage, headerText, isWaiting } = SetReducer;
+  const { opponentTag, opponentCharacter, games, bannedStages, character, selectedStage, headerText, isWaiting, availableRanks } = SetReducer;
   return { 
     opponentTag, 
     opponentCharacter, 
-    games, bannedStages, 
+    games, 
+    bannedStages, 
     character, 
     selectedStage, 
     headerText,
     userTag: AuthReducer.userTag,
-    isWaiting
+    isWaiting,
+    availableRanks
   };
 }
 

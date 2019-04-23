@@ -51,7 +51,6 @@ class EventScreen extends Component {
   }
 
   eventSignIn(eventId) {
-    console.log("hit event sign in");
     this.setState({ showFindSignIn: false });
     this.props.eventSignIn(this.props.selectedEvent);
   }
