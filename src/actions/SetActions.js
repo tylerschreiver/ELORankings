@@ -4,7 +4,7 @@ import socket from '../globals/socket';
 export const init = () => {
   socket.on('stageBanned', stage => {
     console.log('hit');
-    dispatch({ type: set_banned_stage, action: stage });
+    dispatch({ type: set_banned_stage, payload: stage });
   });
 }
 

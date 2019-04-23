@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Image, View, ScrollView, Dimensions, Text } from 'react-native';
 import { connect } from 'react-redux';
 
-import { banStage, resetBannedStages, setGameWin, setOpponent, setBestOf, setStage } from '../actions/SetActions'
+import { banStage, resetBannedStages, setGameWin, setOpponent, setBestOf, setStage, init } from '../actions/SetActions'
 import { BasePage } from '../components';
 import stages from '../assets/getStages';
 import characters from '../assets/getCharacters';
@@ -13,6 +13,7 @@ class SetScreen extends Component {
   stageArray = [];
 
   UNSAFE_componentWillMount() {
+    this.props.init();
     for(const key in stages) this.stageArray.push({ key, stage: stages[key] });
   }
 
@@ -131,5 +132,6 @@ export default connect(mapStateToProps, {
   setGameWin, 
   setOpponent, 
   setStage,
-  setBestOf 
+  setBestOf,
+  init
 })(SetScreen);
