@@ -42,7 +42,7 @@ const SetReducer = (state = INITIAL_STATE, action) => {
         const newState = { ...state, bannedStages }
         newState.headerText = getHeaderText(newState);
         newState.isWaiting = newState.headerText.includes('Wait');
-        return newState;
+        return { ...newState };
       } else return state;
     }
   
@@ -63,7 +63,7 @@ const SetReducer = (state = INITIAL_STATE, action) => {
       newState.headerText = getHeaderText(newState);
       newState.isWaiting = newState.headerText.includes('Wait');
       newState.bannedStages = game.didWin ? getBannedOpponentStages(games) : getBannedUserStages(games);
-      return newState;
+      return { ...newState };
     }
     case set_best_of: 
       return { ...state, bestOf: action.payload };
@@ -75,14 +75,15 @@ const SetReducer = (state = INITIAL_STATE, action) => {
       const newState = { ...state, selectedStage: action.payload }
       newState.headerText =  getHeaderText(newState);
       newState.isWaiting = newState.headerText.includes('Wait');
-      return newState;
+      return { ...newState };
     }
     case set_set_id: {
       const newState = state;
       newState.setId = action.payload.setId;
       newState.strikeFirst = action.payload.strikeFirst;
       newState.headerText = getHeaderText(newState); 
-      return newState
+      console.log(newState);
+      return { ...newState }
     }
     default: return state;
    }
