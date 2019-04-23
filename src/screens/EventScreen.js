@@ -60,7 +60,7 @@ class EventScreen extends Component {
     return (
       <QRScanner exitScanner={result => {
           if (this.state.showFindSignIn) {
-            if (result.data === this.props.selectedEvent.eventId) this.eventSignIn(result.data);
+            if (result.data === this.props.selectedEvent.id) this.eventSignIn(result.data);
             else console.log(result.data);
           }
           else if (this.state.showFindMatch) this.joinSet(result.data);
@@ -72,10 +72,8 @@ class EventScreen extends Component {
   renderQRCode() {
     const { showSignInQR } = this.state;
     const qrText = showSignInQR ? "Sign In" : "Create Match";
-    const value = showSignInQR ? this.props.selectedEvent.eventId : this.props.setId;
-    console.log(value);
-    console.log(this.props.selectedEvent.eventId)
-    console.log(this.props.setId);
+    const value = showSignInQR ? this.props.selectedEvent.id : this.props.setId;
+    console.log(this.props);
 
     return (
       <QRCodeComponent 
