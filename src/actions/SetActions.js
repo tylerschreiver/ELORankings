@@ -4,6 +4,7 @@ import socket from '../globals/socket';
 export const init = () => {
   return async () => {
     console.log("is this called?")
+    socket.connect(token);
     socket.on('stageBanned', stage => {
       console.log('hit');
       dispatch({ type: set_banned_stage, payload: stage });
@@ -18,7 +19,7 @@ export const banStage = stage => {
     const token = headers.Authorization.slice(7, headers.Authorization.length);
 
    
-    socket.connect(token);
+    // socket.connect(token);
     socket.emit('removeStage', { stage, setId });
   }
 };

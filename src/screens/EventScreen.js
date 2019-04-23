@@ -33,7 +33,6 @@ class EventScreen extends Component {
   }
 
   async joinSet(setId) {
-    console.log('join');
     this.props.joinSet({ setId, eventId: this.props.signedInEvent.id });
     this.setState({ showFindMatch: false });
     Actions.Set()
@@ -46,8 +45,6 @@ class EventScreen extends Component {
   renderQRCode() {
     const { showSignInQR } = this.state;
     const qrText = showSignInQR ? "Sign In" : "Create Match";
-
-    console.log(this.props.setId);
 
     return (
       <QRCodeComponent 
