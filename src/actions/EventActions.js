@@ -70,7 +70,7 @@ export const joinSet = (set) => {
     const token = headers.Authorization.slice(7, headers.Authorization.length);
     socket.connect(token);
     console.log('set set set');
-    dispatch({ type: set_set_id, payload: { setId: set } });
+    dispatch({ type: set_set_id, payload: { setId: set, strikeFirst: false } });
     socket.emit('joinSet', set);
     socket.on('setJoined', () => {
       Actions.Set();
