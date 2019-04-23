@@ -7,7 +7,9 @@ import {
   set_user_character, 
   set_stage,
   set_set_id,
-  set_available_ranks
+  set_available_ranks,
+  set_rank,
+  set_character
 } from '../actions/types';
 
 const stages = ['Dreamland', 'Fountain of Dreams', 'Battlefield', 'Final Destination', 'Yoshis Story', 'Pokemon Stadium'];
@@ -99,6 +101,15 @@ const SetReducer = (state = INITIAL_STATE, action) => {
         return { ...state, rank: action.payload.rank };
       } else if (action.payload.opponentRank) {
         return { ...state, opponentRank: action.payload.opponentRank };
+      } else return { ...state };
+    }
+
+    case set_character: {
+      console.log(action.payload);
+      if (action.payload.character) {
+        return { ...state, character: action.payload.character };
+      } else if (action.payload.opponentCharacter) {
+        return { ...state, opponentCharacter: action.payload.opponentCharacter };
       } else return { ...state };
     }
     default: return state;

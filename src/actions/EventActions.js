@@ -56,7 +56,6 @@ export const createSet = set => {
       dispatch({ type: set_set_id, payload: { setId: id, strikeFirst: true }});
     });
     socket.on('setJoined', joinedSet => {
-      console.log(joinedSet);
       dispatch({ type: set_available_ranks, payload: joinedSet.creator.rank });
       Actions.Set();
     });
@@ -65,14 +64,12 @@ export const createSet = set => {
 
 export const joinSet = set => {
   return async (dispatch, getState) => {
-    console.log(set);
     const { headers } = getState().AuthReducer;
     const token = headers.Authorization.slice(7, headers.Authorization.length);
     socket.connect(token);
     dispatch({ type: set_set_id, payload: { setId: set.setId, strikeFirst: false } });
     socket.emit('joinSet', set);
     socket.on('setJoined', joinedSet => {
-      console.log(joinedSet);
       dispatch({ type: set_available_ranks, payload: joinedSet.joiner.rank });
       Actions.Set();
     });

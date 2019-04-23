@@ -2,15 +2,28 @@ import React, { Component } from 'react';
 import { Image, View, ScrollView, Dimensions, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
-import { banStage, resetBannedStages, setGameWin, setOpponent, setBestOf, setStage, init, chooseRankedSlot } from '../actions/SetActions'
+import { 
+  banStage, 
+  resetBannedStages, 
+  setGameWin, 
+  setOpponent, 
+  setBestOf, 
+  setStage, 
+  init, 
+  chooseRankedSlot, 
+  setCharacter 
+} from '../actions/SetActions'
 import { BasePage } from '../components';
 import stages from '../assets/getStages';
 import characters from '../assets/getCharacters';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
 class SetScreen extends Component {
   state = { firstGame: true, selectStage: true, chooseCharacter: false };
   phoneDim = Dimensions.get("window");
   stageArray = [];
+  charactersSearch = Object.keys(characters).map(char => { return { name: char } });
+
 
   UNSAFE_componentWillMount() {
     this.props.init();
@@ -22,6 +35,7 @@ class SetScreen extends Component {
   }
 
   pickedRankSlot(rank) {
+    console.log(rank);
     if (rank.slotNumber === 1) {
       this.setState({ chooseCharacter: true });
       this.props.chooseRankedSlot(rank)
@@ -88,11 +102,11 @@ class SetScreen extends Component {
   renderRanks() {
     return this.props.availableRanks.map(rank => {
       return (
-      <TouchableOpacity key={rank.slotNumber} onTouchEnd={() => this.pickedRankSlot(rank)}>
-        <View style={{ flexDirection: 'row', borderWidth: 1, borderRadius: 5, padding: 10, borderColor: 'black' }}>
+      <TouchableOpacity key={rank.slotNumber} onPress={() => this.pickedRankSlot(rank)}>
+        <View style={styles.rankStyles}>
           <Text>{rank.character}</Text>
-          <Text>{rank.score}</Text>
           <Text>Slot {rank.slotNumber}</Text>
+          <Text>{rank.score}</Text>
         </View>
       </TouchableOpacity>
       );
@@ -108,6 +122,21 @@ class SetScreen extends Component {
         <View>
           <Text>Choose Rank</Text>
           {this.renderRanks()}
+
+          { this.state.chooseCharacter &&
+            <View>
+                <SectionedMultiSelect
+                  uniqueKey="name" 
+                  items={this.charactersSearch} 
+                  selectedItems={[this.props.character]} 
+                  selectText="Character"
+                  showChips={false}
+                  single={true}
+                  onSelectedItemsChange={chars => this.props.setCharacter(chars[0])}
+                  styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
+                />
+            </View>
+          }
         </View>
       );
     }
@@ -147,10 +176,22 @@ const styles = {
   characterIconStyle: {
     height: 64,
     width: 64
+  },
+  rankStyles: {
+    flexDirection: 'row', 
+    borderWidth: 1, 
+    borderRadius: 5, 
+    backgroundColor: '#4c4f54',
+    width: '80%',
+    alignSelf: 'center',
+    padding: 10, 
+    borderColor: 'black', 
+    alignItems: 'space-between'
   }
 }
 
-const mapStateToProps = ({ SetReducer, AuthReducer }) => {
+const mapStateToProps = ({ SetReducer, 
+  AuthReducer }) => {
   const { opponentTag, opponentCharacter, games, bannedStages, character, selectedStage, headerText, isWaiting, availableRanks } = SetReducer;
   return { 
     opponentTag, 
@@ -174,5 +215,6 @@ export default connect(mapStateToProps, {
   setStage,
   setBestOf,
   init,
-  chooseRankedSlot
+  chooseRankedSlot,
+  setCharacter
 })(SetScreen);
