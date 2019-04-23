@@ -51,8 +51,9 @@ class EventScreen extends Component {
   }
 
   eventSignIn(eventId) {
+    console.log("hit event sign in");
     this.setState({ showFindSignIn: false });
-    this.props.eventSignIn(eventId);
+    this.props.eventSignIn(this.props.selectedEvent);
   }
 
   renderQRScanner() {
@@ -60,7 +61,7 @@ class EventScreen extends Component {
       <QRScanner exitScanner={result => {
           if (this.state.showFindSignIn) {
             if (result.data === this.props.selectedEvent.eventId) this.eventSignIn(result.data);
-            else console.log('well tgus us a lil fukt up');
+            else console.log(result.data);
           }
           else if (this.state.showFindMatch) this.joinSet(result.data);
         }}
@@ -72,6 +73,9 @@ class EventScreen extends Component {
     const { showSignInQR } = this.state;
     const qrText = showSignInQR ? "Sign In" : "Create Match";
     const value = showSignInQR ? this.props.selectedEvent.eventId : this.props.setId;
+    console.log(value);
+    console.log(this.props.selectedEvent.eventId)
+    console.log(this.props.setId);
 
     return (
       <QRCodeComponent 
@@ -94,7 +98,6 @@ class EventScreen extends Component {
 
     const rightIcon = signedInEvent === selectedEvent 
       ? { name: "sign-out", onPress: () => this.props.eventSignOut() } 
-      // todo remove auto sign in
       : { name: "sign-in", onPress: () => {
         if (this.isAdmin) {
           this.props.eventSignIn(this.props.selectedEvent);
@@ -102,7 +105,6 @@ class EventScreen extends Component {
           this.setState({ showFindSignIn: true })
         }
       }};
-      // : { name: "sign-in", onPress: () => { this.props.eventSignIn(this.props.selectedEvent) }};
     
     return (
       <BasePage 
