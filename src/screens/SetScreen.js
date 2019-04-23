@@ -46,7 +46,7 @@ class SetScreen extends Component {
     const widthAndHeight = this.phoneDim.width * .4;
     return this.stageArray.map(stageObj => {
       if (this.props.bannedStages.includes(stageObj.key)) return null;
-      const banOrPick = isWaiting ? console.log("fuggit") :
+      const banOrPick = this.props.isWaiting ? console.log("fuggit") :
           this.props.headerText.indexOf("Choose") !== -1
             ? () => this.props.setStage(stageObj.key)
             : () => this.props.banStage(stageObj.key);
