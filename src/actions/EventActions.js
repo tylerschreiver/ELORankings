@@ -63,14 +63,14 @@ export const createSet = (set) => {
   };
 }
 
-export const joinSet = (set) => {
+export const joinSet = set => {
   return async (dispatch, getState) => {
     console.log('joineth');
     const { headers } = getState().AuthReducer;
     const token = headers.Authorization.slice(7, headers.Authorization.length);
     socket.connect(token);
-    console.log('set set set');
-    dispatch({ type: set_set_id, payload: { setId: set, strikeFirst: false } });
+    console.log(set);
+    dispatch({ type: set_set_id, payload: { setId: set.setId, strikeFirst: false } });
     socket.emit('joinSet', set);
     socket.on('setJoined', () => {
       Actions.Set();

@@ -71,14 +71,19 @@ const SetReducer = (state = INITIAL_STATE, action) => {
     case set_user_character: 
       return { ...state, character: action.payload };
 
-    case set_stage: 
+    case set_stage: {
       const newState = { ...state, selectedStage: action.payload }
       newState.headerText =  getHeaderText(newState);
       newState.isWaiting = newState.headerText.includes('Wait');
       return newState;
-
-    case set_set_id:
-      return { ...state, setId: action.payload.setId, strikeFirst: action.payload.strikeFirst };
+    }
+    case set_set_id: {
+      const newState = state;
+      newState.setId = action.payload.setId;
+      newState.strikeFirst = action.payload.strikeFirst;
+      newState.headerText = getHeaderText(newState); 
+      return newState
+    }
     default: return state;
    }
 }
