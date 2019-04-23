@@ -6,7 +6,7 @@ export const init = () => {
     console.log('init');
     const { headers } = getState().AuthReducer;
     const token = headers.Authorization.slice(7, headers.Authorization.length);
-    socket.connect(token);
+    // socket.connect(token);
     socket.on('stageBanned', stage => {
       console.log('hit');
       dispatch({ type: set_banned_stage, payload: stage });
