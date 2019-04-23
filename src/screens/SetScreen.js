@@ -44,18 +44,15 @@ class SetScreen extends Component {
   renderStages() {
     const { isWaiting, bannedStages, setStage, banStage, headerText } = this.props
     const widthAndHeight = this.phoneDim.width * .4;
-    console.log(isWaiting);
     return this.stageArray.map(stageObj => {
       if (bannedStages.includes(stageObj.key)) return null;
       if (isWaiting) {
-        console.log('waiting waiting waiting')
         return (
           <View key={stageObj.key}> 
             <Image style={{ height: widthAndHeight, width: widthAndHeight, margin: 5 }} source={stageObj.stage}></Image>
           </View >
         );
       }
-      cosole.log('ban section');
       const banOrPick = headerText.indexOf("Choose") !== -1
         ? () => setStage(stageObj.key)
         : () => banStage(stageObj.key);

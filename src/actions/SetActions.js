@@ -6,7 +6,6 @@ export const init = () => {
     socket.on('stageBanned', stage => {
       dispatch({ type: set_banned_stage, payload: stage });
     });
-    console.log(socket.socket._callbacks);
   }
 }
 

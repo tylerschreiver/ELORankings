@@ -81,7 +81,7 @@ const SetReducer = (state = INITIAL_STATE, action) => {
       newState.setId = action.payload.setId;
       newState.strikeFirst = action.payload.strikeFirst;
       newState.headerText = getHeaderText(newState); 
-      console.log(newState);
+      newState.isWaiting = newState.headerText.includes('Wait');
       return { ...newState }
     }
     default: return state;
