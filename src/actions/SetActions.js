@@ -2,8 +2,10 @@ import { set_banned_stage, set_game_win, set_opponent, reset_banned_stages, set_
 import socket from '../globals/socket';
 
 export const init = () => {
-  return async () => {
-    console.log("is this called?")
+  return async (dispatch, getState) => {
+    console.log('init');
+    const { headers } = getState().AuthReducer;
+    const token = headers.Authorization.slice(7, headers.Authorization.length);
     socket.connect(token);
     socket.on('stageBanned', stage => {
       console.log('hit');
@@ -14,9 +16,9 @@ export const init = () => {
 
 export const banStage = stage => {
   return async (dispatch, getState) => {
-    const { headers } = getState().AuthReducer;
+    // const { headers } = getState().AuthReducer;
     const { setId } = getState().SetReducer;
-    const token = headers.Authorization.slice(7, headers.Authorization.length);
+    // const token = headers.Authorization.slice(7, headers.Authorization.length);
 
    
     // socket.connect(token);
