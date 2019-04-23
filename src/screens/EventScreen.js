@@ -38,17 +38,32 @@ class EventScreen extends Component {
     Actions.Set()
   }
 
+  eventSignIn(eventId) {
+    this.setState({ showSignInQR: false });
+    this.props.eventSignIn(eventId);
+  }
+
   renderQRScanner() {
-    return <QRScanner exitScanner={setId => this.joinSet(setId.data)}/>
+    return (
+      <QRScanner exitScanner={result => {
+          if (this.state.showSignInQR) {
+            if (result.data === this.props.selectedEvent.eventId) this.eventSignIn(result.data);
+            else console.log('well tgus us a lil fukt up');
+          }
+          else if (this.state.showFindMatch) this.joinSet(result.data);
+        }}
+      />
+    )
   }
 
   renderQRCode() {
     const { showSignInQR } = this.state;
     const qrText = showSignInQR ? "Sign In" : "Create Match";
+    const value = showSignInQR ? this.props.selectedEvent.eventId : this.props.setId;
 
     return (
       <QRCodeComponent 
-        value={this.props.setId} 
+        value={value} 
         text={qrText}
         onClose={() => this.setState({ showSignInQR: false, showCreateMatchQR: false })}
       />
@@ -57,17 +72,25 @@ class EventScreen extends Component {
 
   render() {
     const { buttonStyle, eventSectionStyle, twoButtonStyle, eventInfoText } = styles;
-    const { selectedEvent, signedInEvent } = this.props;
+    const { selectedEvent, signedInEvent, uid } = this.props;
     const { showSignInQR, showCreateMatchQR, showFindMatch } = this.state;
 
+    
     if (!selectedEvent) return null;
-    if (showFindMatch) return this.renderQRScanner();
+    if (showFindMatch || showSignInQR) return this.renderQRScanner();
     if (showCreateMatchQR) return this.renderQRCode(); 
 
     const rightIcon = signedInEvent === selectedEvent 
       ? { name: "sign-out", onPress: () => this.props.eventSignOut() } 
       // todo remove auto sign in
-      : { name: "sign-in", onPress: () => { this.props.eventSignIn(this.props.selectedEvent) }};
+      : { name: "sign-in", onPress: () => {
+        if (selectedEvent.eventAdmins.includes(uid)) {
+          this.props.eventSignIn(this.props.selectedEvent);
+        } else {
+          this.setState({ showSignInQR: true })
+        }
+      }};
+      // : { name: "sign-in", onPress: () => { this.props.eventSignIn(this.props.selectedEvent) }};
     
     return (
       <BasePage 
@@ -146,10 +169,11 @@ const styles = {
   }
 }
 
-const mapStateToProps = ({ EventsReducer, SetReducer }) => {
+const mapStateToProps = ({ EventsReducer, SetReducer, AuthReducer }) => {
   const { selectedEvent, signedInEvent } = EventsReducer;
   const { setId } = SetReducer;
-  return { selectedEvent, signedInEvent, setId };
+  const { uid } = AuthReducer;
+  return { selectedEvent, signedInEvent, setId, uid };
 }
 
 export default connect(mapStateToProps, { eventSignIn, eventSignOut, createSet, joinSet })(EventScreen);
