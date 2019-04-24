@@ -19,6 +19,7 @@ class Leaderboard extends Component {
   };
 
   charactersSearch = Object.keys(characters).map(char => { return { name: char } });
+  stateIds = states.default.map(state => state.id);
 
   searchBar = null;
 
@@ -41,7 +42,7 @@ class Leaderboard extends Component {
     if (selectedRegions !== null && selectedRegions.length !== 0) {
       // this.setState({ selectedRegions });
       filteredRanks = filteredRanks.filter(rank => {
-        return selectedRegions.indexOf(rank.region) !== -1;
+        return selectedRegions.indexOf(states.default[this.stateIds.indexOf(rank.region)].name) !== -1;
       });
     }
 
@@ -82,7 +83,7 @@ class Leaderboard extends Component {
             <Text style={userTextStyle}>{i+1}) {user.username}</Text>
             {this.renderCharacters(user)}
           </View>
-          <Text style={{ ...userTextStyle, flex: 1 }}>{user.region}</Text>
+          <Text style={{ ...userTextStyle, flex: 1 }}>{states.default[this.stateIds.indexOf(user.region)].name}</Text>
           <Text style={{ fontSize: 16, color: 'white' }}>{user.eloScore}</Text>
         </View>
       );
@@ -92,9 +93,6 @@ class Leaderboard extends Component {
   render() {
     const rightIcon = { name: 'search', onPress: () => this.searchBar.show() };
     const { shadowStyle } = styles;
-
-    console.log(this.props.users);
-    console.log(this.props.leaderboard);
 
     return (
       <BasePage rightIcon={rightIcon} headerText="Leaderboard">

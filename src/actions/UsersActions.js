@@ -44,29 +44,20 @@ export const getLeaderboard = () => {
   return async (dispatch, getState) => {
     // await dispatch(getUsers());
     const users = getState().UsersReducer.users;
-    console.log(users);
     const ranks = []
     users.forEach(user => {
-      if (user.ranks) {
+      // if (user.ranks) {
+        console.log(user);
         user.ranks.forEach(rank => {
-          const id = faker.random.uuid();
           ranks.push({ 
-            username: user.username,
-            eloScore: rank.eloScore, 
-            region: user.region,
-            characters: rank.characters.map(char => char.id), 
-            id
+            username: user.displayName,
+            eloScore: rank.score, 
+            region: user.regionId,
+            characters: [rank.character],
+            id: rank.id
           });
         });
-      } else {
-        ranks.push({
-          username: user.displayName || 'shit',
-          eloScore: 111,
-          region: user.regionId,
-          id: user.id,
-          characters: ['Luigi']
-        });
-      }
+      // }
     });
     ranks.sort((a, b) => b.eloScore - a.eloScore);
     dispatch({ type: 'set_leaderboard', payload: ranks });
