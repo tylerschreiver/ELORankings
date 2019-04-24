@@ -7,54 +7,36 @@ import {
   remove_current_user 
 } from './types';
 import faker from 'faker';
+import backendUrl from '../globals/environment';
 import generatePlayers from '../mockData/players';
 
-const fakeUsers = [
-  {
-    id: '2b608d4d-562f-491c-9968-321dda0ec874',
-    username: 'Yee',
-    email: 'tyler.schreiver+2@interapt.com',
-    region: 'Kentucky',
-    subregion: 'Lousiville',
-    ranks: [
-      { eloScore: 6000, userId: '2b608d4d-562f-491c-9968-321dda0ec874', characters: [{ id: 'Marth', percentUsed: 80 }, { id: 'Peach', percentUsed: 20 }], },
-      { eloScore: 3200, userId: '2b608d4d-562f-491c-9968-321dda0ec874', characters: [{ id: 'Mario', percentUsed: 100 }]}
-    ]
-  },
-  {
-    id: '2b608d4d-562f-491c-9968-321dda0ec875',
-    username: 'Nato',
-    email: 'nato@google.com',
-    region: 'Kentucky',
-    subregion: 'The Vill',
-    ranks: [{
-      eloScore: 2000, 
-      characters: [{ id: 'Falco', id: '2b608d4d-562f-491c-9968-321dda0ec875', percentUsed: 100 }]
-    }]
-  }
-];
 
 export const getUsers = () => {
-  const fake = generatePlayers(20);
-  const payload = fakeUsers.concat(fake);
-  return { type: set_users, payload };
+  return async (dispatch, getState) => {
+    const { headers } = getState().AuthReducer;
+    const response = await fetch(`${backendUrl}/Users`, {
+      method: "GET",
+      headers
+    });
+    const json = await response.json();
+    dispatch({ type: set_users, payload: json });
+  }
 };
 
 export const getLeaderboard = () => {
-  return (dispatch, getState) => {
-    // await dispatch(getUsers());
+  return async (dispatch, getState) => {
     const users = getState().UsersReducer.users;
+    if (!users.length) await getUsers();
     let ranks = []
     users.forEach(user => {
       user.ranks.forEach(rank => {
-        const id = faker.random.uuid();
         ranks.push({ 
-          username: user.username,
-          userId: user.id,
-          eloScore: rank.eloScore, 
-          region: user.region,
-          characters: rank.characters, 
-          id
+          username: user.displayName,
+          eloScore: rank.score, 
+          region: user.regionId,
+          character: rank.character,
+          id: rank.id,
+          userId: user.id
         });
       });
     });
@@ -85,8 +67,12 @@ export const getPlayerRanks = id => {
   return async (dispatch, getState) => {
     if (getState().UsersReducer.leaderboard.length === 0) {
       dispatch(getLeaderboard());
+      console.log(id);
     }
-    const ranks = getState().UsersReducer.leaderboard.filter(rank => rank.userId === id);
+    const ranks = getState().UsersReducer.leaderboard.filter(rank => {
+      console.log(rank);
+      return rank.userId === id
+    });
     return ranks;
   }
 }

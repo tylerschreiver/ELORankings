@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, Image, TextInput } from 'react-native';
-import { getPlayerRanks, removeViewedUser, getUserById } from '../actions/UsersActions';
+import { removeViewedUser, getUserById, getPlayerRanks } from '../actions/UsersActions';
 import { connect } from 'react-redux';
 import { BasePage } from '../components';
 import characters from '../assets/getCharacters';
@@ -14,19 +14,25 @@ class Profile extends Component {
   state = { playerRanks: [], editMode: false, editUser: {}, user: {} };
   rightIcon = null;
   leftIcon = null;
+  stateIds = states.default.map(state => state.id);
 
   async UNSAFE_componentWillMount() {
-    const { viewedUser, currentUser, getPlayerRanks, getUserById } = this.props;
+    const { viewedUser, currentUser, getUserById, getPlayerRanks } = this.props;
+    // if (!leaderboard || !leaderboard.length) await getLeaderboard();
     let user = {}
+    let playerRanks = [];
     if (viewedUser !== null) {
       user = await getUserById(viewedUser.userId);
+      playerRanks = await getPlayerRanks(user.id);
       this.leftIcon = { name: 'arrow-left', onPress: () => Actions.pop() };
       
     } else {
       user = currentUser;
+      playerRanks = await getPlayerRanks(user.id);
       this.rightIcon = { name: 'edit', onPress: () => this.enterEditMode()}
     }
-    const playerRanks = await getPlayerRanks(user.id);
+
+    // const playerRanks = user && user.ranks ? user.ranks : [];
     this.setState({ playerRanks, user });
   }
 
@@ -62,25 +68,21 @@ class Profile extends Component {
 
   renderImages(rank) {
     const { textStyle, flexStyle, flexEndStyle } = styles;
-    return rank.characters.map((character, i) => {
+    // return rank.characters.map((character, i) => {
       return (
-        <View style={{ flexDirection: 'row', alignItems: 'space-between', width: '100%' }} key={character.id}>
+        <View style={{ flexDirection: 'row', alignItems: 'space-between', width: '100%' }} key={rank.character}>
           <View style={flexStyle}>
-            <Text style={textStyle}>{character.id}</Text>
+            <Text style={textStyle}>{rank.character}</Text>
           </View>
 
-          <Image source={characters[character.id]} />
-
-          <View style={flexEndStyle}>
-            <Text style={textStyle}>{character.percentUsed} %</Text>
-          </View>
+          <Image source={characters[rank.character]} />
         </View>
       );
-    });
+    // });
   }
 
   renderRanks() {
-    if (this.state.editMode) return null;
+    if (this.state.editMode || !this.state.playerRanks || !this.state.playerRanks.length) return null;
 
     const { rankStyle, textStyle, flexEndStyle } = styles;
     return this.state.playerRanks.map((rank, i) => {
@@ -98,7 +100,7 @@ class Profile extends Component {
             {this.renderImages(rank)}
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 10 }}>
-            <Text style={textStyle}>ELO Score: {rank.eloScore}</Text>
+            <Text style={textStyle}>ELO Score: {rank.score}</Text>
           </View>
         </View>
       );
@@ -107,7 +109,7 @@ class Profile extends Component {
 
   renderRegion(user) {
     const { textStyle, regionStyle, inputStyle } = styles;
-    if (user) {
+    if (user && user.regionId) {
       if (this.state.editMode) {
         return (
           <View style={{ flexDirection: 'row', alignItems: 'space-around', width: '100%' }}>
@@ -135,7 +137,8 @@ class Profile extends Component {
           </View>
         );
       } else {
-        const regionString = user.subregion ? user.region + ' - ' + user.subregion : user.region;
+        const regionName = states.default[this.stateIds.indexOf(user.regionId)].name;
+        const regionString = user.subregion ? regionName + ' - ' + user.subregion : regionName;
         return (
           <View style={regionStyle}>
             <Text style={textStyle}>{regionString}</Text>
@@ -153,7 +156,7 @@ class Profile extends Component {
       <BasePage 
         rightIcon={this.rightIcon} 
         leftIcon={this.leftIcon} 
-        headerText={this.state.user.username + "'s Profile"}
+        headerText={this.state.user.displayName + "'s Profile"}
       >
         <ScrollView>
           <View style={{ width: '80%', alignSelf: 'center' }}>
@@ -245,4 +248,4 @@ const mapStateToProps = ({ UsersReducer }) => {
   return { viewedUser, currentUser, totalPeople: leaderboard.length };
 }
 
-export default connect(mapStateToProps, { getPlayerRanks, removeViewedUser, getUserById })(Profile);
+export default connect(mapStateToProps, { removeViewedUser, getUserById, getPlayerRanks })(Profile);

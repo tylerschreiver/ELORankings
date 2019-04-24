@@ -6,7 +6,8 @@ import { signIn } from '../actions/AuthActions';
 import CreateAccount from './CreateAccount';
 
 class Login extends Component {
-  state = { email: 'tyschreiver+2@gmail.com', password: 'Marth12#', createAccount: false };
+  // state = { email: 'ebmcla01@louisville.edu', password: 'password', createAccount: false };
+  state = { email: 'tyschreiver+38@gmail.com', password: 'password', createAccount: false };
 
   handleLoginAttempt() {
     this.props.signIn(this.state.email, this.state.password);

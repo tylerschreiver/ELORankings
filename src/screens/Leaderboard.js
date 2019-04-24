@@ -19,6 +19,7 @@ class Leaderboard extends Component {
   };
 
   charactersSearch = Object.keys(characters).map(char => { return { name: char } });
+  stateIds = states.default.map(state => state.id);
 
   searchBar = null;
 
@@ -40,7 +41,7 @@ class Leaderboard extends Component {
 
     if (selectedRegions !== null && selectedRegions.length !== 0) {
       filteredRanks = filteredRanks.filter(rank => {
-        return selectedRegions.indexOf(rank.region) !== -1;
+        return selectedRegions.indexOf(states.default[this.stateIds.indexOf(rank.region)].name) !== -1;
       });
     }
 
@@ -64,16 +65,16 @@ class Leaderboard extends Component {
   }
 
   renderCharacters(rank) {
-    return rank.characters.map(char => {
-      const icon = characters[char.id];
+    // return rank.characters.map(char => {
+      const icon = characters[rank.character];
       return (
         <Image 
           style={{ marginLeft: 5, marginRight: 5 }} 
-          key={char.id} 
+          key={rank.character} 
           source={icon} 
         />
       );
-    });
+    // });
   }
 
   renderUsers() {
@@ -86,7 +87,7 @@ class Leaderboard extends Component {
             <Text style={userTextStyle}>{i+1}) {user.username}</Text>
             {this.renderCharacters(user)}
           </View>
-          <Text style={{ ...userTextStyle, flex: 1 }}>{user.region}</Text>
+          <Text style={{ ...userTextStyle, flex: 1 }}>{states.default[this.stateIds.indexOf(user.region)].name}</Text>
           <Text style={{ fontSize: 16, color: 'white' }}>{user.eloScore}</Text>
         </View>
       );

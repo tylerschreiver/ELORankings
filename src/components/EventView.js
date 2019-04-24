@@ -20,13 +20,20 @@ class EventViewComponent extends Component {
       <View onTouchEnd={() => this.selectEvent()} style={eventStyle}>
         <View style={{ flex:1, flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={eventTextStyle}>{event.name}</Text>
-          <Text style={eventTextStyle}>{event.region.region}</Text>
+          { event && event.region &&  
+          <Text style={eventTextStyle}>{event.region.name}</Text>
+          }
         </View>
-
-        <View style={{ flex: 1, flexDirection: 'row' }}>
+        { event && event.timeRange &&        
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <Text style={eventTextStyle}>{event.timeRange.start} - </Text>
+            <Text style={eventTextStyle}>{event.timeRange.end}</Text>
+          </View>
+        }
+        {/* <View style={{ flex: 1, flexDirection: 'row' }}>
           <Text style={eventTextStyle}>{event.activeTimeSlots[0].start.toLocaleDateString()} - </Text>
           <Text style={eventTextStyle}>{event.activeTimeSlots[0].end.toLocaleDateString()}</Text>
-        </View>
+        </View> */}
       </View>
     );
   }

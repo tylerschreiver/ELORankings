@@ -52,7 +52,7 @@ class Events extends Component {
   }
   
   isInTimeFrame(event, timeFrame) {
-    const time = new Date(event.activeTimeSlots[0]['end'].toLocaleDateString());
+    // const time = new Date(event.activeTimeSlots[0]['end'].toLocaleDateString());
     switch (timeFrame) {
       case 'All': return true;
       case 'This Month': return this.dates.month.getTime() > time.getTime();
@@ -83,7 +83,13 @@ class Events extends Component {
   }
 
   renderEvents() {
-    if (this.state.filteredEvents.length === 0) return null;    
+    if (this.state.filteredEvents.length === 0) {
+      return (
+        <View style={{ width: '80%', alignSelf: 'center'}}>
+          <Text style={{ color: 'white', fontSize: 24 }}>Loading Events...</Text>
+        </View>
+      );
+    } 
     else {
       return this.state.filteredEvents.map(event => {
         return <EventView event={event} key={event.id} />;

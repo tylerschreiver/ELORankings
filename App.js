@@ -7,6 +7,7 @@ import firebase from 'react-native-firebase';
 
 export default class App extends Component {
   componentWillMount() {
+    console.disableYellowBox = true;
     firebase.initializeApp({
       apiKey: "AIzaSyAW8K-5Pq5QywrZCxEQWLq6rajCgclUOYg",
       authDomain: "elo-rankings-531a9.firebaseapp.com",
@@ -16,7 +17,6 @@ export default class App extends Component {
       messagingSenderId: "791422824537"
     });
   }
-
 
   render() {
     const { homeStyle } = styles;

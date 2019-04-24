@@ -1,7 +1,7 @@
 import { events_requested, event_selected, event_sign_in, event_sign_out, create_event } from '../actions/types';
 
 const INITIAL_STATE = {
-  events: null,
+  events: [],
   selectedEvent: null,
   viewedEvents: [],
   signedInEvent: null
