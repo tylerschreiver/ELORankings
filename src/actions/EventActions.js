@@ -1,6 +1,5 @@
 import { generateEvents } from '../mockData/mock';
 import { events_requested, event_selected, create_event, event_sign_in, event_sign_out, set_set_id, set_available_ranks } from './types';
-import faker from 'faker';
 import backendUrl from '../globals/environment';
 import socket from '../globals/socket';
 import { Actions } from 'react-native-router-flux';
@@ -82,7 +81,7 @@ export const createSet = set => {
     });
     socket.on('setJoined', joinedSet => {
       const payload = { 
-        rank: joinedSet.creator.ranks,
+        availableRanks: joinedSet.creator.ranks,
         opponentTag: joinedSet.joiner.displayName, 
         opponentUid: joinedSet.joiner.id,
         tag: joinedSet.creator.displayName 
@@ -102,7 +101,7 @@ export const joinSet = set => {
     socket.emit('joinSet', set);
     socket.on('setJoined', joinedSet => {
       const payload = { 
-        rank: joinedSet.joiner.ranks, 
+        availableRanks: joinedSet.joiner.ranks, 
         opponentTag: joinedSet.creator.displayName,
         opponentUid: joinedSet.creator.id,
         tag: joinedSet.joiner.displayName

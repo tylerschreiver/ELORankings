@@ -83,6 +83,7 @@ class SetScreen extends Component {
   renderStages() {
     const { isWaiting, bannedStages, setStage, banStage, headerText } = this.props
     const widthAndHeight = this.phoneDim.width * .4;
+    console.log(this.stageArray);
     return this.stageArray.map(stageObj => {
       if (bannedStages.includes(stageObj.key)) return null;
       if (isWaiting) {
@@ -115,6 +116,8 @@ class SetScreen extends Component {
   }
 
   renderRanks() {
+    if (!this.props.availableRanks) return null;
+    console.log(this.props.availableRanks);
     return this.props.availableRanks.map(rank => {
       return (
       <TouchableOpacity key={rank.slotNumber} onPress={() => this.pickedRankSlot(rank)}>
