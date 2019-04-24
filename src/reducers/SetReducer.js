@@ -17,13 +17,13 @@ const stages = ['Dreamland', 'Fountain of Dreams', 'Battlefield', 'Final Destina
 
 const INITIAL_STATE = {
   opponentTag: '',
-  opponentCharacter: '',
+  opponentCharacter: null,
   games: [],
   tag: '',
   bannedStages: ['Pokemon Stadium'],
   selectedStage: '',
   bestOf: 5,
-  character: '',
+  character: null,
   headerText: 'Strike 1 Stage',
   strikeFirst: false,
   setOver: false,
@@ -71,7 +71,7 @@ const SetReducer = (state = INITIAL_STATE, action) => {
         stage: state.selectedStage
       };
       const games = [ ...state.games, game]
-      const newState = { ...state, games, selectedStage: '', bannedStages: [] };
+      const newState = { ...state, games, selectedStage: '', bannedStages: [], opponentCharacter: null, character: null };
       newState.setOver = isSetOver(newState);
       newState.headerText = getHeaderText(newState);
       newState.isWaiting = newState.headerText.includes('Wait');

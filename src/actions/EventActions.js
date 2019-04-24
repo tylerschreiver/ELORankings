@@ -56,7 +56,6 @@ export const createSet = set => {
       dispatch({ type: set_set_id, payload: { setId: id, strikeFirst: true }});
     });
     socket.on('setJoined', joinedSet => {
-      console.log(joinedSet);
       const payload = { 
         rank: joinedSet.creator.ranks, 
         opponentTag: joinedSet.joiner.displayName, 
@@ -76,7 +75,6 @@ export const joinSet = set => {
     dispatch({ type: set_set_id, payload: { setId: set.setId, strikeFirst: false } });
     socket.emit('joinSet', set);
     socket.on('setJoined', joinedSet => {
-      console.log(joinedSet);
       const payload = { 
         rank: joinedSet.joiner.ranks, 
         opponentTag: joinedSet.creator.displayName,

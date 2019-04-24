@@ -90,7 +90,8 @@ export const setBestOf = bestOf => {
 
 export const setStage = stage => {
   return async (dispatch, getState) => {
-    socket.emit('chooseStage', stage);
+    const { setId } = getState().SetReducer;
+    socket.emit('chooseStage', { stage, setId });
   };
   // return { type: set_stage, payload: stage };
 };

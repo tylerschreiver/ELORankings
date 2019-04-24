@@ -34,8 +34,13 @@ class SetScreen extends Component {
     return true;
   }
 
+  componentDidUpdate() {
+    if ((this.props.opponentCharacter === null || this.props.character === null) && this.props.selectedStage) {
+      this.setState({ chooseCharacter: this.props.games[this.props.games.length - 1].didWin });
+    }
+  }
+
   pickedRankSlot(rank) {
-    console.log(rank);
     if (rank.slotNumber === 1) {
       this.setState({ chooseCharacter: true });
       this.props.chooseRankedSlot(rank)
@@ -78,8 +83,9 @@ class SetScreen extends Component {
           </View >
         );
       }
+      console.log(headerText.indexOf("Choose") !== -1);
       const banOrPick = headerText.indexOf("Choose") !== -1
-        ? () => setStage(stageObj.key)
+        ? () => { this.setState({ chooseCharacter: false }); setStage(stageObj.key) }
         : () => banStage(stageObj.key);
       return (
         <View key={stageObj.key} onTouchEnd={banOrPick} > 
@@ -117,7 +123,7 @@ class SetScreen extends Component {
     if (this.props.headerText.indexOf('Won') !== -1) return (
       <View><Text>{this.props.headerText}</Text></View>
     );
-    else if ((this.props.character === '' || this.props.opponentCharacter === '') && this.props.games.length === 0) {
+    else if ((this.props.character === null || this.props.opponentCharacter === null) && this.props.games.length === 0) {
       return (
         <View>
           <Text>Choose Rank</Text>
@@ -135,6 +141,31 @@ class SetScreen extends Component {
                   onSelectedItemsChange={chars => this.props.setCharacter(chars[0])}
                   styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
                 />
+            </View>
+          }
+        </View>
+      );
+    }
+    else if ((this.props.character === null || this.props.opponentCharacter === null) && this.props.games.length !== 0) {
+      return (
+        <View>
+          { this.state.chooseCharacter &&
+            <View>
+                <Text>Choose character for next game</Text>
+                <SectionedMultiSelect
+                  uniqueKey="name" 
+                  items={this.charactersSearch} 
+                  selectedItems={[this.props.character]} 
+                  selectText="Character"
+                  showChips={false}
+                  single={true}
+                  onSelectedItemsChange={chars => this.props.setCharacter(chars[0])}
+                  styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
+                />
+            </View>
+          } { !this.state.chooseCharacter &&
+            <View>
+              <Text>Waiting for opponent to choose character</Text>
             </View>
           }
         </View>

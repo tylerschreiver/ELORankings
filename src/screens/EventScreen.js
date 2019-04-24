@@ -74,8 +74,6 @@ class EventScreen extends Component {
     const { showSignInQR } = this.state;
     const qrText = showSignInQR ? "Sign In" : "Create Match";
     const value = showSignInQR ? this.props.selectedEvent.id : this.props.setId;
-    console.log(this.props);
-
     return (
       <QRCodeComponent 
         value={value} 
