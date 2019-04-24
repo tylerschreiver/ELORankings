@@ -28,7 +28,6 @@ export const signIn = (email, password) => {
 };
 
 export const signOut = () => {
-  dispatch(removeCurrentUser());
   return { type: user_signed_out };
 };
 

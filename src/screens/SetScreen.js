@@ -164,15 +164,15 @@ class SetScreen extends Component {
       }
       return (
         <View style={{ width: '80%', alignSelf: 'center', justifyContent: 'center' }}>
-          <Text style={basicTextStyle}>{headerText}</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-            <Text style={basicTextStyle}>{Math.floor(rank.score)}</Text>
-            <Icon
-              color="white" 
-              name={'angle-right'}
-              type="font-awesome"
-            />
-            <Text style={basicTextStyle}>{Math.floor(this.state.newScore)}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around', flex: 1 }}>
+            <View>
+              <Text style={basicTextStyle}>Old Score:</Text>
+              <Text style={basicTextStyle}>{Math.floor(rank.score)}</Text>
+            </View>
+            <View>
+              <Text style={basicTextStyle}>New Score:</Text>
+              <Text style={basicTextStyle}>{Math.floor(this.state.newScore)}</Text>
+            </View>
           </View>
         </View>
       );

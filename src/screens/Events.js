@@ -72,10 +72,11 @@ class Events extends Component {
     
     if (regions !== null && regions.length > 0) {
       this.setState({regions})
-      let selectedRegionNames = regions.map((region) => this.getRegionName(region));
+      // let selectedRegionNames = regions.map((region) => this.getRegionName(region));
+      console.log(regions);
       filteredEvents = filteredEvents.filter((event) => {
-        let eventRegion = event.region.region;
-        return selectedRegionNames.indexOf(eventRegion) !== -1;
+        let eventRegion = event.regionId;
+        return regions.indexOf(eventRegion) !== -1;
       });
     }
     
@@ -110,6 +111,7 @@ class Events extends Component {
             <SectionedMultiSelect 
               uniqueKey="id" 
               items={this.timeFrames} 
+              renderSelectText={() => this.state.timeFrame[0] || 'Time Frame'}
               selectedItems={this.state.timeFrame} 
               selectText="Time Frame"
               showChips={false}

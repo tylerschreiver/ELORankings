@@ -49,9 +49,9 @@ class Leaderboard extends Component {
       // this.setState({ selectedCharacters });
       filteredRanks = filteredRanks.filter(rank => {
         let isCharInRank = false
-        rank.characters.forEach(char => {
-          if (selectedCharacters.indexOf(char) !== -1) isCharInRank = true;
-        });
+        // rank.characters.forEach(char => {
+          if (selectedCharacters.indexOf(rank.character) !== -1) isCharInRank = true;
+        // });
         return isCharInRank;
       });
     }

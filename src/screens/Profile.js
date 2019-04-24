@@ -95,6 +95,7 @@ class Profile extends Component {
 
     const { rankStyle, textStyle, flexEndStyle } = styles;
     return this.state.playerRanks.map((rank, i) => {
+      console.log(rank);
       return (
         <View key={i} style={rankStyle}>
           <View style={{ flexDirection: 'row', marginBottom: 10 }} key={rank.id}>
@@ -109,7 +110,7 @@ class Profile extends Component {
             {this.renderImages(rank)}
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 10 }}>
-            <Text style={textStyle}>ELO Score: {rank.score}</Text>
+            <Text style={textStyle}>ELO Score: {Math.floor(rank.eloScore)}</Text>
           </View>
         </View>
       );
