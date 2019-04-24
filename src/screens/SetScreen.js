@@ -22,7 +22,7 @@ import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 rankNames = ["Primary", "Secondary", "Third", "Fourth", "Fifth"];
 
 class SetScreen extends Component {
-  state = { firstGame: true, selectStage: true, chooseCharacter: false };
+  state = { firstGame: true, selectStage: true, chooseCharacter: false, headerText: '' };
   phoneDim = Dimensions.get("window");
   stageArray = [];
   charactersSearch = Object.keys(characters).map(char => { return { name: char } });
@@ -149,8 +149,8 @@ class SetScreen extends Component {
     const { inputStyle, basicTextStyle } = styles;
 
     if (setOver) {
+      if (this.state.headerText) this.setState({ headerText: '' });
       if (!this.hasUpdatedScore) {
-        console.log('ay');
         this.hasUpdatedScore = true;
         updateScore(opponentRank, rank, games[games.length - 1].didWin)
       }
@@ -159,6 +159,7 @@ class SetScreen extends Component {
       );
     } 
     else if ((character === null || opponentCharacter === null) && games.length === 0) {
+      if (this.state.headerText !== 'Choose your ranked slot') this.setState({ headerText: 'Choose your ranked slot' })
       return (
         <View style={{ width: '80%', alignSelf: 'center', justifyContent: 'center' }}>
           <Text style={{ color: 'white', fontSize: 20, marginBottom: 15 }}>Choose Rank</Text>
@@ -183,30 +184,37 @@ class SetScreen extends Component {
         </View>
       );
     }
-    else if (selectedStage === '') return this.renderStageStrike();
+    else if (selectedStage === '') {
+      if (this.state.headerText) this.setState({ headerText: '' });
+      return this.renderStageStrike();
+    }
     else if ((character === null || opponentCharacter === null) && games.length !== 0) {
-      return (
+      if (this.state.chooseCharacter) {
+        if (this.state.headerText !== 'Choose your character!') this.setState({ headerText: 'Choose your character!'})
+        return (
           <View style={{ width: '80%', alignSelf: 'center', justifyContent: 'center' }}>
-          { this.state.chooseCharacter &&
-              <View>
-                <Text style={basicTextStyle}>Choose character for next game</Text>
-                <SectionedMultiSelect
-                  uniqueKey="name" 
-                  items={this.charactersSearch} 
-                  selectedItems={[character]} 
-                  selectText="Character"
-                  showChips={false}
-                  single={true}
-                  onSelectedItemsChange={chars => setCharacter(chars[0])}
-                  styles={{ selectToggle: [{ height: 50, width: '100%' }, inputStyle], selectToggleText: { color: 'white', textAlign: 'center' } }}
-                />
-            </View>
-          } 
-          { !this.state.chooseCharacter &&
             <View>
-              <Text style={basicTextStyle}>Waiting for opponent to choose character</Text>
+              <Text style={basicTextStyle}>Choose character for next game</Text>
+              <SectionedMultiSelect
+                uniqueKey="name" 
+                items={this.charactersSearch} 
+                selectedItems={[character]} 
+                selectText="Character"
+                showChips={false}
+                single={true}
+                onSelectedItemsChange={chars => setCharacter(chars[0])}
+                styles={{ selectToggle: [{ height: 50, width: '100%' }, inputStyle], selectToggleText: { color: 'white', textAlign: 'center' } }}
+              />
             </View>
-          }
+          </View>
+        );
+      }
+      if (this.state.headerText !== 'Wait for Opponent') this.setState({ headerText: 'Wait for Opponent'})
+      return (
+        <View style={{ width: '80%', alignSelf: 'center', justifyContent: 'center' }}>
+          <View>
+            <Text style={basicTextStyle}>Waiting for opponent to choose character</Text>
+          </View>
         </View>
       );
     }
@@ -214,8 +222,9 @@ class SetScreen extends Component {
   }
 
   render() {
+    const headerText = this.state.headerText ? this.state.headerText : this.props.headerText;
     return (
-      <BasePage headerText={this.props.headerText}>
+      <BasePage headerText={headerText}>
         {this.renderSection()}
       </BasePage>
     );

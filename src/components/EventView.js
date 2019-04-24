@@ -4,25 +4,53 @@ import { connect } from 'react-redux';
 import { View, Text } from 'react-native';
 import { setSelectedEvent } from '../actions/EventActions';
 import { Actions } from 'react-native-router-flux';
-
+import * as states from '../mockData/states.json';
 
 class EventViewComponent extends Component {
+  stateIds = states.default.map(state => state.id);
 
   selectEvent() {
     this.props.setSelectedEvent(this.props.event);
     Actions.EventScreen();
   }
 
+  renderTimeFrame() {
+    const { eventTextStyle } = styles;
+    const startDate = new Date(JSON.parse(this.props.event.timeFrame.start));
+    const endDate = new Date(JSON.parse(this.props.event.timeFrame.end));
+    const isSameDay = (
+      startDate.getDate() === endDate.getDate() && 
+      startDate.getMonth() === endDate.getMonth() &&
+      startDate.getFullYear() === endDate.getFullYear()
+    );
+    if (isSameDay) {
+      return (
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          <Text style={eventTextStyle}>{startDate.toLocaleDateString()}: </Text>
+          <Text style={eventTextStyle}>{startDate.toLocaleTimeString('en-us', { hour: '2-digit', minute: '2-digit'})} -</Text>
+          <Text style={eventTextStyle}>{endDate.toLocaleTimeString('en-us', { hour: '2-digit', minute: '2-digit'})}</Text>
+
+        </View>
+      );
+    } 
+    return (
+      <View style={{ flex: 1, flexDirection: 'row' }}>
+        <Text style={eventTextStyle}>{startDate.toLocaleDateString()} - </Text>
+        <Text style={eventTextStyle}>{endDate.toLocaleDateString()}</Text>
+      </View>
+    );
+  }
+
   render() {
     const { eventStyle, eventTextStyle } = styles;
     const { event } = this.props;
+    const stateName = states.default[this.stateIds.indexOf(event.regionId)].name;
+    
     return (
       <View onTouchEnd={() => this.selectEvent()} style={eventStyle}>
         <View style={{ flex:1, flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={eventTextStyle}>{event.name}</Text>
-          { event && event.region &&  
-          <Text style={eventTextStyle}>{event.region.name}</Text>
-          }
+          <Text style={eventTextStyle}>{stateName}</Text>
         </View>
         { event && event.timeRange &&        
           <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -30,10 +58,7 @@ class EventViewComponent extends Component {
             <Text style={eventTextStyle}>{event.timeRange.end}</Text>
           </View>
         }
-        {/* <View style={{ flex: 1, flexDirection: 'row' }}>
-          <Text style={eventTextStyle}>{event.activeTimeSlots[0].start.toLocaleDateString()} - </Text>
-          <Text style={eventTextStyle}>{event.activeTimeSlots[0].end.toLocaleDateString()}</Text>
-        </View> */}
+        {this.renderTimeFrame()}
       </View>
     );
   }

@@ -52,7 +52,7 @@ class Events extends Component {
   }
   
   isInTimeFrame(event, timeFrame) {
-    // const time = new Date(event.activeTimeSlots[0]['end'].toLocaleDateString());
+    const time = new Date(new Date(JSON.parse(event.timeFrame['start'])).toLocaleDateString());
     switch (timeFrame) {
       case 'All': return true;
       case 'This Month': return this.dates.month.getTime() > time.getTime();
@@ -91,8 +91,9 @@ class Events extends Component {
       );
     } 
     else {
-      return this.state.filteredEvents.map(event => {
-        return <EventView event={event} key={event.id} />;
+      console.log(this.state.filteredEvents);
+      return this.state.filteredEvents.map(filteredEvent => {
+        return <EventView event={filteredEvent} key={filteredEvent.id} />;
       });
     }
   }

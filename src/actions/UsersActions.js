@@ -90,3 +90,25 @@ export const getAdmins = () => {
     }
   }
 };
+
+export const updateUser = (user) => {
+  console.log('hit');
+  return async (dispatch, getState) => {
+    try {
+      console.log(user);
+      const { headers } = getState().AuthReducer;
+      const response = await fetch(`${backendUrl}/Users/${user.id}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify(user)
+      });
+
+      const newUser = await response.json()
+      console.log(newUser)
+      
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+};

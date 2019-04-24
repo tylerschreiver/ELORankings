@@ -47,16 +47,18 @@ class CreateEvent extends Component {
   }
 
   setDateTime(date, time1, time2, index = 0) {
+    console.log(new Date(date));
     const timeFrameDays = [...this.state.timeFrames];
 
     if (date !== null) {
       const dateSplit = date.split(' ');
-      const convertedDate = new Date(dateSplit[2], months.indexOf(dateSplit[0]), dateSplit[1].substring(0, dateSplit.length - 1))
-
+      const convertedDate = new Date(dateSplit[2], months.indexOf(dateSplit[0]), dateSplit[1].substr(0, dateSplit[1].length - 2))
+      console.log(convertedDate);
       timeFrameDays.forEach((day, i) => {
         day.startDate = new Date(convertedDate);
         day.startDate.setDate(day.startDate.getDate() + i);
       });
+      // console.log(timeFrameDays);
     }
     if (time1 !== null) {
       timeSections = time1.split(':');

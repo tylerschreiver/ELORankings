@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, Image, TextInput } from 'react-native';
-import { removeViewedUser, getUserById, getPlayerRanks } from '../actions/UsersActions';
+import { removeViewedUser, getUserById, getPlayerRanks, updateUser } from '../actions/UsersActions';
 import { connect } from 'react-redux';
 import { BasePage } from '../components';
 import characters from '../assets/getCharacters';
@@ -15,6 +15,7 @@ class Profile extends Component {
   rightIcon = null;
   leftIcon = null;
   stateIds = states.default.map(state => state.id);
+  stateNames = states.default.map(state => state.name);
 
   async UNSAFE_componentWillMount() {
     const { viewedUser, currentUser, getUserById, getPlayerRanks } = this.props;
@@ -45,12 +46,20 @@ class Profile extends Component {
   }
 
   enterEditMode() {
-    this.setState({ editMode: true });
+    const regionName = states.default[this.stateIds.indexOf(this.state.user.regionId)].name;
+    this.setState({ editMode: true, editUser: { region: [regionName], subregion: this.state.user.subregion } });
     this.rightIcon = { name: 'save', onPress: () => this.save() };
     this.leftIcon = { name: 'times', onPress: () => this.cancelEdit() };
   }
 
-  save() {
+  async save() {
+    const userUpdate = { ...this.state.user };
+    userUpdate.regionId = states.default[this.stateNames.indexOf(this.state.editUser.region[0])].id;
+    userUpdate.subregion = this.state.editUser.subregion;
+
+    await this.props.updateUser(userUpdate);
+    console.log('after');
+
     this.setState({ editMode: false });
     this.leftIcon = null;
     this.rightIcon = { name: 'edit', onPress: () => this.enterEditMode()}
@@ -248,4 +257,4 @@ const mapStateToProps = ({ UsersReducer }) => {
   return { viewedUser, currentUser, totalPeople: leaderboard.length };
 }
 
-export default connect(mapStateToProps, { removeViewedUser, getUserById, getPlayerRanks })(Profile);
+export default connect(mapStateToProps, { removeViewedUser, getUserById, getPlayerRanks, updateUser })(Profile);
