@@ -147,11 +147,6 @@ class EventScreen extends Component {
               />
             }
 
-            <Button
-              text="crash app" 
-              style={buttonStyle}
-            />
-
             <Text>{this.state.info}</Text>
           </View>
         </ScrollView>

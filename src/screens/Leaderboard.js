@@ -88,7 +88,7 @@ class Leaderboard extends Component {
             {this.renderCharacters(user)}
           </View>
           <Text style={{ ...userTextStyle, flex: 1 }}>{states.default[this.stateIds.indexOf(user.region)].name}</Text>
-          <Text style={{ fontSize: 16, color: 'white' }}>{user.eloScore}</Text>
+          <Text style={{ fontSize: 16, color: 'white' }}>{Math.floor(user.eloScore)}</Text>
         </View>
       );
     });

@@ -19,6 +19,8 @@ import stages from '../assets/getStages';
 import characters from '../assets/getCharacters';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
+rankNames = ["Primary", "Secondary", "Third", "Fourth", "Fifth"];
+
 class SetScreen extends Component {
   state = { firstGame: true, selectStage: true, chooseCharacter: false };
   phoneDim = Dimensions.get("window");
@@ -83,7 +85,6 @@ class SetScreen extends Component {
   renderStages() {
     const { isWaiting, bannedStages, setStage, banStage, headerText } = this.props
     const widthAndHeight = this.phoneDim.width * .4;
-    console.log(this.stageArray);
     return this.stageArray.map(stageObj => {
       if (bannedStages.includes(stageObj.key)) return null;
       if (isWaiting) {
@@ -93,7 +94,6 @@ class SetScreen extends Component {
           </View >
         );
       }
-      console.log(headerText.indexOf("Choose") !== -1);
       const banOrPick = headerText.indexOf("Choose") !== -1
         ? () => { this.setState({ chooseCharacter: false }); setStage(stageObj.key) }
         : () => banStage(stageObj.key);
@@ -116,15 +116,16 @@ class SetScreen extends Component {
   }
 
   renderRanks() {
+    const { basicTextStyle, characterIconStyle } = styles;
+
     if (!this.props.availableRanks) return null;
-    console.log(this.props.availableRanks);
     return this.props.availableRanks.map(rank => {
       return (
       <TouchableOpacity key={rank.slotNumber} onPress={() => this.pickedRankSlot(rank)}>
         <View style={styles.rankStyles}>
-          <Text>{rank.character}</Text>
-          <Text>Slot {rank.slotNumber}</Text>
-          <Text>{rank.score}</Text>
+          <Text style={basicTextStyle}>{rankNames[rank.slotNumber - 1]} Slot</Text>
+          <Image style={characterIconStyle} source={characters[rank.character]}></Image>
+          <Text style={basicTextStyle}>{rank.score}</Text>
         </View>
       </TouchableOpacity>
       );
@@ -145,6 +146,8 @@ class SetScreen extends Component {
       headerText 
     } = this.props;
 
+    const { inputStyle } = styles;
+
     if (setOver) {
       if (!this.hasUpdatedScore) {
         console.log('ay');
@@ -157,8 +160,8 @@ class SetScreen extends Component {
     } 
     else if ((character === null || opponentCharacter === null) && games.length === 0) {
       return (
-        <View>
-          <Text>Choose Rank</Text>
+        <View style={{ width: '80%', alignSelf: 'center', justifyContent: 'center' }}>
+          <Text style={{ color: 'white', fontSize: 20, marginBottom: 15 }}>Choose Rank</Text>
           {this.renderRanks()}
 
           { this.state.chooseCharacter &&
@@ -171,7 +174,9 @@ class SetScreen extends Component {
                   showChips={false}
                   single={true}
                   onSelectedItemsChange={chars => setCharacter(chars[0])}
-                  styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
+                  styles={{ selectToggle: [{ height: 50, width: '100%' }, inputStyle], selectToggleText: { color: 'white', textAlign: 'center' } }}
+
+                  // styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
                 />
             </View>
           }
@@ -193,7 +198,9 @@ class SetScreen extends Component {
                   showChips={false}
                   single={true}
                   onSelectedItemsChange={chars => setCharacter(chars[0])}
-                  styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
+                  styles={{ selectToggle: [{ height: 50, width: '100%' }, inputStyle], selectToggleText: { color: 'white', textAlign: 'center' } }}
+
+                  // styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
                 />
             </View>
           } 
@@ -246,11 +253,25 @@ const styles = {
     borderWidth: 1, 
     borderRadius: 5, 
     backgroundColor: '#4c4f54',
-    width: '80%',
-    alignSelf: 'center',
+    width: '100%',
     padding: 10, 
     borderColor: 'black', 
-    alignItems: 'space-between'
+    justifyContent: 'space-between',
+  },
+  inputStyle: {
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 5,
+    width: '100%',
+    color: 'white',
+    backgroundColor: '#2f3136',
+    padding: 10,
+    paddingLeft: 10,
+    fontSize: 16
+  },
+  basicTextStyle: {
+    color: 'white',
+    fontSize: 16
   }
 }
 

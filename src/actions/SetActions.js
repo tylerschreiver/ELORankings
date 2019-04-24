@@ -98,20 +98,22 @@ export const setStage = stage => {
 };
 
 export const updateScore = (opponentRank, userRank, didWin) => {
+  console.log('update');
   return async (dispatch, getState) => {
     const { headers, uid } = getState().AuthReducer;
     const { opponentUid } = getState().SetReducer;
-
     const url = `${backendUrl}/Users/${uid}/rank/${userRank.id}`;
-    const response = await fetch(url, {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        opponent: { id: opponentUid, rank: { id: opponentRank.id } },
-        didWin
-      })
+    const body = JSON.stringify({
+      opponent: { id: opponentUid, rank: { id: opponentRank.id } },
+      didWin
     });
-    const didUpdate = await response.json();
-    console.log(didUpdate);
+
+    try {
+      const response = await fetch(url, { method: "POST", headers, body });
+      const didUpdate = await response.json();
+      console.log(didUpdate);
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
