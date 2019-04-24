@@ -28,3 +28,4 @@ export const set_viewed_user = 'set_viewed_user';
 export const remove_viewed_user = 'remove_viewed_user';
 export const set_current_user = 'set_current_user';
 export const remove_current_user = 'remove_current_user';
+export const get_admins = 'get_admins';

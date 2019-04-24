@@ -18,6 +18,8 @@ const stages = ['Dreamland', 'Fountain of Dreams', 'Battlefield', 'Final Destina
 const INITIAL_STATE = {
   opponentTag: '',
   opponentCharacter: null,
+  opponentRank: null,
+  opponentUid: null,
   games: [],
   tag: '',
   bannedStages: ['Pokemon Stadium'],
@@ -31,7 +33,6 @@ const INITIAL_STATE = {
   isWaiting: false,
   availableRanks: [],
   rank: null,
-  opponentRank: null,
   pendingWinner: null
 };
 
@@ -102,11 +103,13 @@ const SetReducer = (state = INITIAL_STATE, action) => {
 
     case set_available_ranks: {
       console.log(action.payload);
+      const { opponentUid, opponentTag, tag, availableRanks } = action.payload;
       return { 
         ...state, 
-        availableRanks: action.payload.rank, 
-        opponentTag: action.payload.opponentTag, 
-        tag: action.payload.tag 
+        availableRanks, 
+        opponentTag, 
+        tag,
+        opponentUid
       };
     } 
 

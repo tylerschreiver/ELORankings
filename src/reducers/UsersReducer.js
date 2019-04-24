@@ -4,14 +4,16 @@ import {
   set_viewed_user, 
   remove_viewed_user, 
   set_current_user, 
-  remove_current_user 
+  remove_current_user, 
+  get_admins
 } from '../actions/types';
 
 const INITIAL_STATE = {
   users: [],
   leaderboard: [],
   currentUser: null,
-  viewedUser: null
+  viewedUser: null,
+  admins: []
 };
 
 const UsersReducer = (state = INITIAL_STATE, action) => {
@@ -28,6 +30,8 @@ const UsersReducer = (state = INITIAL_STATE, action) => {
       return { ...state, currentUser: action.payload };
     case remove_current_user:
       return { ...state, currentUser: null };
+    case get_admins:
+      return { ...state, admins: action.payload };
     default: return state;
   }
 };

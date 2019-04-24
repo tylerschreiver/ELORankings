@@ -19,7 +19,7 @@ class EventScreen extends Component {
   };
 
   UNSAFE_componentWillMount() {
-    this.isAdmin = this.props.selectedEvent.eventAdmins.includes(this.props.uid);
+    this.isAdmin = this.props.selectedEvent.admins.includes(this.props.uid);
   }
 
   shouldComponentUpdate(prevProps) {

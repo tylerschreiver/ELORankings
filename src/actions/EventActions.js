@@ -11,7 +11,8 @@ export const getEvents = () => {
       const { headers } = getState().AuthReducer;
       const url = backendUrl + '/Events';
       const response = await fetch(url, { method: 'GET', headers });
-      const events = JSON.parse(response._bodyText);
+      const events = await response.json();
+      console.log(events);
       
       dispatch({ type: events_requested, payload: events });
     } catch (e) {
@@ -26,12 +27,17 @@ export const setSelectedEvent = (event) => {
 
 export const eventSignIn = event => {
   return async (dispatch, getState) => {
-    const { headers } = getState().AuthReducer;
-    const url = backendUrl + '/Events/' + event.id + '/signin';
+    try {
+      const { headers } = getState().AuthReducer;
+      const url = backendUrl + '/Events/' + event.id + '/signin';
+  
+      const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify({}) });
+      if (response.ok) {
+        dispatch({ type: event_sign_in, payload: event });
+      }
 
-    const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify({}) });
-    if (response.ok) {
-      dispatch({ type: event_sign_in, payload: event });
+    } catch (e) {
+      console.log(e);
     }
   }
 }
@@ -41,8 +47,27 @@ export const eventSignOut = () => {
 }
 
 export const createEvent = event => {
-  event.id = faker.random.uuid();
-  return { type: create_event, payload: event };
+  console.log(event);
+  return async (dispatch, getState) => {
+    try {
+      const { headers } = getState().AuthReducer;
+      console.log(1);
+      const response = await fetch(`${backendUrl}/Events`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(event)
+        // body: JSON.stringify(event)
+      });
+      console.log(response);
+      
+      const result = await response.json();
+      console.log(3);
+      console.log(result);
+    } catch (e) {
+      console.log(e);
+    }
+    // return { type: create_event, payload: event };
+  }
 }
 
 export const createSet = set => {
@@ -57,8 +82,9 @@ export const createSet = set => {
     });
     socket.on('setJoined', joinedSet => {
       const payload = { 
-        rank: joinedSet.creator.ranks, 
+        rank: joinedSet.creator.ranks,
         opponentTag: joinedSet.joiner.displayName, 
+        opponentUid: joinedSet.joiner.id,
         tag: joinedSet.creator.displayName 
       };
       dispatch({ type: set_available_ranks, payload });
@@ -78,6 +104,7 @@ export const joinSet = set => {
       const payload = { 
         rank: joinedSet.joiner.ranks, 
         opponentTag: joinedSet.creator.displayName,
+        opponentUid: joinedSet.creator.id,
         tag: joinedSet.joiner.displayName
       };
       dispatch({ type: set_available_ranks, payload });

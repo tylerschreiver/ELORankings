@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, View, ScrollView, Text, TextInput } from 'react-native';
+import { View, ScrollView, Text, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import { BasePage, Button } from '../components';
 import DatePicker from 'react-native-datepicker';
@@ -7,8 +7,8 @@ import { Icon } from 'react-native-elements';
 import * as states from '../mockData/states.json';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import { createEvent } from '../actions/EventActions';
+import { getAdmins } from '../actions/UsersActions';
 import { Actions } from 'react-native-router-flux';
-import faker from 'faker';
 
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
   'August', 'September', 'October', 'November', 'December']
@@ -40,6 +40,11 @@ class CreateEvent extends Component {
   stateIds = states.default.map(state => state.id);
 
   headers = ['Create Event - Info', 'Create Event - Days', 'Create Event - Staff'];
+
+  async UNSAFE_componentWillMount() {
+    if (!this.props.admins || !this.props.admins.length) await this.props.getAdmins();
+    console.log(this.props.admins);
+  }
 
   setDateTime(date, time1, time2, index = 0) {
     const timeFrameDays = [...this.state.timeFrames];
@@ -76,20 +81,25 @@ class CreateEvent extends Component {
   convertTimeFramesToTimeSlots() {
     return this.state.timeFrames.map(timeFrame => {
       const { startDate, startTime, endTime } = timeFrame
-      const start = new Date(startDate)
+      let start = new Date(startDate)
       start.setHours(startTime.getHours(), startTime.getMinutes());
-      const end = new Date(startDate)
+      // start = start.toISOString();
+      start = JSON.stringify(start);
+      let end = new Date(startDate)
       end.setHours(endTime.getHours(), endTime.getMinutes());
+      // end = end.toISOString();
+      end = JSON.stringify(end);
       return { start, end };
+
     });
   }
 
   async saveEvent() {
     const { name, description, tourneyLink, address } = this.state;
-    const activeTimeSlots = this.convertTimeFramesToTimeSlots();
-    const region = { id: this.state.region[0], region: states.default[this.stateIds.indexOf(this.state.region[0])].name };
+    const timeRanges = this.convertTimeFramesToTimeSlots();
+    const regionId = this.state.region[0]; //{ id: this.state.region[0], region: states.default[this.stateIds.indexOf(this.state.region[0])].name };
     const eventData = {
-      region, name, description, tourneyLink, activeTimeSlots, address
+      regionId, name, description, tourneyLink, timeRanges
     }
 
     this.props.createEvent(eventData)
@@ -357,4 +367,9 @@ styles = {
   }
 };
 
-export default connect(null, { createEvent })(CreateEvent);
+const mapStateToProps = ({ UsersReducer }) => {
+  const { admins } = UsersReducer;
+  return { admins };
+}
+
+export default connect(mapStateToProps, { createEvent, getAdmins })(CreateEvent);

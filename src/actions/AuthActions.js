@@ -1,4 +1,4 @@
-import { setCurrentUser, removeCurrentUser } from './UsersActions';
+import { removeCurrentUser } from './UsersActions';
 import { user_signed_in, user_signed_out, sign_in_fail, set_headers, set_current_user } from './types';
 import firebase from 'react-native-firebase';
 import backendUrl from '../globals/environment';

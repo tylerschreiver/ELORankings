@@ -11,6 +11,7 @@ import {
   set_character 
 } from './types';
 import socket from '../globals/socket';
+import backendUrl from '../globals/environment';
 
 export const init = () => {
   return async (dispatch, getState) => {
@@ -71,7 +72,7 @@ export const setGameWin = player => {
     } else {
       if (player === pendingWinner.winner) {
         socket.emit('confirmWinner', { setId, winner: player });
-      } else console.log("fuck dude Idk");
+      }
     }
   }
 };
@@ -95,3 +96,22 @@ export const setStage = stage => {
   };
   // return { type: set_stage, payload: stage };
 };
+
+export const updateScore = (opponentRank, userRank, didWin) => {
+  return async (dispatch, getState) => {
+    const { headers, uid } = getState().AuthReducer;
+    const { opponentUid } = getState().SetReducer;
+
+    const url = `${backendUrl}/Users/${uid}/rank/${userRank.id}`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        opponent: { id: opponentUid, rank: { id: opponentRank.id } },
+        didWin
+      })
+    });
+    const didUpdate = await response.json();
+    console.log(didUpdate);
+  }
+}

@@ -3,12 +3,10 @@ import {
   set_leaderboard, 
   set_viewed_user,
   remove_viewed_user, 
-  set_current_user, 
+  get_admins,
   remove_current_user 
 } from './types';
-import faker from 'faker';
 import backendUrl from '../globals/environment';
-import generatePlayers from '../mockData/players';
 
 
 export const getUsers = () => {
@@ -54,11 +52,6 @@ export const removeViewedUser = () => {
   return { type: remove_viewed_user };
 };
 
-export const setCurrentUser = user => {
-  // TODO DO THIS RIGHt
-  return { type: set_current_user, payload: fakeUsers[0] };
-};
-
 export const removeCurrentUser = () => {
   return { type: remove_current_user };
 };
@@ -67,10 +60,8 @@ export const getPlayerRanks = id => {
   return async (dispatch, getState) => {
     if (getState().UsersReducer.leaderboard.length === 0) {
       dispatch(getLeaderboard());
-      console.log(id);
     }
     const ranks = getState().UsersReducer.leaderboard.filter(rank => {
-      console.log(rank);
       return rank.userId === id
     });
     return ranks;
@@ -83,3 +74,19 @@ export const getUserById = id => {
     return users.find(user => user.id === id);
   }
 }
+
+export const getAdmins = () => {
+  return async (dispatch, getState) => {
+    try {
+      const { headers } = getState().AuthReducer;
+      const response = await fetch(`${backendUrl}/Users?role=Player`, {
+        method: "GET",
+        headers
+      });
+      const admins = await response.json();
+      dispatch({ type: get_admins, payload: admins });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+};

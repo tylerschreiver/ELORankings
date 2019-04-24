@@ -11,7 +11,8 @@ import {
   setStage, 
   init, 
   chooseRankedSlot, 
-  setCharacter 
+  setCharacter,
+  updateScore
 } from '../actions/SetActions'
 import { BasePage } from '../components';
 import stages from '../assets/getStages';
@@ -23,7 +24,7 @@ class SetScreen extends Component {
   phoneDim = Dimensions.get("window");
   stageArray = [];
   charactersSearch = Object.keys(characters).map(char => { return { name: char } });
-
+  hasUpdatedScore = false;
 
   UNSAFE_componentWillMount() {
     this.props.init();
@@ -128,10 +129,29 @@ class SetScreen extends Component {
   }
   
   renderSection() {
-    if (this.props.setOver) return (
-      <View><Text>{this.props.headerText}</Text></View>
-    );
-    else if ((this.props.character === null || this.props.opponentCharacter === null) && this.props.games.length === 0) {
+    const { 
+      setOver, 
+      updateScore, 
+      opponentRank, 
+      rank, 
+      games, 
+      setCharacter, 
+      opponentCharacter, 
+      character, 
+      selectedStage, 
+      headerText 
+    } = this.props;
+    
+    if (setOver) {
+      if (!this.hasUpdatedScore) {
+        this.hasUpdatedScore = true;
+        updateScore(opponentRank, rank, games[games.length - 1].didWin)
+      }
+      return (
+        <View><Text>{headerText}</Text></View>
+      );
+    } 
+    else if ((character === null || opponentCharacter === null) && games.length === 0) {
       return (
         <View>
           <Text>Choose Rank</Text>
@@ -142,11 +162,11 @@ class SetScreen extends Component {
                 <SectionedMultiSelect
                   uniqueKey="name" 
                   items={this.charactersSearch} 
-                  selectedItems={[this.props.character]} 
+                  selectedItems={[character]} 
                   selectText="Character"
                   showChips={false}
                   single={true}
-                  onSelectedItemsChange={chars => this.props.setCharacter(chars[0])}
+                  onSelectedItemsChange={chars => setCharacter(chars[0])}
                   styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
                 />
             </View>
@@ -154,8 +174,8 @@ class SetScreen extends Component {
         </View>
       );
     }
-    else if (this.props.selectedStage === '') return this.renderStageStrike();
-    else if ((this.props.character === null || this.props.opponentCharacter === null) && this.props.games.length !== 0) {
+    else if (selectedStage === '') return this.renderStageStrike();
+    else if ((character === null || opponentCharacter === null) && games.length !== 0) {
       return (
         <View>
           { this.state.chooseCharacter &&
@@ -164,11 +184,11 @@ class SetScreen extends Component {
                 <SectionedMultiSelect
                   uniqueKey="name" 
                   items={this.charactersSearch} 
-                  selectedItems={[this.props.character]} 
+                  selectedItems={[character]} 
                   selectText="Character"
                   showChips={false}
                   single={true}
-                  onSelectedItemsChange={chars => this.props.setCharacter(chars[0])}
+                  onSelectedItemsChange={chars => setCharacter(chars[0])}
                   styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
                 />
             </View>
@@ -233,7 +253,9 @@ const styles = {
 const mapStateToProps = ({ SetReducer }) => {
   const { 
     opponentTag, 
-    opponentCharacter, 
+    opponentCharacter,
+    opponentRank,
+    rank,
     games, 
     bannedStages, 
     character, 
@@ -247,6 +269,8 @@ const mapStateToProps = ({ SetReducer }) => {
   return { 
     opponentTag, 
     opponentCharacter, 
+    opponentRank,
+    rank,
     games, 
     bannedStages, 
     setOver,
@@ -268,5 +292,6 @@ export default connect(mapStateToProps, {
   setBestOf,
   init,
   chooseRankedSlot,
-  setCharacter
+  setCharacter,
+  updateScore
 })(SetScreen);
