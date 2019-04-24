@@ -27,13 +27,14 @@ export const init = () => {
       dispatch({ type: set_character, payload })
     });
     socket.on('winnerPicked', winner => {
-      console.log(winner);
       dispatch({ type: set_pending_game_win, payload: winner });
     });
     socket.on('winnerConfirmed', winner => {
-      console.log(winner);
       dispatch({ type: set_game_win, payload: winner })
     });
+    socket.on('stageChosen', stage => {
+      dispatch({ type: set_stage, payload: stage });
+    })
   }
 }
 
@@ -88,5 +89,8 @@ export const setBestOf = bestOf => {
 // };
 
 export const setStage = stage => {
-  return { type: set_stage, payload: stage };
+  return async (dispatch, getState) => {
+    socket.emit('chooseStage', stage);
+  };
+  // return { type: set_stage, payload: stage };
 };

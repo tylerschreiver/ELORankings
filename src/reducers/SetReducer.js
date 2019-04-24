@@ -22,7 +22,7 @@ const INITIAL_STATE = {
   tag: '',
   bannedStages: ['Pokemon Stadium'],
   selectedStage: '',
-  bestOf: 3,
+  bestOf: 5,
   character: '',
   headerText: 'Strike 1 Stage',
   strikeFirst: false,
@@ -62,6 +62,8 @@ const SetReducer = (state = INITIAL_STATE, action) => {
     }
 
     case set_game_win: { 
+      if (state.pendingWinner === null) return { ...state };
+      console.log('winner confirmed');
       const game = { 
         winner: state.pendingWinner.winner, 
         userCharacter: state.character, 
@@ -74,9 +76,8 @@ const SetReducer = (state = INITIAL_STATE, action) => {
       newState.setOver = isSetOver(newState);
       newState.headerText = getHeaderText(newState);
       newState.isWaiting = newState.headerText.includes('Wait');
+      newState.pendingWinner = null;
       newState.bannedStages = game.didWin ? getBannedOpponentStages(games) : getBannedUserStages(games);
-      console.log(newState);
-      
       return { ...newState };
     }
     case set_best_of: 
