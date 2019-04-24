@@ -5,6 +5,7 @@ import {
   reset_banned_stages, 
   set_best_of, 
   set_user_character, 
+  reset_set,
   set_stage, 
   set_pending_game_win,
   set_rank, 

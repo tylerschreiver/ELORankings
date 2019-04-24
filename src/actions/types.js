@@ -21,6 +21,7 @@ export const set_available_ranks = 'set_available_ranks';
 export const set_rank = 'set_rank';
 export const set_character = 'set_character';
 export const set_pending_game_win = 'set_pending_game_win';
+export const reset_set = 'reset_set';
 
 export const set_users = 'set_users';
 export const set_leaderboard = 'set_leaderboard';

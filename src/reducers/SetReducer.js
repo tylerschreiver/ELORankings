@@ -10,6 +10,7 @@ import {
   set_available_ranks,
   set_rank,
   set_character,
+  reset_set,
   set_pending_game_win
 } from '../actions/types';
 
@@ -38,6 +39,8 @@ const INITIAL_STATE = {
 
 const SetReducer = (state = INITIAL_STATE, action) => {
   switch(action.type) {
+    case reset_set:
+      return { ...INITIAL_STATE };
     case reset_banned_stages:
       return { ...state, bannedStages: [] };
 
