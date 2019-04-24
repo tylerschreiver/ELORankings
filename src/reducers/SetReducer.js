@@ -93,7 +93,7 @@ const SetReducer = (state = INITIAL_STATE, action) => {
 
     case set_available_ranks: {
       console.log(action.payload);
-      if (action.payload.displayName) {
+      if (action.payload.opponentTag) {
         return { ...state, availableRanks: action.payload.rank, opponentTag: action.payload.opponentTag };
       }
       return { ...state, availableRanks: action.payload.rank,  };

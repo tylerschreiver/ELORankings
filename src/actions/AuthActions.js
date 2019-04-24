@@ -30,7 +30,7 @@ export const createAccount = (email, password, region, character, tag) => {
       const body = JSON.stringify({
         regionId: region,
         primaryCharacter: character,
-        diplayName: tag
+        displayName: tag
       });
 
       const headers = {
