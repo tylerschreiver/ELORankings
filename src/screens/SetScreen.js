@@ -125,7 +125,7 @@ class SetScreen extends Component {
         <View style={styles.rankStyles}>
           <Text style={basicTextStyle}>{rankNames[rank.slotNumber - 1]} Slot</Text>
           <Image style={characterIconStyle} source={characters[rank.character]}></Image>
-          <Text style={basicTextStyle}>{rank.score}</Text>
+          <Text style={[basicTextStyle, { alignSelf: 'flex-end' }]}>Score {Math.floor(rank.score)}</Text>
         </View>
       </TouchableOpacity>
       );
@@ -146,7 +146,7 @@ class SetScreen extends Component {
       headerText 
     } = this.props;
 
-    const { inputStyle } = styles;
+    const { inputStyle, basicTextStyle } = styles;
 
     if (setOver) {
       if (!this.hasUpdatedScore) {
@@ -186,10 +186,10 @@ class SetScreen extends Component {
     else if (selectedStage === '') return this.renderStageStrike();
     else if ((character === null || opponentCharacter === null) && games.length !== 0) {
       return (
-        <View>
+          <View style={{ width: '80%', alignSelf: 'center', justifyContent: 'center' }}>
           { this.state.chooseCharacter &&
-            <View>
-                <Text>Choose character for next game</Text>
+              <View>
+                <Text style={basicTextStyle}>Choose character for next game</Text>
                 <SectionedMultiSelect
                   uniqueKey="name" 
                   items={this.charactersSearch} 
@@ -199,14 +199,12 @@ class SetScreen extends Component {
                   single={true}
                   onSelectedItemsChange={chars => setCharacter(chars[0])}
                   styles={{ selectToggle: [{ height: 50, width: '100%' }, inputStyle], selectToggleText: { color: 'white', textAlign: 'center' } }}
-
-                  // styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
                 />
             </View>
           } 
           { !this.state.chooseCharacter &&
             <View>
-              <Text>Waiting for opponent to choose character</Text>
+              <Text style={basicTextStyle}>Waiting for opponent to choose character</Text>
             </View>
           }
         </View>

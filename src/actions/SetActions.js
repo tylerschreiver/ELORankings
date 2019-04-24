@@ -16,6 +16,7 @@ import backendUrl from '../globals/environment';
 export const init = () => {
   return async (dispatch, getState) => {
     const { uid } = getState().AuthReducer;
+
     socket.on('stageBanned', stage => {
       dispatch({ type: set_banned_stage, payload: stage });
     });
@@ -31,6 +32,21 @@ export const init = () => {
       dispatch({ type: set_pending_game_win, payload: winner });
     });
     socket.on('winnerConfirmed', winner => {
+      // const winCount = games.map(game => game.didWin);
+      // const { games, bestOf } = getState().SetReducer;
+      // console.log(winCount);
+      // console.log(games);
+      // if (bestOf === 3) {
+      //   if (winCount === 2 || games.length - winCount === 2) {
+      //     console.log('hit');
+      //     // dispatch(updateScore())
+      //   }
+      // } else if (bestOf === 5) {
+      //   if (winCount === 3 || games.length - winCount === 3) {
+      //     console.log('hit');
+      //     // dispatch(updateScore())
+      //   }
+      // }
       dispatch({ type: set_game_win, payload: winner })
     });
     socket.on('stageChosen', stage => {
@@ -97,16 +113,19 @@ export const setStage = stage => {
   // return { type: set_stage, payload: stage };
 };
 
-export const updateScore = (opponentRank, userRank, didWin) => {
+export const updateScore = () => {
   console.log('update');
   return async (dispatch, getState) => {
     const { headers, uid } = getState().AuthReducer;
-    const { opponentUid } = getState().SetReducer;
+    const { opponentUid, opponentRank, userRank, games } = getState().SetReducer;
+    const didWin = games[games.length -1].didWin;
     const url = `${backendUrl}/Users/${uid}/rank/${userRank.id}`;
     const body = JSON.stringify({
       opponent: { id: opponentUid, rank: { id: opponentRank.id } },
       didWin
     });
+
+    console.log(body);
 
     try {
       const response = await fetch(url, { method: "POST", headers, body });
