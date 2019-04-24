@@ -128,7 +128,7 @@ class SetScreen extends Component {
   }
   
   renderSection() {
-    if (this.props.headerText.indexOf('Won') !== -1) return (
+    if (this.props.setOver) return (
       <View><Text>{this.props.headerText}</Text></View>
     );
     else if ((this.props.character === null || this.props.opponentCharacter === null) && this.props.games.length === 0) {
@@ -238,7 +238,8 @@ const mapStateToProps = ({ SetReducer }) => {
     bannedStages, 
     character, 
     selectedStage, 
-    headerText, 
+    headerText,
+    setOver,
     isWaiting, 
     availableRanks, 
     tag 
@@ -248,6 +249,7 @@ const mapStateToProps = ({ SetReducer }) => {
     opponentCharacter, 
     games, 
     bannedStages, 
+    setOver,
     character, 
     selectedStage, 
     headerText,
