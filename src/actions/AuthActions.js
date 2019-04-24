@@ -33,8 +33,6 @@ export const createAccount = (email, password, region, character, tag) => {
         diplayName: tag
       });
 
-      console.log(body);
-  
       const headers = {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json'

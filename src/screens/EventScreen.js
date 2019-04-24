@@ -41,10 +41,12 @@ class EventScreen extends Component {
   }
 
   pressCreateSet() {
+    // todo add displayName
     this.props.createSet({ bestOf: 5, eventId: this.props.signedInEvent.id });
   }
 
   async joinSet(setId) {
+    // todo add displayName
     this.props.joinSet({ setId, eventId: this.props.signedInEvent.id });
     this.setState({ showFindMatch: false });
     Actions.Set()

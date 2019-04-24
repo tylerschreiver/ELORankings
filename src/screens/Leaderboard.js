@@ -93,6 +93,9 @@ class Leaderboard extends Component {
     const rightIcon = { name: 'search', onPress: () => this.searchBar.show() };
     const { shadowStyle } = styles;
 
+    console.log(this.props.users);
+    console.log(this.props.leaderboard);
+
     return (
       <BasePage rightIcon={rightIcon} headerText="Leaderboard">
         <View style={{ position: 'absolute', top: 0, width: '100%', height: 50 }}>

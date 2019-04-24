@@ -56,7 +56,9 @@ export const createSet = set => {
       dispatch({ type: set_set_id, payload: { setId: id, strikeFirst: true }});
     });
     socket.on('setJoined', joinedSet => {
-      dispatch({ type: set_available_ranks, payload: joinedSet.creator.rank });
+      console.log(joinedSet);
+      const payload = { rank: joinedSet.creator.rank, opponentTag: joinedSet.joiner.displayName };
+      dispatch({ type: set_available_ranks, payload });
       Actions.Set();
     });
   };
@@ -70,7 +72,9 @@ export const joinSet = set => {
     dispatch({ type: set_set_id, payload: { setId: set.setId, strikeFirst: false } });
     socket.emit('joinSet', set);
     socket.on('setJoined', joinedSet => {
-      dispatch({ type: set_available_ranks, payload: joinedSet.joiner.rank });
+      console.log(joinedSet);
+      const payload = { rank: joinedSet.joiner.rank, opponentTag: joinedSet.creator.displayName };
+      dispatch({ type: set_available_ranks, payload });
       Actions.Set();
     });
   };

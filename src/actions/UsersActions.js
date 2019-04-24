@@ -1,34 +1,45 @@
 import { set_users, set_leaderboard } from './types';
 import faker from 'faker';
+import backendUrl from '../globals/environment';
 import generatePlayers from '../mockData/players';
 
-const fakeUsers = [
-  {
-    id: faker.random.uuid(),
-    username: 'Yee',
-    email: 'tyler.schreiver+2@interapt.com',
-    region: 'Kentucky',
-    ranks: [
-      { eloScore: 6000, characters: [{ id: 'Marth', percentUsed: 80 }, { id: 'Peach', percentUsed: 20 }], },
-      { eloScore: 3200, characters: [{ id: 'Mario', percentUsed: 100 }]}
-    ]
-  },
-  {
-    id: faker.random.uuid(),
-    username: 'Nato',
-    email: 'nato@google.com',
-    region: 'Kentucky',
-    ranks: [{
-      eloScore: 2000, 
-      characters: [{ id: 'Falco', percentUsed: 100 }]
-    }]
-  }
-];
+// const fakeUsers = [
+//   {
+//     id: faker.random.uuid(),
+//     username: 'Yee',
+//     email: 'tyler.schreiver+2@interapt.com',
+//     region: 'Kentucky',
+//     ranks: [
+//       { eloScore: 6000, characters: [{ id: 'Marth', percentUsed: 80 }, { id: 'Peach', percentUsed: 20 }], },
+//       { eloScore: 3200, characters: [{ id: 'Mario', percentUsed: 100 }]}
+//     ]
+//   },
+//   {
+//     id: faker.random.uuid(),
+//     username: 'Nato',
+//     email: 'nato@google.com',
+//     region: 'Kentucky',
+//     ranks: [{
+//       eloScore: 2000, 
+//       characters: [{ id: 'Falco', percentUsed: 100 }]
+//     }]
+//   }
+// ];
 
 export const getUsers = () => {
-  const fake = generatePlayers(20);
-  const payload = fakeUsers.concat(fake);
-  return { type: set_users, payload };
+  // const fake = generatePlayers(20);
+  // const payload = fakeUsers.concat(fake);
+  return async (dispatch, getState) => {
+    const { headers } = getState().AuthReducer;
+    const response = await fetch(`${backendUrl}/Users`, {
+      method: "GET",
+      headers
+    });
+    console.log(response);
+    const json = await response.json();
+    console.log(json);
+  }
+  // return { type: set_users, payload };
 };
 
 export const getLeaderboard = () => {

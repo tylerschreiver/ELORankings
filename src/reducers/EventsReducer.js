@@ -1,21 +1,7 @@
 import { events_requested, event_selected, event_sign_in, event_sign_out, create_event } from '../actions/types';
 
 const INITIAL_STATE = {
-  events: [{
-    activeTimeSlots: [{
-      end: new Date(2019, 4, 20, 23),
-      start: new Date(2019, 4, 20, 16, 20) 
-    }],
-    description: "Best Louisville Monthly",
-    id: "a3c5862e-bd60-41ff-9185-f2997019c0f6",
-    name: "House of Cards",
-    address: '1511 Bellamy Pl',
-    region: {
-      id: "23dafbe3-5802-4a47-9951-8b7487d77ca1",
-      region: "Kentucky"
-    },
-    tourneyLink: "smash.gg"
-  }],
+  events: [],
   selectedEvent: null,
   viewedEvents: [],
   signedInEvent: null
