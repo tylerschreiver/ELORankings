@@ -6,6 +6,7 @@ import {
   set_best_of, 
   set_user_character, 
   set_stage, 
+  set_pending_game_win,
   set_rank, 
   set_character 
 } from './types';
@@ -24,7 +25,15 @@ export const init = () => {
     socket.on('characterChosen', char => {
       const payload = char.id === uid ? { character: char.character } : { opponentCharacter: char.character }
       dispatch({ type: set_character, payload })
-    })
+    });
+    socket.on('winnerPicked', winner => {
+      console.log(winner);
+      dispatch({ type: set_pending_game_win, payload: winner });
+    });
+    socket.on('winnerConfirmed', winner => {
+      console.log(winner);
+      dispatch({ type: set_game_win, payload: winner })
+    });
   }
 }
 
@@ -54,7 +63,16 @@ export const resetBannedStages = () => {
 };
 
 export const setGameWin = player => {
-  return { type: set_game_win, payload: player };
+  return async (dispatch, getState) => {
+    const { setId, pendingWinner } = getState().SetReducer;
+    if (pendingWinner === null) {
+      socket.emit('pickWinner', { setId, winner: player });
+    } else {
+      if (player === pendingWinner.winner) {
+        socket.emit('confirmWinner', { setId, winner: player });
+      } else console.log("fuck dude Idk");
+    }
+  }
 };
 
 export const setOpponent = opponent => {

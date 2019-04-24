@@ -9,7 +9,8 @@ import {
   set_set_id,
   set_available_ranks,
   set_rank,
-  set_character
+  set_character,
+  set_pending_game_win
 } from '../actions/types';
 
 const stages = ['Dreamland', 'Fountain of Dreams', 'Battlefield', 'Final Destination', 'Yoshis Story', 'Pokemon Stadium'];
@@ -30,7 +31,8 @@ const INITIAL_STATE = {
   isWaiting: false,
   availableRanks: [],
   rank: null,
-  opponentRank: null
+  opponentRank: null,
+  pendingWinner: null
 };
 
 const SetReducer = (state = INITIAL_STATE, action) => {
@@ -54,22 +56,29 @@ const SetReducer = (state = INITIAL_STATE, action) => {
   
     case set_opponent:
       return { ...state, opponent: action.payload };
-    case set_game_win: {
-      const game = { 
-        didWin: action.payload, 
-        userCharacter: state.character, 
-        opponentTag: state.opponentTag, 
-        opponentCharacter: state.opponentCharacter,
-        opponentTag: state.opponentTag,
-        stage: state.selectedStage
-      }
-      const games = [ ...state.games, game]
-      const newState = { ...state, games, selectedStage: '', bannedStages: [] };
-      newState.setOver = isSetOver(newState);
-      newState.headerText = getHeaderText(newState);
-      newState.isWaiting = newState.headerText.includes('Wait');
-      newState.bannedStages = game.didWin ? getBannedOpponentStages(games) : getBannedUserStages(games);
-      return { ...newState };
+
+    case set_pending_game_win: {
+      return { ...state, pendingWinner: action.payload };
+    }
+
+    case set_game_win: { 
+      console.log(action.payload);
+      // const game = { 
+      //   didWin: action.payload, 
+      //   userCharacter: state.character, 
+      //   opponentTag: state.opponentTag, 
+      //   opponentCharacter: state.opponentCharacter,
+      //   opponentTag: state.opponentTag,
+      //   stage: state.selectedStage
+      // }
+      return state;
+      // const games = [ ...state.games, game]
+      // const newState = { ...state, games, selectedStage: '', bannedStages: [] };
+      // newState.setOver = isSetOver(newState);
+      // newState.headerText = getHeaderText(newState);
+      // newState.isWaiting = newState.headerText.includes('Wait');
+      // newState.bannedStages = game.didWin ? getBannedOpponentStages(games) : getBannedUserStages(games);
+      // return { ...newState };
     }
     case set_best_of: 
       return { ...state, bestOf: action.payload };

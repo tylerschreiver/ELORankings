@@ -49,7 +49,7 @@ class SetScreen extends Component {
 
     return (
       <View style={{ flex: 1, alignItems: 'space-between', margin: 5, height: '100%' }}>
-        <View style={playerStyles} onTouchEnd={() => this.props.setGameWin(true)}>
+        <View style={playerStyles} onTouchEnd={() => this.props.setGameWin(this.props.tag)}>
           <Image style={characterIconStyle} source={userChar}></Image>
           <Text style={playerNameStyles}>{this.props.tag}</Text>
         </View>
@@ -58,7 +58,7 @@ class SetScreen extends Component {
             source={stages[this.props.selectedStage]}>
           </Image>
         </View>
-        <View style={playerStyles} onTouchEnd={() => this.props.setGameWin(false)}>
+        <View style={playerStyles} onTouchEnd={() => this.props.setGameWin(this.props.opponentTag)}>
           <Text  style={playerNameStyles}>{this.props.opponentTag}</Text>
           <Image style={characterIconStyle} source={opponentChar}></Image>
         </View>
