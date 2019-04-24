@@ -7,10 +7,10 @@ class Navbar extends Component {
   state = { currentSection: 'Events' };
 
   handleNavPress(currentSection) {
-    if (Actions.currentScene !== currentSection) {
+    // if (Actions.currentScene !== currentSection) {
       this.props.navigate(currentSection);
       this.setState({ currentSection });
-    }
+    // }
   }
 
   render() {

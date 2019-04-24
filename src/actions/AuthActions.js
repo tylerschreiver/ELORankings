@@ -1,4 +1,5 @@
-import { user_signed_in, user_signed_out, sign_in_fail, set_headers } from './types';
+import { setCurrentUser, removeCurrentUser } from './UsersActions';
+import { user_signed_in, user_signed_out, sign_in_fail, set_headers, set_current_user } from './types';
 import firebase from 'react-native-firebase';
 import backendUrl from '../globals/environment';
 
@@ -12,6 +13,13 @@ export const signIn = (email, password) => {
         'Content-Type': 'application/json'
       };
 
+      const currentUserResponse = await fetch(`${backendUrl}/Users/${user.user.uid}`, {
+        method: "GET",
+        headers
+      });
+      const currentUser = await currentUserResponse.json();
+      
+      dispatch({ type: set_current_user, payload: currentUser });
       dispatch({ type: user_signed_in, payload: { headers, uid: user.user.uid } });
     } catch(e) {
       console.log(e);
@@ -20,6 +28,7 @@ export const signIn = (email, password) => {
 };
 
 export const signOut = () => {
+  dispatch(removeCurrentUser());
   return { type: user_signed_out };
 };
 

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { signOut } from '../actions/AuthActions';
 import { getEvents } from '../actions/EventActions';
-import { getUsers } from '../actions/UsersActions';
+import { getUsers, removeViewedUser } from '../actions/UsersActions';
 import { Navbar, SideMenuContent } from '../components';
 
 import Events from './Events';
@@ -29,7 +29,6 @@ class Home extends Component {
 
   async componentDidUpdate(prevProps) {
     if (prevProps.signedIn !== this.props.signedIn) {
-      console.log('why');
       this.setState({ section: 'Events' });
       await this.props.getEvents();
       await this.props.getUsers();
@@ -37,6 +36,7 @@ class Home extends Component {
   }
 
   changeSection(section) {
+    this.props.removeViewedUser();
     switch(section) {
       case 'Events': 
         Actions.Events();
@@ -108,10 +108,14 @@ const styles = {
   }
 }
 
-// is only called on init
 const mapStateToProps = (state) => {
   return { signedIn: state.AuthReducer.signedIn };
 };
 
 
-export default connect(mapStateToProps, { signOut, getEvents, getUsers })(Home);
+export default connect(mapStateToProps, { 
+  signOut,
+  getEvents,
+  getUsers, 
+  removeViewedUser 
+})(Home);

@@ -1,34 +1,17 @@
-import { set_users, set_leaderboard } from './types';
+import { 
+  set_users, 
+  set_leaderboard, 
+  set_viewed_user,
+  remove_viewed_user, 
+  set_current_user, 
+  remove_current_user 
+} from './types';
 import faker from 'faker';
 import backendUrl from '../globals/environment';
 import generatePlayers from '../mockData/players';
 
-// const fakeUsers = [
-//   {
-//     id: faker.random.uuid(),
-//     username: 'Yee',
-//     email: 'tyler.schreiver+2@interapt.com',
-//     region: 'Kentucky',
-//     ranks: [
-//       { eloScore: 6000, characters: [{ id: 'Marth', percentUsed: 80 }, { id: 'Peach', percentUsed: 20 }], },
-//       { eloScore: 3200, characters: [{ id: 'Mario', percentUsed: 100 }]}
-//     ]
-//   },
-//   {
-//     id: faker.random.uuid(),
-//     username: 'Nato',
-//     email: 'nato@google.com',
-//     region: 'Kentucky',
-//     ranks: [{
-//       eloScore: 2000, 
-//       characters: [{ id: 'Falco', percentUsed: 100 }]
-//     }]
-//   }
-// ];
 
 export const getUsers = () => {
-  // const fake = generatePlayers(20);
-  // const payload = fakeUsers.concat(fake);
   return async (dispatch, getState) => {
     const { headers } = getState().AuthReducer;
     const response = await fetch(`${backendUrl}/Users`, {
@@ -42,24 +25,61 @@ export const getUsers = () => {
 
 export const getLeaderboard = () => {
   return async (dispatch, getState) => {
-    // await dispatch(getUsers());
     const users = getState().UsersReducer.users;
-    const ranks = []
+    if (!users.length) await getUsers();
+    let ranks = []
     users.forEach(user => {
-      // if (user.ranks) {
-        console.log(user);
-        user.ranks.forEach(rank => {
-          ranks.push({ 
-            username: user.displayName,
-            eloScore: rank.score, 
-            region: user.regionId,
-            characters: [rank.character],
-            id: rank.id
-          });
+      user.ranks.forEach(rank => {
+        ranks.push({ 
+          username: user.displayName,
+          eloScore: rank.score, 
+          region: user.regionId,
+          character: rank.character,
+          id: rank.id,
+          userId: user.id
         });
-      // }
+      });
     });
     ranks.sort((a, b) => b.eloScore - a.eloScore);
-    dispatch({ type: 'set_leaderboard', payload: ranks });
+    ranks.forEach((rank, i) => rank.position = i);
+    dispatch({ type: set_leaderboard, payload: ranks });
+  }
+};
+
+export const setViewedUser = user => {
+  return { type: set_viewed_user, payload: user };
+};
+
+export const removeViewedUser = () => {
+  return { type: remove_viewed_user };
+};
+
+export const setCurrentUser = user => {
+  // TODO DO THIS RIGHt
+  return { type: set_current_user, payload: fakeUsers[0] };
+};
+
+export const removeCurrentUser = () => {
+  return { type: remove_current_user };
+};
+
+export const getPlayerRanks = id => {
+  return async (dispatch, getState) => {
+    if (getState().UsersReducer.leaderboard.length === 0) {
+      dispatch(getLeaderboard());
+      console.log(id);
+    }
+    const ranks = getState().UsersReducer.leaderboard.filter(rank => {
+      console.log(rank);
+      return rank.userId === id
+    });
+    return ranks;
+  }
+}
+
+export const getUserById = id => {
+  return (dispatch, getState) => {
+    const { users } = getState().UsersReducer;
+    return users.find(user => user.id === id);
   }
 }

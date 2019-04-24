@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { BasePage } from '../components';
-import { getLeaderboard } from '../actions/UsersActions';
+import { getLeaderboard, setViewedUser } from '../actions/UsersActions';
 import { Image } from 'react-native-elements';
 import characters from '../assets/getCharacters';
 import SearchBar from 'react-native-searchbar';
@@ -40,7 +40,6 @@ class Leaderboard extends Component {
     } 
 
     if (selectedRegions !== null && selectedRegions.length !== 0) {
-      // this.setState({ selectedRegions });
       filteredRanks = filteredRanks.filter(rank => {
         return selectedRegions.indexOf(states.default[this.stateIds.indexOf(rank.region)].name) !== -1;
       });
@@ -60,17 +59,22 @@ class Leaderboard extends Component {
     this.setState({ filteredRanks, filterText, selectedRegions, selectedCharacters });
   }
 
+  goToUserProfile(user) {
+    this.props.setViewedUser(user);
+    Actions.Profile();
+  }
+
   renderCharacters(rank) {
-    return rank.characters.map(char => {
-      const icon = characters[char];
+    // return rank.characters.map(char => {
+      const icon = characters[rank.character];
       return (
         <Image 
           style={{ marginLeft: 5, marginRight: 5 }} 
-          key={char} 
+          key={rank.character} 
           source={icon} 
         />
       );
-    });
+    // });
   }
 
   renderUsers() {
@@ -78,7 +82,7 @@ class Leaderboard extends Component {
     return this.state.filteredRanks.map((user, i) => {
       const rowStyles = i % 2 === 0 ? [userStyle, userEvenStyle] : [userStyle];
       return (
-        <View onTouchEnd={() => Actions.Profile()} key={user.id} style={rowStyles}>
+        <View onTouchEnd={() => this.goToUserProfile(user)} key={user.id} style={rowStyles}>
           <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
             <Text style={userTextStyle}>{i+1}) {user.username}</Text>
             {this.renderCharacters(user)}
@@ -115,7 +119,10 @@ class Leaderboard extends Component {
                   selectText="Regions"
                   showChips={false}
                   onSelectedItemsChange={regions => this.filter(null, regions, null)}
-                  styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
+                  styles={{ 
+                    selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, 
+                    selectToggleText: { color: 'white', textAlign: 'center' }
+                  }}
                 />
               </View>
               <View style={shadowStyle}>
@@ -126,7 +133,10 @@ class Leaderboard extends Component {
                   selectText="Characters"
                   showChips={false}
                   onSelectedItemsChange={chars => this.filter(null, null, chars)}
-                  styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
+                  styles={{ 
+                    selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5},
+                    selectToggleText: { color: 'white', textAlign: 'center' } 
+                  }}
                 />
               </View>
             </View>
@@ -172,4 +182,4 @@ mapStateToProps = ({ UsersReducer }) => {
   return { users, leaderboard };
 }
 
-export default connect(mapStateToProps, { getLeaderboard })(Leaderboard);
+export default connect(mapStateToProps, { getLeaderboard, setViewedUser })(Leaderboard);

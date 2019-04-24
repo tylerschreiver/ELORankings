@@ -24,3 +24,7 @@ export const set_pending_game_win = 'set_pending_game_win';
 
 export const set_users = 'set_users';
 export const set_leaderboard = 'set_leaderboard';
+export const set_viewed_user = 'set_viewed_user';
+export const remove_viewed_user = 'remove_viewed_user';
+export const set_current_user = 'set_current_user';
+export const remove_current_user = 'remove_current_user';
