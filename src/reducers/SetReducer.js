@@ -18,6 +18,7 @@ const INITIAL_STATE = {
   opponentTag: '',
   opponentCharacter: '',
   games: [],
+  tag: '',
   bannedStages: ['Pokemon Stadium'],
   selectedStage: '',
   bestOf: 3,
@@ -93,10 +94,12 @@ const SetReducer = (state = INITIAL_STATE, action) => {
 
     case set_available_ranks: {
       console.log(action.payload);
-      if (action.payload.opponentTag) {
-        return { ...state, availableRanks: action.payload.rank, opponentTag: action.payload.opponentTag };
-      }
-      return { ...state, availableRanks: action.payload.rank,  };
+      return { 
+        ...state, 
+        availableRanks: action.payload.rank, 
+        opponentTag: action.payload.opponentTag, 
+        tag: action.payload.tag 
+      };
     } 
 
     case set_rank: {

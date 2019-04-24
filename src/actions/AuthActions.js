@@ -11,6 +11,7 @@ export const signIn = (email, password) => {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json'
       };
+
       dispatch({ type: user_signed_in, payload: { headers, uid: user.user.uid } });
     } catch(e) {
       console.log(e);

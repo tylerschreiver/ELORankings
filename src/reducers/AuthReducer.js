@@ -3,7 +3,6 @@ import { user_signed_in, user_signed_out, sign_in_fail, set_headers } from '../a
 const INITIAL_STATE = {
   signedIn: false,
   error: '',
-  userTag: 'Yee',
   headers: {},
   uid: null
 };
