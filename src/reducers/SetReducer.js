@@ -1,18 +1,38 @@
-import { set_best_of, set_banned_stage, set_game_win, set_opponent, reset_banned_stages, set_user_character, set_stage } from '../actions/types';
+import { 
+  set_best_of, 
+  set_banned_stage, 
+  set_game_win, 
+  set_opponent, 
+  reset_banned_stages, 
+  set_user_character, 
+  set_stage,
+  set_set_id,
+  set_available_ranks,
+  set_rank,
+  set_character,
+  set_pending_game_win
+} from '../actions/types';
 
 const stages = ['Dreamland', 'Fountain of Dreams', 'Battlefield', 'Final Destination', 'Yoshis Story', 'Pokemon Stadium'];
 
 const INITIAL_STATE = {
-  opponentTag: 'Nato',
-  opponentCharacter: 'Falco',
+  opponentTag: '',
+  opponentCharacter: null,
   games: [],
+  tag: '',
   bannedStages: ['Pokemon Stadium'],
   selectedStage: '',
-  bestOf: 3,
-  character: 'Mario',
+  bestOf: 5,
+  character: null,
   headerText: 'Strike 1 Stage',
-  strikeFirst: true,
-  setOver: false
+  strikeFirst: false,
+  setOver: false,
+  setId: null,
+  isWaiting: false,
+  availableRanks: [],
+  rank: null,
+  opponentRank: null,
+  pendingWinner: null
 };
 
 const SetReducer = (state = INITIAL_STATE, action) => {
@@ -21,33 +41,43 @@ const SetReducer = (state = INITIAL_STATE, action) => {
       return { ...state, bannedStages: [] };
 
     case set_banned_stage: {
-      const bannedStages = [ ...state.bannedStages, action.payload ];
-      if (state.games.length === 0 && bannedStages.length === 5) {
-        const selectedStage = stages.filter(stage => bannedStages.indexOf(stage) === -1);
-        return { ...state, bannedStages, selectedStage: selectedStage[0], headerText: "Select the Winner" };
-      }
-      const newState = { ...state, bannedStages }
-      newState.headerText = getHeaderText(newState);
-      return newState;
+      if (!state.bannedStages.includes(action.payload)) {
+        const bannedStages = [ ...state.bannedStages, action.payload ];
+        if (state.games.length === 0 && bannedStages.length === 5) {
+          const selectedStage = stages.filter(stage => bannedStages.indexOf(stage) === -1);
+          return { ...state, bannedStages, selectedStage: selectedStage[0], headerText: "Select the Winner" };
+        }
+        const newState = { ...state, bannedStages }
+        newState.headerText = getHeaderText(newState);
+        newState.isWaiting = newState.headerText.includes('Wait');
+        return { ...newState };
+      } else return state;
     }
   
     case set_opponent:
       return { ...state, opponent: action.payload };
-    case set_game_win: {
+
+    case set_pending_game_win: {
+      return { ...state, pendingWinner: action.payload };
+    }
+
+    case set_game_win: { 
+      if (state.pendingWinner === null) return { ...state };
       const game = { 
-        didWin: action.payload, 
+        didWin: state.pendingWinner.winner === state.tag, 
         userCharacter: state.character, 
         opponentTag: state.opponentTag, 
         opponentCharacter: state.opponentCharacter,
-        opponentTag: state.opponentTag,
         stage: state.selectedStage
-      }
+      };
       const games = [ ...state.games, game]
-      const newState = { ...state, games, selectedStage: '', bannedStages: [] };
+      const newState = { ...state, games, selectedStage: '', bannedStages: [], opponentCharacter: null, character: null };
       newState.setOver = isSetOver(newState);
       newState.headerText = getHeaderText(newState);
+      newState.isWaiting = newState.headerText.includes('Wait');
+      newState.pendingWinner = null;
       newState.bannedStages = game.didWin ? getBannedOpponentStages(games) : getBannedUserStages(games);
-      return newState;
+      return { ...newState };
     }
     case set_best_of: 
       return { ...state, bestOf: action.payload };
@@ -55,10 +85,46 @@ const SetReducer = (state = INITIAL_STATE, action) => {
     case set_user_character: 
       return { ...state, character: action.payload };
 
-    case set_stage: 
+    case set_stage: {
       const newState = { ...state, selectedStage: action.payload }
       newState.headerText =  getHeaderText(newState);
-      return newState;
+      newState.isWaiting = newState.headerText.includes('Wait');
+      return { ...newState };
+    }
+    case set_set_id: {
+      const newState = state;
+      newState.setId = action.payload.setId;
+      newState.strikeFirst = action.payload.strikeFirst;
+      newState.headerText = getHeaderText(newState); 
+      newState.isWaiting = newState.headerText.includes('Wait');
+      return { ...newState }
+    }
+
+    case set_available_ranks: {
+      console.log(action.payload);
+      return { 
+        ...state, 
+        availableRanks: action.payload.rank, 
+        opponentTag: action.payload.opponentTag, 
+        tag: action.payload.tag 
+      };
+    } 
+
+    case set_rank: {
+      if (action.payload.rank) {
+        return { ...state, rank: action.payload.rank };
+      } else if (action.payload.opponentRank) {
+        return { ...state, opponentRank: action.payload.opponentRank };
+      } else return { ...state };
+    }
+
+    case set_character: {
+      if (action.payload.character) {
+        return { ...state, character: action.payload.character };
+      } else if (action.payload.opponentCharacter) {
+        return { ...state, opponentCharacter: action.payload.opponentCharacter };
+      } else return { ...state };
+    }
     default: return state;
    }
 }
