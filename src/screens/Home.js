@@ -29,6 +29,7 @@ class Home extends Component {
 
   async componentDidUpdate(prevProps) {
     if (prevProps.signedIn !== this.props.signedIn) {
+      console.log('why');
       this.setState({ section: 'Events' });
       await this.props.getEvents();
       await this.props.getUsers();

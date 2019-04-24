@@ -35,29 +35,38 @@ export const getUsers = () => {
       method: "GET",
       headers
     });
-    console.log(response);
     const json = await response.json();
-    console.log(json);
+    dispatch({ type: set_users, payload: json });
   }
-  // return { type: set_users, payload };
 };
 
 export const getLeaderboard = () => {
   return async (dispatch, getState) => {
     // await dispatch(getUsers());
     const users = getState().UsersReducer.users;
+    console.log(users);
     const ranks = []
     users.forEach(user => {
-      user.ranks.forEach(rank => {
-        const id = faker.random.uuid();
-        ranks.push({ 
-          username: user.username,
-          eloScore: rank.eloScore, 
-          region: user.region,
-          characters: rank.characters.map(char => char.id), 
-          id
+      if (user.ranks) {
+        user.ranks.forEach(rank => {
+          const id = faker.random.uuid();
+          ranks.push({ 
+            username: user.username,
+            eloScore: rank.eloScore, 
+            region: user.region,
+            characters: rank.characters.map(char => char.id), 
+            id
+          });
         });
-      });
+      } else {
+        ranks.push({
+          username: user.displayName || 'shit',
+          eloScore: 111,
+          region: user.regionId,
+          id: user.id,
+          characters: ['Luigi']
+        });
+      }
     });
     ranks.sort((a, b) => b.eloScore - a.eloScore);
     dispatch({ type: 'set_leaderboard', payload: ranks });

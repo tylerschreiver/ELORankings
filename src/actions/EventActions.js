@@ -57,7 +57,7 @@ export const createSet = set => {
     });
     socket.on('setJoined', joinedSet => {
       console.log(joinedSet);
-      const payload = { rank: joinedSet.creator.rank, opponentTag: joinedSet.joiner.displayName };
+      const payload = { rank: joinedSet.creator.ranks, opponentTag: joinedSet.joiner.displayName };
       dispatch({ type: set_available_ranks, payload });
       Actions.Set();
     });
@@ -73,7 +73,7 @@ export const joinSet = set => {
     socket.emit('joinSet', set);
     socket.on('setJoined', joinedSet => {
       console.log(joinedSet);
-      const payload = { rank: joinedSet.joiner.rank, opponentTag: joinedSet.creator.displayName };
+      const payload = { rank: joinedSet.joiner.ranks, opponentTag: joinedSet.creator.displayName };
       dispatch({ type: set_available_ranks, payload });
       Actions.Set();
     });
