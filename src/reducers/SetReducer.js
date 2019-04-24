@@ -63,9 +63,8 @@ const SetReducer = (state = INITIAL_STATE, action) => {
 
     case set_game_win: { 
       if (state.pendingWinner === null) return { ...state };
-      console.log('winner confirmed');
       const game = { 
-        winner: state.pendingWinner.winner, 
+        didWin: state.pendingWinner.winner === state.tag, 
         userCharacter: state.character, 
         opponentTag: state.opponentTag, 
         opponentCharacter: state.opponentCharacter,
