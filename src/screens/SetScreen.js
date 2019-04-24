@@ -35,9 +35,16 @@ class SetScreen extends Component {
   }
 
   componentDidUpdate() {
-    const shouldChoose = this.props.games.length ? this.props.games[this.props.games.length - 1].didWin : false;
-    if ((this.props.opponentCharacter === null || this.props.character === null) && this.props.selectedStage && this.state.chooseCharacter !== shouldChoose) {
-      this.setState({ chooseCharacter: shouldChoose });
+    // const shouldChoose = this.props.games.length ? this.props.games[this.props.games.length - 1].didWin : false;
+    if (this.props.selectedStage && this.props.games.length) {
+      if ((this.props.opponentCharacter === null && this.props.character === null) && this.state.chooseCharacter !== this.props.games[this.props.games.length - 1].didWin) {
+        this.setState({ chooseCharacter: this.props.games[this.props.games.length - 1].didWin });
+      } else if (this.props.opponentCharacter !== null && this.props.character === null && !this.state.chooseCharacter) {
+        this.setState({ chooseCharacter: true });
+      } else if (this.props.opponentCharacter === null && this.props.character !== null && this.state.chooseCharacter) {
+        this.setState({ chooseCharacter: false });
+      }
+
     }
   }
 
