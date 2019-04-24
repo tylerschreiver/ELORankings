@@ -141,9 +141,10 @@ class SetScreen extends Component {
       selectedStage, 
       headerText 
     } = this.props;
-    
+
     if (setOver) {
       if (!this.hasUpdatedScore) {
+        console.log('ay');
         this.hasUpdatedScore = true;
         updateScore(opponentRank, rank, games[games.length - 1].didWin)
       }
