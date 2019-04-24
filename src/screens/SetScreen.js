@@ -163,7 +163,8 @@ class SetScreen extends Component {
                   styles={{ selectToggle: {height: 50, width: 120, backgroundColor: 'rebeccapurple', borderRadius: 5}, selectToggleText: { color: 'white', textAlign: 'center' } }}
                 />
             </View>
-          } { !this.state.chooseCharacter &&
+          } 
+          { !this.state.chooseCharacter &&
             <View>
               <Text>Waiting for opponent to choose character</Text>
             </View>
