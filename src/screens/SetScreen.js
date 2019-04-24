@@ -22,13 +22,14 @@ import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 rankNames = ["Primary", "Secondary", "Third", "Fourth", "Fifth"];
 
 class SetScreen extends Component {
-  state = { firstGame: true, selectStage: true, chooseCharacter: false, headerText: '' };
+  state = { firstGame: true, selectStage: true, chooseCharacter: false, headerText: '', newScore: null };
   phoneDim = Dimensions.get("window");
   stageArray = [];
   charactersSearch = Object.keys(characters).map(char => { return { name: char } });
   hasUpdatedScore = false;
 
   UNSAFE_componentWillMount() {
+    this.setState({ firstGame: true, selectStage: true, chooseCharacter: false, headerText: '', newScore: null })
     this.props.init();
     for(const key in stages) this.stageArray.push({ key, stage: stages[key] });
   }
@@ -58,10 +59,20 @@ class SetScreen extends Component {
     }
   }
 
+  async updateScore() {
+    console.log('b4');
+    const score = await this.props.updateScore();
+    console.log(score);
+    console.log(this.props.rank);
+    this.setState({ newScore: score });
+  }
+
   renderGameWin() {
     const userChar = characters[this.props.character];
     const opponentChar = characters[this.props.opponentCharacter];
     const { playerNameStyles, playerStyles, characterIconStyle } = styles;
+
+    if (this.state.headerText) this.setState({ headerText: '' });
 
     return (
       <View style={{ flex: 1, alignItems: 'space-between', margin: 5, height: '100%' }}>
@@ -155,7 +166,14 @@ class SetScreen extends Component {
         updateScore(opponentRank, rank, games[games.length - 1].didWin)
       }
       return (
-        <View><Text>{headerText}</Text></View>
+        <View style={{ width: '80%', alignSelf: 'center', justifyContent: 'center' }}>
+          <Text style={basicTextStyle}>{headerText}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+            <Text style={basicTextStyle}>{rank.score}</Text>
+            <Text style={basicTextStyle}> -> </Text>
+            <Text style={basicTextStyle}>{this.state.newScore}</Text>
+          </View>
+        </View>
       );
     } 
     else if ((character === null || opponentCharacter === null) && games.length === 0) {

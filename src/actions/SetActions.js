@@ -131,7 +131,7 @@ export const updateScore = () => {
     try {
       const response = await fetch(url, { method: "POST", headers, body });
       const didUpdate = await response.json();
-      console.log(didUpdate);
+      return didUpdate;
     } catch (e) {
       console.log(e);
     }
