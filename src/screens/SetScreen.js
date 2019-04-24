@@ -51,7 +51,7 @@ class SetScreen extends Component {
       <View style={{ flex: 1, alignItems: 'space-between', margin: 5, height: '100%' }}>
         <View style={playerStyles} onTouchEnd={() => this.props.setGameWin(true)}>
           <Image style={characterIconStyle} source={userChar}></Image>
-          <Text style={playerNameStyles}>{this.props.userTag}</Text>
+          <Text style={playerNameStyles}>{this.props.tag}</Text>
         </View>
         <View style={{ flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
           <Image style={{ height: this.phoneDim.width * .8, width: this.phoneDim.width * .8, margin: 5 }} 
@@ -190,9 +190,19 @@ const styles = {
   }
 }
 
-const mapStateToProps = ({ SetReducer, 
-  AuthReducer }) => {
-  const { opponentTag, opponentCharacter, games, bannedStages, character, selectedStage, headerText, isWaiting, availableRanks } = SetReducer;
+const mapStateToProps = ({ SetReducer }) => {
+  const { 
+    opponentTag, 
+    opponentCharacter, 
+    games, 
+    bannedStages, 
+    character, 
+    selectedStage, 
+    headerText, 
+    isWaiting, 
+    availableRanks, 
+    tag 
+  } = SetReducer;
   return { 
     opponentTag, 
     opponentCharacter, 
@@ -201,7 +211,7 @@ const mapStateToProps = ({ SetReducer,
     character, 
     selectedStage, 
     headerText,
-    userTag: AuthReducer.userTag,
+    tag,
     isWaiting,
     availableRanks
   };
