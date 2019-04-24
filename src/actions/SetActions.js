@@ -87,7 +87,7 @@ export const setGameWin = player => {
       socket.emit('pickWinner', { setId, winner: player });
     } else {
       if (player === pendingWinner.winner) {
-        socket.emit('confirmWinner', { setId, winner: player });
+        socket.emit('confirmWinner', { setId, confirmation: player });
       }
     }
   }
@@ -117,9 +117,10 @@ export const updateScore = () => {
   console.log('update');
   return async (dispatch, getState) => {
     const { headers, uid } = getState().AuthReducer;
-    const { opponentUid, opponentRank, userRank, games } = getState().SetReducer;
+    const { opponentUid, opponentRank, rank, games } = getState().SetReducer;
     const didWin = games[games.length -1].didWin;
-    const url = `${backendUrl}/Users/${uid}/rank/${userRank.id}`;
+    console.log(rank);
+    const url = `${backendUrl}/Users/${uid}/rank/${rank.id}`;
     const body = JSON.stringify({
       opponent: { id: opponentUid, rank: { id: opponentRank.id } },
       didWin
