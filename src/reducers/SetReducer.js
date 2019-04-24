@@ -40,7 +40,16 @@ const INITIAL_STATE = {
 const SetReducer = (state = INITIAL_STATE, action) => {
   switch(action.type) {
     case reset_set:
-      return { ...INITIAL_STATE };
+    const { tag, opponentTag, opponentUid, availableRanks, setId } = state;
+    return {
+      ...INITIAL_STATE,
+      tag, 
+      opponentTag, 
+      opponentUid, 
+      availableRanks, 
+      setId 
+    };
+    
     case reset_banned_stages:
       return { ...state, bannedStages: [] };
 
