@@ -17,6 +17,8 @@ export const init = () => {
   return async (dispatch, getState) => {
     const { uid } = getState().AuthReducer;
 
+    dispatch({ type: reset_set });
+
     socket.on('stageBanned', stage => {
       dispatch({ type: set_banned_stage, payload: stage });
     });
@@ -32,21 +34,6 @@ export const init = () => {
       dispatch({ type: set_pending_game_win, payload: winner });
     });
     socket.on('winnerConfirmed', winner => {
-      // const winCount = games.map(game => game.didWin);
-      // const { games, bestOf } = getState().SetReducer;
-      // console.log(winCount);
-      // console.log(games);
-      // if (bestOf === 3) {
-      //   if (winCount === 2 || games.length - winCount === 2) {
-      //     console.log('hit');
-      //     // dispatch(updateScore())
-      //   }
-      // } else if (bestOf === 5) {
-      //   if (winCount === 3 || games.length - winCount === 3) {
-      //     console.log('hit');
-      //     // dispatch(updateScore())
-      //   }
-      // }
       dispatch({ type: set_game_win, payload: winner })
     });
     socket.on('stageChosen', stage => {

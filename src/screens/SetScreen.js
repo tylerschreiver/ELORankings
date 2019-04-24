@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Image, View, ScrollView, Dimensions, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
+import { Icon } from 'react-native-elements';
 
 import { 
   banStage, 
@@ -29,7 +30,7 @@ class SetScreen extends Component {
   hasUpdatedScore = false;
 
   UNSAFE_componentWillMount() {
-    this.setState({ firstGame: true, selectStage: true, chooseCharacter: false, headerText: '', newScore: null })
+    // this.setState({ firstGame: true, selectStage: true, chooseCharacter: false, headerText: '', newScore: null })
     this.props.init();
     for(const key in stages) this.stageArray.push({ key, stage: stages[key] });
   }
@@ -59,11 +60,8 @@ class SetScreen extends Component {
     }
   }
 
-  async updateScore() {
-    console.log('b4');
-    const score = await this.props.updateScore();
-    console.log(score);
-    console.log(this.props.rank);
+  async updateScore(opponentRank, rank, didWin) {
+    const score = await this.props.updateScore(opponentRank, rank, didWin);
     this.setState({ newScore: score });
   }
 
@@ -146,7 +144,6 @@ class SetScreen extends Component {
   renderSection() {
     const { 
       setOver, 
-      updateScore, 
       opponentRank, 
       rank, 
       games, 
@@ -163,15 +160,19 @@ class SetScreen extends Component {
       if (this.state.headerText) this.setState({ headerText: '' });
       if (!this.hasUpdatedScore) {
         this.hasUpdatedScore = true;
-        updateScore(opponentRank, rank, games[games.length - 1].didWin)
+        this.updateScore(opponentRank, rank, games[games.length - 1].didWin)
       }
       return (
         <View style={{ width: '80%', alignSelf: 'center', justifyContent: 'center' }}>
           <Text style={basicTextStyle}>{headerText}</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-            <Text style={basicTextStyle}>{rank.score}</Text>
-            <Text style={basicTextStyle}> -> </Text>
-            <Text style={basicTextStyle}>{this.state.newScore}</Text>
+            <Text style={basicTextStyle}>{Math.floor(rank.score)}</Text>
+            <Icon
+              color="white" 
+              name={'angle-right'}
+              type="font-awesome"
+            />
+            <Text style={basicTextStyle}>{Math.floor(this.state.newScore)}</Text>
           </View>
         </View>
       );
