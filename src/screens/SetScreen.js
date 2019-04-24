@@ -35,8 +35,9 @@ class SetScreen extends Component {
   }
 
   componentDidUpdate() {
-    if ((this.props.opponentCharacter === null || this.props.character === null) && this.props.selectedStage) {
-      this.setState({ chooseCharacter: this.props.games[this.props.games.length - 1].didWin });
+    const shouldChoose = this.props.games[this.props.games.length - 1].didWin;
+    if ((this.props.opponentCharacter === null || this.props.character === null) && this.props.selectedStage && this.state.chooseCharacter !== shouldChoose) {
+      this.setState({ chooseCharacter: shouldChoose });
     }
   }
 
@@ -146,6 +147,7 @@ class SetScreen extends Component {
         </View>
       );
     }
+    else if (this.props.selectedStage === '') return this.renderStageStrike();
     else if ((this.props.character === null || this.props.opponentCharacter === null) && this.props.games.length !== 0) {
       return (
         <View>
@@ -172,7 +174,6 @@ class SetScreen extends Component {
         </View>
       );
     }
-    else if (this.props.selectedStage === '') return this.renderStageStrike();
     else return this.renderGameWin();
   }
 
